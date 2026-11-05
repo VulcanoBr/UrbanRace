@@ -1,0 +1,65 @@
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Patrocinadores</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Gestão de parceiros.</p>
+  </div>
+  
+  <div class="flex-shrink-0">
+    <%= link_to new_organizer_sponsor_path, class: "inline-flex items-center gap-x-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-blue-500 transition-all active:scale-95" do %>
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      Novo Patrocinador
+    <% end %>
+  </div>
+</div>
+
+<div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-2xl overflow-hidden">
+  <div class="min-w-full overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-900/50">
+        <tr>
+          <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-widest">Patrocinador / CNPJ</th>
+          <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-widest">Responsável</th>
+          <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-widest">E-mail</th>
+          <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-widest">Telefone</th>
+          <th class="relative py-4 pl-3 pr-6"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+        <% @sponsors.each do |sponsor| %>
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <td class="whitespace-nowrap px-6 py-4">
+              <div class="font-bold text-gray-900 dark:text-white"><%= sponsor.nome %></div>
+              <div class="text-xs text-gray-300"><%= sponsor.cnpj.present? ? sponsor.cnpj.gsub(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '\1.\2.\3/\4-\5') : "Não informado" %>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm">
+              <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-900/20 dark:text-blue-400">
+                <%= sponsor.contato %>
+              </span>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+              <%= sponsor.email_contato %>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-white font-mono">
+              <%= sponsor.phone_contato.present? ? sponsor.phone_contato.gsub(/^(\d{2})(\d{5})(\d{4})$/, '(\1) \2-\3') : "Não informado" %>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+              <div class="flex justify-end gap-3">
+                <%= link_to "Ver", organizer_sponsor_path(sponsor), class: "text-blue-400 hover:text-blue-500 font-bold" %>
+                <%= link_to "Editar", edit_organizer_sponsor_path(sponsor), class: "text-gray-400 hover:text-gray-600 font-bold" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <!-- Paginação -->
+    <div class="mt-2 flex justify-center">
+      <div class="glass-card p-2 rounded-2xl border-gray-500 flex items-center gap-1 text-white">
+        <%= paginate @sponsors, window: 2, outer_window: 1, class: "urbanrace-pagination" %>
+      </div>
+    </div>
+  </div>
+</div>

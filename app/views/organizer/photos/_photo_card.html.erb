@@ -1,0 +1,41 @@
+<%# app/views/organizer/photos/_photo_card.html.erb %>
+<%# Só renderiza se houver arquivo real anexado — evita card em branco %>
+<%# app/views/organizer/photos/_photo_card.html.erb %>
+<% if photo.arquivo.attached? %>
+  <div id="<%= dom_id(photo) %>"
+       class="relative group aspect-square bg-gray-100 rounded-2xl overflow-hidden border dark:border-gray-700">
+
+    <%= image_tag photo.arquivo.variant(resize_to_limit: [400, 400]),
+          class: "object-cover w-full h-full" %>
+
+    <%# Badge de status %>
+    <div class="absolute top-2 left-2 flex flex-col gap-1 max-w-[90%]">
+      <% if photo.tipo == "evento" %> <%# Use o campo tipo diretamente %>
+        <span class="bg-gray-700/80 text-white text-[8px] font-black px-2 py-0.5 rounded-full">
+          EVENTO
+        </span>
+      <% elsif photo.reconhecido_ia? %>
+        <%# Supondo que você use photo_registrations como tabela intermediária %>
+        <% photo.photo_registrations.each do |pr| %>
+          <span class="bg-green-600 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-lg">
+            DORSAL <%= pr.registration.numero_dorsal %>
+          </span>
+        <% end %>
+      <% else %>
+        <span class="bg-amber-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full animate-pulse">
+          IA PROCESSANDO...
+        </span>
+      <% end %>
+    </div>
+
+    <%# Botão deletar %>
+    <%= button_to organizer_event_photo_path(photo.event, photo),
+          method: :delete,
+          data: { turbo_confirm: "Remover esta foto?" },
+          class: "absolute top-2 right-2 p-1.5 bg-white/80 rounded-lg text-red-600 opacity-0 group-hover:opacity-100 transition" do %>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+      </svg>
+    <% end %>
+  </div>
+<% end %>

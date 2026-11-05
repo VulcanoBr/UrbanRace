@@ -1,0 +1,49 @@
+<div class="sm:flex sm:items-center sm:justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Postos de Voluntários</h1>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400"> Locais de atuação para o evento: 
+      <span class="text-orange-500 font-bold"><%= @event.nome %></span>
+    </p>
+  </div>
+  <div class="mt-4 sm:ml-16 sm:mt-0">
+    <%= link_to "Novo Posto", new_organizer_event_volunteer_station_path(@event), class: "block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <% @stations.each do |station| %>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex justify-between items-start mb-4">
+          <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-900/20 dark:text-blue-400">
+            <%= station.tipo %>
+          </span>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">KM <%= station.km_posicao %></span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1"><%= station.nome %></h3>
+        <p class="text-sm text-gray-500 mb-4"><%= station.distance.nome %></p>
+        
+        <!-- Barra de Progresso de Ocupação -->
+        <% percent = (station.volunteer_shifts.count.to_f / station.vagas * 100).clamp(0, 100) %>
+        <div class="mt-4">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="dark:text-gray-400">Equipe: <%= station.volunteer_shifts.count %>/<%= station.vagas %></span>
+            <span class="font-bold <%= percent == 100 ? 'text-green-600' : 'text-blue-600' %>"><%= percent.to_i %>%</span>
+          </div>
+          <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
+            <div class="bg-blue-600 h-1.5 rounded-full" style="width: <%= percent %>%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 flex gap-3">
+        <%= link_to organizer_event_volunteer_station_volunteer_shifts_path(@event, station), 
+            class: "flex-1 text-center py-2 text-sm font-bold bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100" do %>
+          Gerenciar Equipe (<%= station.volunteer_shifts.count %>)
+        <% end %>
+        <%= link_to "Detalhes", organizer_event_volunteer_station_path(@event, station), class: "flex-1 text-center py-2 text-sm font-bold bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200" %>
+        <%= link_to "Editar", edit_organizer_event_volunteer_station_path(@event, station), class: "px-4 py-2 text-sm font-bold text-blue-600 hover:text-blue-700" %>
+      </div>
+    </div>
+  <% end %>
+</div>

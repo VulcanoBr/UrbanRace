@@ -1,0 +1,73 @@
+<%= form_with model: [:organizer, supplier_form], url: url, method: (supplier_form.persisted? ? :patch : :post),class: "space-y-8" do |f| %>
+  <div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl p-6 md:p-8">
+    <div class="sm:col-span-4">
+        <% if supplier_form.errors.any? %>
+
+          <div class=" mb-8 rounded-2xl border border-red-200 bg-red-50 p-6 ">
+
+            <h3 class="text-sm font-bold text-red-700 mb-3 ">Corrija os erros abaixo </h3>
+
+            <ul class="list-disc ml-5 text-sm text-red-600 ">
+
+              <% supplier_form.errors.full_messages.each do |message| %>
+
+                <li><%= message %></li>
+
+              <% end %>
+
+            </ul>
+
+          </div>
+
+        <% end %>
+    </div>
+    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6" data-controller="maskphone maskcpfcnpj">
+      
+      
+      <div class="sm:col-span-4">
+        <%= f.label :razao_social, "Razão Social / Nome Fantasia", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :razao_social, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :cnpj, "CNPJ", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :cnpj, placeholder: '  00.000.000/0000-00', maxlength: "18", "data-maskcpfcnpj-target": "inputCpfCnpj", 
+                                    "data-action": "keyup->maskcpfcnpj#addMaskToCpfCnpjFields",
+                        class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :tipo_servico, "Tipo de Serviço", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.select :tipo_servico, ["Infraestrutura", "Cronometragem", "Segurança", "Ambulância", "Banheiros Químicos", "Medalhas/Troféus", "Camisetas", "Alimentação"], { include_blank: "Selecione..." }, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :contato, "Nome do Responsável", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :contato, placeholder: "Ex: João Silva", class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :email_contato, "E-mail de Contato", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.email_field :email_contato, placeholder: "email@fornecedor.com", class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :phone_contato, "Telefone de Contato", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :phone_contato, placeholder: "(99) 99999-9999",  maxlength: "15",
+                                  "data-maskphone-target": "inputPhone", 
+                                  "data-action": "keyup->maskphone#addMaskToPhoneFields",
+                                  class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :avaliacao_media, "Avaliação (0 a 5)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.number_field :avaliacao_media, step: 0.1, min: 0, max: 5, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-x-4">
+    <%= link_to "Cancelar", organizer_suppliers_path, class: "text-sm font-semibold text-gray-900 dark:text-white" %>
+    <%= f.submit "Salvar Fornecedor", class: "rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,0 +1,140 @@
+<%# app/views/sessions/new.html.erb %>
+<div class="min-h-screen flex bg-white dark:bg-gray-900 transition-colors duration-200">
+  
+  <%# Container de Mensagens de Erro/Alerta (Fixo no topo) %>
+  <% if flash.any? %>
+    <div class="fixed top-5 right-4 z-50 flex flex-col gap-2 w-full max-w-sm">
+      <% flash.each do |type, message| %>
+        <div data-controller="flash" 
+             class="flex items-center p-4 rounded-xl shadow-lg border-l-4 transition-all duration-300 transform 
+                    <%= type == 'alert' ? 'bg-red-50 border-red-500 text-red-800' : 'bg-green-50 border-green-500 text-green-800' %>">
+          <div class="flex-1 text-sm font-bold"><%= message %></div>
+          <button data-action="click->flash#close" class="ml-4 text-gray-400 hover:text-gray-900">&times;</button>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# LADO ESQUERDO: Formulário de Login %>
+  <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:w-1/2 xl:px-24">
+    <div class="mx-auto w-full max-w-sm lg:max-w-md">
+      
+      <%# Logotipo visível apenas no Mobile (já que o lado direito some em telas pequenas) %>
+      <div class="flex justify-center mb-8 lg:hidden">
+        <%= image_tag "logo_urbanrace_3d.png", class: "h-16 w-auto drop-shadow-sm", alt: "Urban Race" %>
+      </div>
+
+      <div>
+        <h2 class="mt-6 text-3xl font-black tracking-tight text-gray-900 dark:text-white uppercase">
+          Bem-vindo à Vitória
+        </h2>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Acesse sua conta para gerenciar suas corridas.
+        </p>
+      </div>
+
+      <div class="mt-10">
+        <%= form_with url: session_path, data: { turbo: false }, class: "space-y-6" do |f| %>
+          
+          <%# Seletor Visual de Tipo de Usuário %>
+          <div>
+            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Como deseja entrar?</label>
+            <div class="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-2xl">
+              <label class="flex-1 cursor-pointer">
+                <%= f.radio_button :user_type, "athlete", checked: true, class: "peer sr-only" %>
+                <div class="w-full text-center py-2.5 rounded-xl text-sm font-bold transition-all
+            peer-checked:bg-white
+            peer-checked:text-blue-600
+            peer-checked:shadow-sm
+            dark:peer-checked:bg-orange-500
+            dark:peer-checked:text-black
+            text-gray-500">
+                  ATLETA
+                </div>
+              </label>
+              <label class="flex-1 cursor-pointer">
+                <%= f.radio_button :user_type, "operation", class: "peer sr-only" %>
+                <div class="w-full text-center py-2.5 rounded-xl text-sm font-bold transition-all
+            peer-checked:bg-white
+            peer-checked:text-blue-600
+            peer-checked:shadow-sm
+            dark:peer-checked:bg-orange-500
+            dark:peer-checked:text-black
+            text-gray-500">
+                  OPERATION
+                </div>
+              </label>
+              <label class="flex-1 cursor-pointer">
+                <%= f.radio_button :user_type, "organizer", class: "peer sr-only" %>
+                <div class="w-full text-center py-2.5 rounded-xl text-sm font-bold transition-all
+            peer-checked:bg-white
+            peer-checked:text-blue-600
+            peer-checked:shadow-sm
+            dark:peer-checked:bg-orange-500
+            dark:peer-checked:text-black
+            text-gray-500">
+                  ORGANIZADOR
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <%= f.label :email_address, "Seu E-mail", class: "block text-sm font-bold text-gray-700 dark:text-gray-300" %>
+            <div class="mt-1">
+              <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "email", 
+                  placeholder:   "exemplo@email.com",
+                  class: "block w-full rounded-xl border-gray-200 px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white sm:text-sm transition duration-200" %>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between">
+              <%= f.label :password, "Sua Senha", class: "block text-sm font-bold text-gray-700 dark:text-gray-300" %>
+              <div class="text-xs">
+                <%= link_to "🔑 Esqueceu sua senha?", new_password_path, class: "font-bold text-blue-600 hover:text-blue-500 transition" %>
+              </div>
+            </div>
+            <div class="mt-1">
+              <%= f.password_field :password, required: true, autocomplete: "current-password", 
+                  placeholder: "••••••••",
+                  class: "px-4 block w-full rounded-xl border-gray-200 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white sm:text-sm transition duration-200" %>
+            </div>
+          </div>
+
+          <%# Bloco de Ações do Formulário %>
+          <div class="pt-2 space-y-3">
+            <%# Botão Principal %>
+            <%= f.submit "ENTRAR NA CONTA", 
+                class: "flex w-full justify-center rounded-xl bg-green-800 py-4 text-sm font-black text-white shadow-xl shadow-blue-600/30 hover:bg-blue-700 hover:shadow-blue-700/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all transform active:scale-95 cursor-pointer uppercase tracking-widest" %>
+            
+            <%# Botão Cancelar (Ação Secundária) %>
+            <%= link_to "CANCELAR E VOLTAR", root_path, 
+                class: "flex w-full justify-center rounded-xl border border-gray-200 dark:border-gray-700 py-4 text-sm font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all transform active:scale-95 uppercase tracking-widest" %>
+          </div>>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+
+  <%# LADO DIREITO: Branding / Logotipo %>
+  <%# Oculto em telas menores que 'lg' (mobile/tablet). Ocupa o resto do espaço na tela grande %>
+  <div class="hidden lg:flex lg:flex-1 relative items-center justify-center bg-green-800 overflow-hidden">
+    
+    <%# Efeitos visuais de fundo (Círculos decorativos) %>
+    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-800 to-blue-950 opacity-90"></div>
+    <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-green-600 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+    <div class="absolute -top-32 -right-32 w-96 h-96 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+    
+    <%# Logotipo Urban Race em destaque %>
+    <div class="relative z-10 p-12 w-full max-w-2xl flex flex-col items-center">
+      <%= image_tag "logo_urbanrace_3d.png", class: "w-full max-w-md object-contain drop-shadow-2xl transition transform hover:scale-105 duration-500", alt: "Urban Race" %>
+      
+      <p class="mt-12 text-blue-200 text-lg font-medium text-center max-w-md">
+        A plataforma oficial para organizar e viver a melhor experiência em corridas de rua.
+      </p>
+    </div>
+  </div>
+
+</div>

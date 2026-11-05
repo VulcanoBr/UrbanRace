@@ -1,0 +1,320 @@
+<% content_for :title do %>
+  <%= @event.nome %>
+<% end %>
+
+<% content_for :meta_description do %>
+  <%= @event.descricao.to_s.truncate(160) %>
+<% end %>
+
+<div class="bg-white">
+
+  <!-- HERO MODERNO (BANNER + INFO) -->
+  <section class="bg-gray-50 py-10">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="grid lg:grid-cols-2 gap-10 items-stretch">
+
+        <!-- BANNER -->
+        <div class="rounded-[32px] overflow-hidden shadow-2xl bg-black">
+          <% if @event.banner.attached? %>
+            <%= image_tag @event.banner,
+              class: "w-full h-[440px] object-cover" %>
+          <% else %>
+            <div class="w-full h-[450px] bg-gradient-to-br from-green-900 via-black to-orange-900"></div>
+          <% end %>
+        </div>
+
+        <!-- INFO LATERAL -->
+        <div class="flex flex-col justify-between">
+
+          <div >
+            <div class="flex items-center justify-between mb-6">
+                <%= link_to root_path, class: "group flex items-center text-xs font-black text-gray-400 hover:text-blue-600 transition-colors tracking-widest" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                  </svg>
+                  VOLTAR AO INÍCIO
+                <% end %>
+              <span class="inline-flex px-4 py-2 rounded-full bg-orange-500/10 text-orange-500 font-black text-xs tracking-widest">
+                  INSCRIÇÕES ABERTAS
+               </span>
+            </div>
+
+            <h1 class="mt-6 text-5xl font-black tracking-tight text-gray-900">
+              <%= @event.nome %>
+            </h1>
+
+            <p class="mt-6 text-gray-600 leading-relaxed">
+              <%= @event.descricao.to_s.truncate(260) %>
+            </p>
+
+            <!-- META -->
+            <div class="mt-8 space-y-3 text-sm text-gray-700">
+
+              <div class="flex gap-2">
+                📍 <strong><%= @event.cidade %>/<%= @event.estado %></strong>
+              </div>
+
+              <div class="flex gap-2">
+                📅 <strong><%= @event.data_largada.strftime("%d/%m/%Y") %></strong>
+              </div>
+
+              <div class="flex gap-2">
+                🕒 <strong><%= @event.horario_largada.strftime("%H:%M") %></strong>
+              </div>
+
+              <div class="flex gap-2">
+                📌 <strong><%= @event.local_partida %></strong>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- CTA FIXO -->
+          <div class="mt-10 space-y-3">
+
+            <%= link_to "GARANTIR INSCRIÇÃO",
+                "#distancias",
+                class: "block text-center bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-2xl transition" %>
+
+            <% if @event.instagram_url.present? %>
+              <a href="<%= @event.instagram_url %>" target="_blank"
+                 class="block text-center border border-gray-200 py-3 rounded-2xl font-bold text-gray-700 hover:bg-gray-100">
+                Instagram do Evento
+              </a>
+            <% end %>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUICK INFO CARDS -->
+  <section class="py-10">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="grid md:grid-cols-4 gap-6">
+
+        <div class="p-6 rounded-3xl border bg-white">
+          <p class="text-xs font-black text-gray-400">LOCAL</p>
+          <p class="mt-2 font-black text-lg"><%= @event.cidade %></p>
+        </div>
+
+        <div class="p-6 rounded-3xl border bg-white">
+          <p class="text-xs font-black text-gray-400">DATA</p>
+          <p class="mt-2 font-black text-lg"><%= @event.data_largada.strftime("%d/%m/%Y") %></p>
+        </div>
+
+        <div class="p-6 rounded-3xl border bg-white">
+          <p class="text-xs font-black text-gray-400">HORÁRIO</p>
+          <p class="mt-2 font-black text-lg"><%= @event.horario_largada.strftime("%H:%M") %></p>
+        </div>
+
+        <div class="p-6 rounded-3xl border bg-white">
+          <p class="text-xs font-black text-gray-400">PARTIDA</p>
+          <p class="mt-2 font-black text-lg"><%= @event.local_partida %></p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DISTÂNCIAS (CONVERSÃO PRINCIPAL) -->
+  <section id="distancias" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center mb-14">
+        <h2 class="text-4xl font-black">Escolha sua Distância</h2>
+        <p class="text-gray-500 mt-2">Selecione o percurso ideal para você</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-10">
+
+        <% @distances.each do |distance| %>
+
+          <% lot = distance.lots.atuais.first %>
+
+          <div class="bg-white border rounded-3xl p-8 shadow-sm hover:shadow-xl transition">
+
+            <div class="text-center">
+
+              <div class="text-6xl font-black text-green-700">
+                <%= distance.km %>K
+              </div>
+
+              <h3 class="mt-3 text-xl font-black">
+                <%= distance.nome %>
+              </h3>
+
+              <!-- CATEGORIAS -->
+              <div class="mt-4 flex flex-wrap justify-center gap-2">
+                <% distance.categories.each do |category| %>
+                  <span class="text-xs bg-gray-100 px-3 py-1 rounded-full font-bold text-gray-600">
+                    <%= category.nome %>
+                  </span>
+                <% end %>
+              </div>
+
+              <!-- LOTE -->
+              <div class="mt-6">
+
+                <% if lot.present? %>
+                  <p class="text-xs font-black text-gray-400">LOTE ATUAL</p>
+                  <p class="text-4xl font-black text-gray-900 mt-2">
+                    <%= number_to_currency(lot.preco) %>
+                  </p>
+                <% else %>
+                  <p class="text-red-500 font-black">ESGOTADO</p>
+                <% end %>
+
+              </div>
+
+              <!-- CTA -->
+              <div class="mt-8">
+                <%= link_to "INSCREVER",
+                    new_public_registration_path(@event.slug_url, distance_id: distance.id),
+                    class: "block bg-gray-900 hover:bg-orange-500 text-white font-black py-4 rounded-2xl transition" %>
+              </div>
+
+            </div>
+
+          </div>
+
+        <% end %>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DESCRIÇÃO -->
+  <section class="py-20">
+    <div class="max-w-4xl mx-auto px-6">
+
+      <h2 class="text-3xl font-black mb-6">Sobre o Evento</h2>
+
+      <div class="text-gray-700 leading-relaxed">
+        <%= simple_format(@event.descricao) %>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CRONOGRAMA -->
+  <% if @event.cronograma.present? %>
+    <section class="py-20 bg-gray-50">
+      <div class="max-w-4xl mx-auto px-6">
+
+        <h2 class="text-3xl font-black mb-6">Cronograma</h2>
+
+        <div class="bg-white p-8 rounded-3xl border">
+          <%= simple_format(@event.cronograma) %>
+        </div>
+
+      </div>
+    </section>
+  <% end %>
+
+  <!-- KIT -->
+  <% if @event.kit_descricao.present? %>
+    <section class="py-20 bg-black text-white">
+      <div class="max-w-4xl mx-auto px-6  items-center">
+
+        <div>
+          <h2 class="text-4xl font-black">Kit do Atleta</h2>
+          <p class="mt-4 text-white/70 leading-relaxed">
+            <%= simple_format(@event.kit_descricao) %>
+          </p>
+        </div>
+
+      </div>
+    </section>
+  <% end %>
+
+  <!-- PATROCINADORES -->
+  <!-- PATROCINADORES -->
+  <% if @event.sponsor_contracts.any? %>
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-6">
+
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-black text-gray-900">Nossos Parceiros</h2>
+          <p class="text-gray-500 mt-2 text-sm uppercase tracking-widest font-bold">Quem apoia o esporte e este evento</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 items-center">
+          <% @event.sponsor_contracts.where(status: "signed").each do |contract| %>
+            <% sponsor = contract.sponsor %>
+
+            <div class="flex flex-col items-center group">
+              <div class="relative w-full h-32 flex items-center justify-center p-4 bg-gray-50 rounded-2xl border border-transparent group-hover:border-blue-100 group-hover:bg-white group-hover:shadow-xl transition-all duration-500">
+                
+                <% if sponsor.logo.attached? %>
+                  <%# Redimensiona a imagem para no máximo 200x100 para manter a página leve %>
+                  <%= image_tag sponsor.logo.variant(resize_to_limit: [200, 100]), 
+                      alt: sponsor.nome, 
+                      class: "max-h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition duration-500" %>
+                <% else %>
+                  <%# Caso o patrocinador não tenha logo, mostra o nome estilizado %>
+                  <span class="text-xl font-black text-gray-300 group-hover:text-blue-600 transition duration-500 uppercase tracking-tighter">
+                    <%= sponsor.nome %>
+                  </span>
+                <% end %>
+                
+              </div>
+              
+              <div class="mt-4 text-center">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                  Cota <%= contract.cota.presence || contract.cota %>
+                </p>
+              </div>
+            </div>
+
+          <% end %>
+        </div>
+
+      </div>
+    </section>
+  <% end %>
+
+  <!-- FAQ -->
+  <% if @event.respond_to?(:faq) && @event.faq.present? %>
+    <section class="py-20 bg-gray-50">
+      <div class="max-w-4xl mx-auto px-6">
+
+        <h2 class="text-3xl font-black mb-6">Dúvidas Frequentes</h2>
+
+        <div class="bg-white p-8 rounded-3xl border">
+          <%= simple_format(@event.faq) %>
+        </div>
+
+      </div>
+    </section>
+  <% end %>
+
+  <!-- CTA FINAL -->
+  <section class="py-24 bg-gradient-to-r from-black via-gray-900 to-black text-white text-center">
+
+    <h2 class="text-5xl font-black">
+      Prepare-se para correr
+    </h2>
+
+    <p class="mt-4 text-white/70">
+      Garanta sua vaga no UrbanRace
+    </p>
+
+    <div class="mt-10">
+      <%= link_to "INSCREVER AGORA",
+          "#distancias",
+          class: "bg-orange-500 hover:bg-orange-600 px-10 py-5 rounded-2xl font-black transition" %>
+    </div>
+
+  </section>
+
+</div>

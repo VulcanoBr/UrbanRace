@@ -1,0 +1,7 @@
+<div class="mx-auto max-w-4xl">
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Editar Contrato</h2>
+    <%= button_to "Remover Contrato", organizer_supplier_contract_path(@contract), method: :delete, data: { turbo_confirm: "Esta ação excluirá o registro financeiro. Deseja continuar?" }, class: "text-sm text-red-600 hover:text-red-800" %>
+  </div>
+  <%= render "form", supplier_contract_form: @supplier_contract_form, url: organizer_supplier_contract_path(@contract) %>
+</div>

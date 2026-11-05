@@ -1,0 +1,65 @@
+<div class="mb-8 flex items-center justify-between">
+  <div class="flex items-center gap-4">
+    <%= link_to organizer_suppliers_path, class: "p-2 rounded-full bg-white border shadow-sm hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700" do %>
+      <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 19l-7-7 7-7" /></svg>
+    <% end %>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white"><%= @supplier.razao_social %></h1>
+  </div>
+  <div class="flex gap-2">
+    <%= link_to "Editar Dados", edit_organizer_supplier_path(@supplier), class: "bg-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium dark:bg-gray-800 dark:text-white" %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- Informações de Contato -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+    <h3 class="text-sm font-bold text-gray-500 uppercase mb-6">Informações e Contato</h3>
+    <dl class="space-y-4">
+      <div>
+        <dt class="text-xs text-gray-400 font-bold uppercase">Serviço</dt>
+        <dd class="text-sm font-medium text-gray-900 dark:text-gray-200"><%= @supplier.tipo_servico %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-400 font-bold uppercase">CNPJ</dt>
+        <dd class="text-sm font-medium text-gray-900 dark:text-gray-200"><%= formatar_cnpj(@supplier.cnpj) %></dd>
+      </div>
+      <div class="pt-4 border-t border-gray-100 dark:border-gray-700">
+        <dt class="text-xs text-gray-400 font-bold uppercase">Responsável</dt>
+        <dd class="text-sm font-medium text-gray-900 dark:text-gray-200"><%= @supplier.contato %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-400 font-bold uppercase">E-mail</dt>
+        <dd class="text-sm font-medium text-blue-600"><%= mail_to @supplier.email_contato %></dd>
+      </div>
+      <div>
+        <dt class="text-xs text-gray-400 font-bold uppercase">Telefone</dt>
+        <dd class="text-sm font-medium text-gray-900 dark:text-gray-200"><%= format_phone(@supplier.phone_contato, fallback: "Sem contato")  %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- Histórico de Contratos (Placeholder para funcionalidade futura) -->
+  <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+    <h3 class="text-sm font-bold text-gray-500 uppercase mb-6">Histórico de Contratos</h3>
+    <% if @supplier.supplier_contracts.any? %>
+      <ul class="divide-y dark:divide-gray-700">
+        <% @supplier.supplier_contracts.each do |contract| %>
+          <li class="py-4 flex justify-between">
+            <div>
+              <p class="font-bold text-gray-900 dark:text-white"><%= contract.event.nome %></p>
+              <p class="text-xs text-gray-500"><%= l contract.created_at, format: :short %></p>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-blue-600"><%= number_to_currency(contract.valor) %></p>
+              <span class="text-[10px] uppercase font-black"><%= contract.status %></span>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="text-center py-10">
+        <p class="text-gray-400 italic">Nenhum contrato registrado para este fornecedor.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

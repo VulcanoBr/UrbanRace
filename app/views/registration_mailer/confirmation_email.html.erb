@@ -1,0 +1,65 @@
+<div style="font-family: sans-serif; background-color: #f3f4f6; padding: 40px 20px;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    
+    <!-- Header -->
+    <div style="background-color: #1d4ed8; padding: 40px; text-align: center;">
+      <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Inscrição Confirmada!</h1>
+    </div>
+
+    <!-- Body -->
+    <div style="padding: 40px;">
+      <p style="font-size: 18px; color: #374151;">Olá, <strong><%= @athlete.nome %></strong>!</p>
+      <p style="color: #4b5563; line-height: 1.6;">Sua participação na <strong><%= @event.nome %></strong> está garantida. Confira os detalhes abaixo:</p>
+
+      <div style="background-color: #eff6ff; border-radius: 12px; padding: 20px; margin: 30px 0;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Seu Número (Dorsal):</td>
+            <td style="padding: 8px 0; color: #1e40af; font-weight: bold; font-size: 20px; text-align: right;">#<%= @registration.numero_dorsal %></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Distância:</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: bold; text-align: right;"><%= @registration.category.distance.nome %></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Kit:</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: bold; text-align: right;">Tamanho <%= @registration.tamanho_kit %></td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="text-align: center; margin: 40px 0;">
+        <p style="font-size: 14px; color: #6b7280; margin-bottom: 10px;">Apresente este QR Code para retirada do kit:</p>
+        <!-- Placeholder para o QR Code -->
+        <div style="display: inline-block; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<%= @registration.qr_code_hash %>" alt="QR Code">
+        </div>
+        <p style="font-size: 12px; color: #9ca3af; margin-top: 10px;"><%= @registration.qr_code_hash %></p>
+      </div>
+
+      <p style="color: #4b5563; line-height: 1.6;">O regulamento completo e as informações sobre a retirada de kit estão disponíveis na sua área exclusiva.</p>
+      
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="<%= athletes_area_do_corredor_url %>" style="background-color: #1d4ed8; color: #ffffff; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">ACESSAR ÁREA DO CORREDOR</a>
+      </div>
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px;">
+      <h4 style="margin: 0 0 10px 0; color: #111827;">Sua conta UrbanRace</h4>
+      <p style="margin: 0; font-size: 14px; color: #6b7280;">
+        Para acessar seus resultados, certificados e fotos, use seu e-mail: <strong><%= @athlete.email_address %></strong>.
+      </p>
+      <p style="margin: 10px 0 0 0; font-size: 14px;">
+        <%# Link para o processo de "Esqueci minha senha" que criamos na Fase 1 %>
+        <a href="<%= new_password_url %>" style="color: #2563eb; font-weight: bold; text-decoration: underline;">
+          Clique aqui para definir sua senha de acesso
+        </a>
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; font-size: 12px; margin: 0;">Este é um e-mail automático enviado por Corrida.sys</p>
+    </div>
+  </div>
+</div>

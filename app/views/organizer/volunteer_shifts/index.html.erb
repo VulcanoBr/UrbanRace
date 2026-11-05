@@ -1,0 +1,54 @@
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <nav class="mb-2">
+      <%= link_to "← Voltar para Postos", organizer_event_volunteer_stations_path(@event), class: "text-sm text-gray-500" %>
+    </nav>
+    <h1 class="text-2xl font-black text-gray-900 dark:text-white">Escala: <%= @station.nome %></h1>
+    <p class="text-sm text-gray-500">KM <%= @station.km_posicao %> • <%= @station.vagas %> vagas totais</p>
+  </div>
+  <%= link_to "Escalar Voluntário", new_organizer_event_volunteer_station_volunteer_shift_path(@event, @station), class: "bg-blue-600 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-blue-700" %>
+</div>
+
+<div class="bg-white dark:bg-gray-800 shadow-sm border rounded-2xl overflow-hidden">
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+    <thead class="bg-gray-50 dark:bg-gray-900/50">
+      <tr>
+        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Voluntário</th>
+        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Turno</th>
+        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+        <th class="relative px-6 py-4"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+      <% @shifts.each do |shift| %>
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+          <td class="px-6 py-4">
+            <div class="font-bold text-gray-900 dark:text-white"><%= shift.volunteer.nome %></div>
+            <div class="text-xs text-gray-500"><%= shift.volunteer.telefone %></div>
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+            <%= shift.turno %>
+          </td>
+          <td class="px-6 py-4">
+            <span class="px-2 py-1 rounded-full text-[10px] font-black uppercase <%= shift.confirmado? ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' %>">
+              <%= shift.status.humanize %>
+            </span>
+          </td>
+          <td class="px-6 py-4 text-right text-sm font-medium">
+            <div class="flex justify-end gap-3">
+              <%= link_to "Editar", edit_organizer_event_volunteer_station_volunteer_shift_path(@event, @station, shift), class: "text-blue-600" %>
+              <%= button_to "Remover", organizer_event_volunteer_station_volunteer_shift_path(@event, @station, shift), method: :delete, data: { turbo_confirm: "Remover este voluntário da escala?" }, class: "text-red-600" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <!-- Paginação -->
+    <div class="mt-2 flex justify-center">
+      <div class="glass-card p-2 rounded-2xl border-gray-500 flex items-center gap-1 text-white">
+        <%= paginate @shifts, window: 2, outer_window: 1, class: "urbanrace-pagination" %>
+      </div>
+    </div>
+</div>

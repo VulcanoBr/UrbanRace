@@ -1,0 +1,67 @@
+<div class="mb-8">
+  <nav class="mb-2">
+    <%= link_to "← Voltar ao Evento", organizer_event_path(@event), class: "text-sm text-blue-600 font-medium" %>
+  </nav>
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Relatório de Satisfação (NPS)</h1>
+  <p class="text-sm text-gray-500"><%= @event.nome %> • <%= l @event.data_largada, format: :long %></p>
+</div>
+
+<!-- Grid de Métricas Principais -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  <!-- Card Score NPS -->
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center">
+    <dt class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Score NPS</dt>
+    <dd class="text-5xl font-black <%= nps_color_class(@report[:score]) %>">
+      <%= @report[:score] %>
+    </dd>
+    <p class="mt-2 text-xs text-gray-400"><%= @report[:total_respostas] %> avaliações recebidas</p>
+  </div>
+
+  <!-- Cards de Médias por Dimensão -->
+  <div class="md:col-span-3 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-6">Médias por Categoria (1 a 10)</h3>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <% @report[:medias].each do |label, media| %>
+        <div class="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-xl">
+          <p class="text-xl font-black text-gray-900 dark:text-white"><%= media %></p>
+          <p class="text-[10px] font-bold text-gray-400 uppercase"><%= label %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Listagem de Feedbacks Detalhados -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+  <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
+    <h3 class="font-bold text-gray-900 dark:text-white">Comentários dos Atletas</h3>
+    <span class="text-xs text-gray-400">Ordenado por mais recente</span>
+  </div>
+  
+  <div class="divide-y divide-gray-100 dark:divide-gray-700">
+    <% if @report[:comentarios].any? %>
+      <% @report[:comentarios].each do |resp| %>
+        <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black ring-1 ring-inset <%= nps_badge_class(resp.nota_geral) %>">
+              NOTA GERAL: <%= resp.nota_geral %>
+            </span>
+            <span class="text-xs text-gray-400"><%= l resp.created_at, format: :short %></span>
+          </div>
+          <p class="text-gray-700 dark:text-gray-300 italic text-sm">"<%= resp.comentario %>"</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-xs font-bold text-blue-600">— <%= resp.athlete.nome %></p>
+            <div class="flex gap-4">
+               <span class="text-[10px] text-gray-400 font-medium">Percurso: <strong><%= resp.nota_percurso || '-' %></strong></span>
+               <span class="text-[10px] text-gray-400 font-medium">Estrutura: <strong><%= resp.nota_estrutura || '-' %></strong></span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="p-12 text-center">
+        <p class="text-gray-400 italic">Nenhum comentário enviado até o momento.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

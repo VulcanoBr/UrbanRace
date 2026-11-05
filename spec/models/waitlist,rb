@@ -1,0 +1,25 @@
+RSpec.describe Waitlist, type: :model do
+  describe "#notificar_vaga_disponivel!" do
+    let(:waitlist) do
+      create(
+        :waitlist,
+        status: "aguardando"
+      )
+    end
+
+    it "altera o status para notificado" do
+      allow(
+        WaitlistMailer
+      ).to receive_message_chain(
+        :vaga_disponivel,
+        :deliver_later
+      )
+
+      waitlist.notificar_vaga_disponivel!
+
+      expect(
+        waitlist.reload.status
+      ).to eq("notificado")
+    end
+  end
+end

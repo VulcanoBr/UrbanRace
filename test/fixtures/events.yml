@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  organizer: one
+  nome: MyString
+  data_largada: 2026-05-31
+  horario_largada: 2026-05-31 22:58:44
+  local_partida: MyString
+  cidade: MyString
+  estado: MyString
+  slug_url: MyString
+  status: MyString
+  descricao: MyText
+
+two:
+  organizer: two
+  nome: MyString
+  data_largada: 2026-05-31
+  horario_largada: 2026-05-31 22:58:44
+  local_partida: MyString
+  cidade: MyString
+  estado: MyString
+  slug_url: MyString
+  status: MyString
+  descricao: MyText

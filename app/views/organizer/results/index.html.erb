@@ -1,0 +1,332 @@
+<%# app/views/organizer/results/index.html.erb %>
+<div class="space-y-6">
+
+  <%# ── Cabeçalho ──────────────────────────────────────────────────────── %>
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Resultados</h1>
+      <p class="text-sm text-gray-500 mt-0.5"><%= @event.nome %></p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <%# Importar CSV de tempos %>
+      <%= form_with url: organizer_event_timings_path(@event),
+            multipart: true, class: "inline-flex" do |f| %>
+        <label class="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50 transition">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+          </svg>
+          Importar tempos (CSV)
+          <%= f.file_field :file, class: "hidden", onchange: "this.form.requestSubmit()" %>
+        </label>
+      <% end %>
+
+      <%# Calcular resultados %>
+      <%= button_to "⚙️ Calcular resultados",
+            calcular_organizer_event_results_path(@event),
+            method: :post, data: { turbo_confirm: "Isso irá recalcular TODAS as posições. Confirmar?" },
+            class: "inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition"
+          %>
+
+      <%# Homologar todos %>
+      <% if @stats[:total] > 0 && @stats[:homologados] < @stats[:total] %>
+        <%= button_to "✅ Homologar todos",
+              homologar_todos_organizer_event_results_path(@event),
+              method: :post,
+              method: :post, data: { turbo_confirm: "Homologar todos os #{@stats[:total]} resultados?" },
+              class: "inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 transition"
+            %>
+      <% end %>
+
+      <% if @stats[:total] == @stats[:homologados]  %>
+        <%= button_to create_batch_organizer_event_certificates_path(@event), 
+                      method: :post,
+                      data: { turbo_confirm: "Isso iniciará a geração de certificados para todos os #{@stats[:total]} atletas homologados. Confirmar?" },
+                      class: "w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-black text-xs shadow-lg shadow-blue-200 dark:shadow-none transition transform active:scale-95 flex items-center justify-center gap-2" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M6.72 13.844l11.76-11.76a.75.75 0 011.06 1.06l-11.76 11.76a.75.75 0 01-1.06-1.06zm-2.828 2.828l11.76-11.76a.75.75 0 011.06 1.06L4.952 17.732a.75.75 0 01-1.06-1.06zM2.25 18.75a.75.75 0 111.5 0 .75.75 0 01-1.5 0z" /></svg>
+          GERAR Yodos CERTIFICADOS
+        <% end %>
+      <% end %>
+
+      <%# Exportar CSV %>
+      <%= link_to "⬇ Exportar CSV",
+            exportar_organizer_event_results_path(@event),
+            class: "inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50 transition" %>
+    </div>
+  </div>
+
+  <%# ── Cards de estatísticas ──────────────────────────────────────────── %>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <% [
+      ["Tempos importados", @stats[:timings],     "text-blue-600",   "bg-blue-50"],
+      ["Resultados gerados", @stats[:total],      "text-indigo-600", "bg-indigo-50"],
+      ["Homologados",  @stats[:homologados],       "text-green-600",  "bg-green-50"],
+      ["Não Homologados",    @stats[:total] - @stats[:homologados], "text-orange-600", "bg-orange-50"],
+    ].each do |label, val, txt, bg| %>
+      <div class="<%= bg %> rounded-xl p-4">
+        <p class="text-xs font-medium text-gray-500 mb-1"><%= label %></p>
+        <p class="text-2xl font-bold <%= txt %>"><%= val %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Relatório de importação (persiste na sessão) ───────────────────── %>
+  <% if @import_relatorio %>
+    <% erros  = @import_relatorio[:erros]  || [] %>
+    <% avisos = @import_relatorio[:avisos] || [] %>
+
+    <% if erros.any? %>
+      <div class="rounded-xl border border-red-200 bg-red-50 p-5">
+        <h3 class="font-semibold text-red-800 mb-3">
+          ❌ <%= erros.size %> linha(s) com erro na última importação
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-red-700">
+            <thead>
+              <tr class="border-b border-red-200">
+                <th class="text-left py-1.5 pr-4 font-semibold">Linha</th>
+                <th class="text-left py-1.5 pr-4 font-semibold">Dorsal</th>
+                <th class="text-left py-1.5 font-semibold">Problema</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% erros.each do |e| %>
+                <tr class="border-b border-red-100">
+                  <td class="py-1.5 pr-4"><%= e[:linha] %></td>
+                  <td class="py-1.5 pr-4 font-mono"><%= e[:dorsal] %></td>
+                  <td class="py-1.5"><%= e[:mensagem] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <% if avisos.any? %>
+      <div class="rounded-xl border border-yellow-200 bg-yellow-50 p-5">
+        <h3 class="font-semibold text-yellow-800 mb-3">
+          ⚠️ <%= avisos.size %> aviso(s) na última importação — dados foram importados mas merecem atenção
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-yellow-700">
+            <thead>
+              <tr class="border-b border-yellow-200">
+                <th class="text-left py-1.5 pr-4 font-semibold">Linha</th>
+                <th class="text-left py-1.5 pr-4 font-semibold">Dorsal</th>
+                <th class="text-left py-1.5 font-semibold">Aviso</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% avisos.each do |a| %>
+                <tr class="border-b border-yellow-100">
+                  <td class="py-1.5 pr-4"><%= a[:linha] %></td>
+                  <td class="py-1.5 pr-4 font-mono"><%= a[:dorsal] %></td>
+                  <td class="py-1.5"><%= a[:mensagem] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%# ── Filtros ─────────────────────────────────────────────────────────── %>
+  <%= form_with url: organizer_event_results_path(@event), method: :get,
+        class: "flex flex-wrap gap-3 items-end" do |f| %>
+    <div>
+      <%= f.label :category_id, "Categoria", class: "block text-xs font-medium text-gray-400 mb-1" %>
+
+      <%= f.select :category_id, options_from_collection_for_select(
+          @categorias, :id, ->(categoria) { "#{categoria.distance.nome} — #{categoria.nome}" }, params[:category_id] ),
+            { include_blank: "Todas" },
+            class: "rounded-lg border border-gray-300 px-3 py-2 bg-white text-sm" %>
+    </div>
+    <div>
+      <%= f.label :homologado, "Status", class: "block text-xs font-medium text-gray-400 mb-1" %>
+      <%= f.select :homologado,
+            [["Todos", ""], ["Homologados", "1"], ["Pendentes", "0"]],
+            { selected: params[:homologado] },
+            class: "rounded-lg border border-gray-300 px-3 py-2 bg-white text-sm" %>
+    </div>
+    <%= f.submit "Filtrar",
+          class: "rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700" %>
+    <% if params[:category_id].present? || params[:homologado].present? %>
+      <%= link_to "Limpar", organizer_event_results_path(@event),
+            class: "text-sm text-gray-500 hover:text-gray-700 underline py-2" %>
+    <% end %>
+  <% end %>
+
+  <%# ── Tabela de resultados ────────────────────────────────────────────── %>
+  <% if @results.any? %>
+    <div class="overflow-x-auto rounded-xl ring-1 ring-gray-200 shadow-sm">
+      <table class="min-w-full divide-y divide-gray-200 bg-white text-sm">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Pos.</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Dorsal</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Atleta</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Sexo</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Categoria</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Distância</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">T. Líquido</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Pace</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Status</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Certificado</th>
+            <th class="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @results.each do |result| %>
+            <% reg = result.registration %>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-4 py-3">
+                <div class="flex flex-col">
+                  <span class="font-bold text-gray-900"><%= result.posicao_geral || "–" %>º</span>
+                  <% if result.posicao_categoria %>
+                    <span class="text-xs text-gray-400">Cat: <%= result.posicao_categoria %>º</span>
+                  <% end %>
+                </div>
+              </td>
+              <td class="px-4 py-3 font-mono font-semibold text-gray-700">
+                <%= reg.numero_dorsal %>
+              </td>
+              <td class="px-4 py-3">
+                <div class="font-medium text-gray-900"><%= reg.athlete.nome %></div>
+              </td>
+              <td class="px-4 py-3 text-gray-600"><%= reg.athlete.sexo %></td>
+              <td class="px-4 py-3 text-gray-600 text-xs"><%= reg.category&.nome || "–" %></td>
+              <td class="px-4 py-3 text-gray-600 text-xs"><%= reg.distance&.nome || "–" %></td>
+              <td class="px-4 py-3 font-mono font-semibold text-gray-900">
+                <%= result.tempo_liquido || "–" %>
+              </td>
+              <td class="px-4 py-3 font-mono text-gray-600 text-xs">
+                <%= result.pace_medio ? "#{result.pace_medio}/km" : "–" %>
+              </td>
+              <td class="px-4 py-3">
+                <% if result.homologado? %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                    ✓ Homologado
+                  </span>
+                <% else %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                    Pendente
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-4 py-3">
+                <% if result.certificado_geravel? %>
+
+                  <% if result.certificate&.gerado? %>
+
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                        ✓ Gerado
+                      </span>
+
+                      <% if result.certificate.arquivo_pdf.attached? %>
+                        <%= link_to "PDF",
+                                    rails_blob_path(
+                                      result.certificate.arquivo_pdf,
+                                      disposition: "inline"
+                                    ),
+                                    target: "_blank",
+                                    rel: "noopener",
+                                    class: "text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline" %>
+                      <% end %>
+                    </div>
+
+                  <% else %>
+
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                      ⏳ Pendente
+                    </span>
+
+                  <% end %>
+
+                <% else %>
+
+                  <span class="text-xs text-gray-400">
+                    —
+                  </span>
+
+                <% end %>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex flex-wrap items-center gap-2">
+
+                  <%= link_to "Editar",
+                              edit_organizer_event_result_path(@event, result),
+                              class: "text-xs text-blue-600 hover:text-blue-800 font-medium" %>
+
+                  <% unless result.homologado? %>
+
+                    <%= button_to "Homologar",
+                                  homologar_organizer_event_result_path(@event, result),
+                                  method: :patch,
+                                  class: "text-xs text-green-600 hover:text-green-800 font-medium",
+                                  form_class: "inline" %>
+
+                  <% end %>
+
+                  <% if result.certificado_geravel? %>
+
+                    <% if result.certificate&.gerado? %>
+
+                      <%= button_to "REGENERAR",
+                                    generate_certificate_organizer_event_result_path(@event, result),
+                                    method: :post,
+                                    data: {
+                                      turbo_confirm: "Regenerar o certificado de #{reg.athlete.nome}?"
+                                    },
+                                    class: "text-xs text-indigo-600 hover:text-indigo-800 font-semibold",
+                                    form_class: "inline" %>
+
+                    <% else %>
+
+                      <%= button_to "GERAR",
+                                    generate_certificate_organizer_event_result_path(@event, result),
+                                    method: :post,
+                                    data: {
+                                      turbo_confirm: "Gerar certificado para #{reg.athlete.nome}?"
+                                    },
+                                    class: "text-xs text-indigo-600 hover:text-indigo-800 font-semibold",
+                                    form_class: "inline" %>
+
+                    <% end %>
+
+                  <% end %>
+
+                  <%= button_to "✕",
+                                organizer_event_result_path(@event, result),
+                                method: :delete,
+                                data: {
+                                  confirm: "Excluir resultado de #{reg.athlete.nome}?"
+                                },
+                                class: "text-xs text-red-400 hover:text-red-600",
+                                form_class: "inline" %>
+
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <!-- Paginação -->
+      <div class="mt-2 flex justify-center">
+        <div class="glass-card p-2 rounded-2xl border-gray-500 flex items-center gap-1 text-white">
+          <%= paginate @results, window: 2, outer_window: 1, class: "urbanrace-pagination" %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="rounded-xl border-2 border-dashed border-gray-200 p-12 text-center">
+      <p class="text-gray-500 font-medium">Nenhum resultado encontrado.</p>
+      <p class="text-gray-400 text-sm mt-1">
+        Importe os tempos via CSV e clique em <strong>"Calcular resultados"</strong>.
+      </p>
+    </div>
+  <% end %>
+
+</div>

@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  registration: one
+  organizers: one
+  tipo: MyString
+  gravidade: MyString
+  km_local: 9.99
+  ocorrida_em: 2026-05-31 23:26:21
+  descricao: MyText
+  status: MyString
+
+two:
+  event: two
+  registration: two
+  organizers: two
+  tipo: MyString
+  gravidade: MyString
+  km_local: 9.99
+  ocorrida_em: 2026-05-31 23:26:21
+  descricao: MyText
+  status: MyString

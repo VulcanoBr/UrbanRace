@@ -1,0 +1,300 @@
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+  <!-- Cabeçalho -->
+  <div class="mb-10">
+    <h1 class="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase">
+      Meus Resultados
+    </h1>
+
+    <p class="mt-2 text-gray-500">
+      Histórico completo das suas provas concluídas.
+    </p>
+  </div>
+
+  <!-- Cards Resumo -->
+  <div class="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 p-6">
+      <p class="text-xs uppercase tracking-widest text-gray-400 font-black">
+        Provas
+      </p>
+
+      <p class="mt-3 text-4xl font-black text-blue-600">
+        <%= @data[:resumo][:provas] %>
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 p-6">
+      <p class="text-xs uppercase tracking-widest text-gray-400 font-black">
+        Homologadas
+      </p>
+
+      <p class="mt-3 text-4xl font-black text-green-600">
+        <%= @data[:resumo][:homologados] %>
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 p-6">
+      <p class="text-xs uppercase tracking-widest text-gray-400 font-black">
+        Quilômetros
+      </p>
+
+      <p class="mt-3 text-4xl font-black text-orange-500">
+        <%= @data[:resumo][:distancia_total] %> km
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 p-6">
+      <p class="text-xs uppercase tracking-widest text-gray-400 font-black">
+        Certificados
+      </p>
+
+      <p class="mt-3 text-4xl font-black text-purple-600">
+        <%= @data[:resumo][:certificados] %>
+      </p>
+    </div>
+
+  </div>
+
+  <div class="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+
+    <!-- Melhor Tempo -->
+
+    <div class="bg-white rounded-3xl shadow-sm border p-6">
+
+      <p class="text-xs uppercase font-black tracking-widest text-gray-400">
+        Melhor Tempo
+      </p>
+
+      <p class="mt-3 text-3xl font-black text-blue-700">
+        <%= @data[:estatisticas][:melhor_tempo]&.tempo_liquido || "--:--:--" %>
+      </p>
+
+    </div>
+
+    <!-- Melhor Pace -->
+
+    <div class="bg-white rounded-3xl shadow-sm border p-6">
+
+      <p class="text-xs uppercase font-black tracking-widest text-gray-400">
+        Melhor Pace
+      </p>
+
+      <p class="mt-3 text-3xl font-black text-green-600">
+        <%= @data[:estatisticas][:melhor_pace]&.pace_medio || "--:--" %>
+      </p>
+
+    </div>
+
+    <!-- Maior Distância -->
+
+    <div class="bg-white rounded-3xl shadow-sm border p-6">
+
+      <p class="text-xs uppercase font-black tracking-widest text-gray-400">
+        Maior Distância
+      </p>
+
+      <p class="mt-3 text-3xl font-black text-orange-500">
+        <%= @data[:estatisticas][:maior_distancia] || 0 %> km
+      </p>
+
+    </div>
+
+    <!-- Pódios -->
+
+    <div class="bg-white rounded-3xl shadow-sm border p-6">
+
+      <p class="text-xs uppercase font-black tracking-widest text-gray-400">
+        Pódios
+      </p>
+
+      <p class="mt-3 text-3xl font-black text-purple-600">
+        <%= @data[:estatisticas][:podios] %>
+      </p>
+
+    </div>
+
+  </div>
+  <% if @performance != nil %>
+  <div class="mt-10 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-3xl border border-blue-100 p-8">
+
+    <div class="flex items-center gap-3 mb-8">
+
+      <div class="text-3xl text-yellow-400">
+        <% if @performance != nil %>
+          <% @performance[:estrelas].times do %>
+            ★
+          <% end %>
+        <% end %>
+
+      </div>
+
+      <div>
+
+        <h2 class="text-xl font-black text-gray-900">
+          Seu Desempenho
+        </h2>
+
+        <p class="text-sm text-gray-500">
+
+          Você correu mais rápido que
+
+          <span class="font-black text-blue-700">
+            <% if @performance != nil %>
+              <%= @performance[:percentual_superado] %>%
+            <% end %>
+          </span>
+
+          dos participantes.
+
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-5">
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+
+        <p class="text-xs uppercase text-gray-400 font-bold">
+          Melhor Pace
+        </p>
+
+        <h3 class="text-2xl font-black text-blue-700 mt-3">
+          <% if @performance != nil %>
+            <%= @performance[:pace] %>
+          <% end %>
+        </h3>
+
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+
+        <p class="text-xs uppercase text-gray-400 font-bold">
+          Velocidade
+        </p>
+
+        <h3 class="text-2xl font-black text-green-700 mt-3">
+          <%= @performance[:velocidade_media] %> km/h
+        </h3>
+
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+
+        <p class="text-xs uppercase text-gray-400 font-bold">
+          Ritmo
+        </p>
+
+        <h3 class="text-2xl font-black text-purple-700 mt-3">
+          <%= @performance[:ritmo] %>
+        </h3>
+
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+
+        <p class="text-xs uppercase text-gray-400 font-bold">
+          Percentil
+        </p>
+
+        <h3 class="text-2xl font-black text-orange-700 mt-3">
+          Top <%= @performance[:percentil] %>%
+        </h3>
+
+      </div>
+
+    </div>
+
+    <div class="mt-8">
+
+      <div class="flex justify-between text-xs font-bold text-gray-500 mb-2">
+
+        <span>Desempenho Geral</span>
+
+        <span><%= @performance[:progresso] %>%</span>
+
+      </div>
+
+      <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+
+        <div
+          class="bg-gradient-to-r from-green-500 via-blue-500 to-indigo-600 h-4 rounded-full transition-all duration-700"
+          style="width:<%= @performance[:progresso] %>%">
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <% end %>
+  <!-- Barra de filtros -->
+  <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 shadow-sm p-6 mb-10">
+
+    <div class="grid lg:grid-cols-4 gap-4">
+
+      <input
+        type="text"
+        placeholder="Pesquisar prova..."
+        class="text-white rounded-xl border-gray-300">
+
+      <select class="text-white rounded-xl border-gray-300">
+        <option>Todas as distâncias</option>
+      </select>
+
+      <select class="text-white rounded-xl border-gray-300">
+        <option>Todos os anos</option>
+      </select>
+
+      <select class="text-white rounded-xl border-gray-300">
+        <option>Todos os status</option>
+      </select>
+
+    </div>
+
+  </div>
+
+  <!-- Lista -->
+
+  <% if @data[:resultados].any? %>
+
+    <div class="space-y-8">
+
+      <% @data[:resultados].each do |result| %>
+
+        <%= render "result_card",
+            result: result %>
+
+      <% end %>
+
+    </div>
+
+  <% else %>
+
+    <div class="bg-white rounded-3xl border-2 border-dashed border-gray-200 p-20 text-center">
+
+      <div class="text-6xl mb-6">
+        🏁
+      </div>
+
+      <h2 class="text-2xl font-black text-gray-800">
+        Nenhum resultado encontrado
+      </h2>
+
+      <p class="mt-4 text-gray-500">
+        Assim que você concluir sua primeira corrida,
+        ela aparecerá aqui.
+      </p>
+
+      <%= link_to "Encontrar Corridas",
+          root_path,
+          class: "inline-flex mt-8 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black transition" %>
+
+    </div>
+
+  <% end %>
+
+</div>

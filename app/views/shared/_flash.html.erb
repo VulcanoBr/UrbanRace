@@ -1,0 +1,16 @@
+<div class="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-sm">
+  <% flash.each do |type, message| %>
+    <% 
+      bg_color = case type.to_s
+                when 'notice' then 'bg-green-500'
+                when 'alert' then 'bg-red-500'
+                else 'bg-blue-500'
+                end
+    %>
+    <div data-controller="flash" 
+         class="<%= bg_color %> text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between transform transition-all duration-300 translate-x-0">
+      <span class="text-sm font-medium"><%= message %></span>
+      <button data-action="click->flash#close" class="ml-4 opacity-75 hover:opacity-100">&times;</button>
+    </div>
+  <% end %>
+</div>

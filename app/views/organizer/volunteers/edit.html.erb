@@ -1,0 +1,7 @@
+<div class="mx-auto max-w-4xl">
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Editar Voluntário</h2>
+    <%= button_to "Excluir Registro", organizer_volunteer_path(@volunteer), method: :delete, data: { turbo_confirm: "Tem certeza? Esta ação removerá o histórico se não houver escalas." }, class: "text-sm text-red-600 hover:text-red-800" %>
+  </div>
+  <%= render "form", volunteer_form: @volunteer_form, url: organizer_volunteer_path(@volunteer) %>
+</div>

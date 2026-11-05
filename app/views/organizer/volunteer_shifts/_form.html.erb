@@ -1,0 +1,34 @@
+<%= form_with model: [:organizer, @event, @station, shift_form], url: url, method: (shift_form.persisted? ? :patch : :post), class: "space-y-6" do |f| %>
+  <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl border shadow-sm">
+    
+    <% if shift_form.errors.any? %>
+      <div class="mb-6 p-4 bg-red-50 text-red-700 rounded-lg text-sm font-medium">
+        <%= shift_form.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 gap-6">
+      <%= f.hidden_field :event_id %>
+      <div>
+        <%= f.label :volunteer_id, "Selecionar Voluntário", class: "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" %>
+        <%= f.collection_select :volunteer_id, Volunteer.all.order(:nome), :id, :nome, { prompt: "Escolha um voluntário da base..." }, class: "w-full rounded-xl px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :turno, class: "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" %>
+          <%= f.select :turno, VolunteerShift.turnos.keys.map { |t| [t.humanize, t] }, {}, class: "w-full rounded-xl px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+        </div>
+        <div>
+          <%= f.label :status, class: "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" %>
+          <%= f.select :status, VolunteerShift.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "w-full rounded-xl px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-4 mt-8">
+    <%= link_to "Cancelar", organizer_event_volunteer_station_volunteer_shifts_path(@event, @station), class: "text-sm font-bold text-gray-500" %>
+    <%= f.submit "Salvar Escala", class: "bg-blue-600 text-white px-8 py-3 rounded-xl font-black hover:bg-blue-700 cursor-pointer shadow-lg" %>
+  </div>
+<% end %>

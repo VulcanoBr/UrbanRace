@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  registration: one
+  url_arquivo: MyString
+  fotografo_id: MyString
+  reconhecido_ia: false
+  confianca_ocr: 1
+  enviada_em: 2026-05-31 23:29:09
+
+two:
+  event: two
+  registration: two
+  url_arquivo: MyString
+  fotografo_id: MyString
+  reconhecido_ia: false
+  confianca_ocr: 1
+  enviada_em: 2026-05-31 23:29:09

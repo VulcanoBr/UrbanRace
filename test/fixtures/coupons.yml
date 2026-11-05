@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  codigo: MyString
+  tipo: MyString
+  valor: 9.99
+  uso_maximo: 1
+  uso_atual: 1
+  validade: 2026-05-31 23:16:26
+
+two:
+  event: two
+  codigo: MyString
+  tipo: MyString
+  valor: 9.99
+  uso_maximo: 1
+  uso_atual: 1
+  validade: 2026-05-31 23:16:26

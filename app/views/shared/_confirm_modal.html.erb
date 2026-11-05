@@ -1,0 +1,27 @@
+<%# app/views/shared/_confirm_modal.html.erb %>
+<dialog id="turbo-confirm" class="fixed inset-0 m-auto rounded-xl p-0 shadow-xl backdrop:bg-black/50 overflow-hidden border-none">
+  <form method="dialog" class="min-w-[350px]">
+    <div class="bg-white rounded-xl overflow-hidden">
+      <!-- Header -->
+      <div class="px-6 pt-6 pb-4">
+        <h2 class="flex items-center gap-2 text-lg font-bold text-red-600">
+          <span class="material-symbols-outlined">warning</span>
+          Confirmação
+        </h2>
+        <p id="turbo-confirm-message" class="mt-3 text-base text-gray-700 font-sans">
+          Tem certeza?
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100">
+        <button value="cancel" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-black hover:bg-gray-400 outline-none">
+          Cancelar
+        </button>
+        <button value="confirm" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 outline-none">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </form>
+</dialog>

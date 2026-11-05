@@ -1,0 +1,12 @@
+Ola, <%= @atleta.nome %>!
+
+Voce recebeu uma vaga no evento "<%= @evento.nome %>".
+
+Evento: <%= @evento.nome %>
+Data: <%= l @evento.data_largada, format: :long %>
+Local: <%= @evento.local_partida %>
+Distancia: <%= @registration.distance.nome %>
+Categoria: <%= @registration.category.nome %>
+Dorsal: #<%= @registration.numero_dorsal %>
+
+Acesse sua area do atleta para mais detalhes.

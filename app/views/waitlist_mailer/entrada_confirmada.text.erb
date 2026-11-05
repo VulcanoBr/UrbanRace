@@ -1,0 +1,22 @@
+UrbanRace — Lista de espera
+===========================
+
+Olá, <%= @athlete.nome %>!
+
+Você entrou na lista de espera com sucesso.
+
+Sua posição: #<%= @posicao %>º
+
+Evento:    <%= @event.nome %>
+Data:      <%= I18n.l(@event.data_largada, format: :long) %>
+Categoria: <%= @category.nome %>
+Distância: <%= @category.distance.nome %>
+Fila desde: <%= I18n.l(@waitlist.data_entrada, format: :short) %>
+
+Avisaremos por e-mail quando uma vaga abrir para você.
+Quando isso acontecer, você terá 48 horas para concluir a inscrição.
+
+Não é necessário fazer nada agora.
+
+---
+© <%= Date.today.year %> UrbanRace

@@ -1,0 +1,75 @@
+<%# app/views/organizer/licenses/index.html.erb %>
+<div class="sm:flex sm:items-center sm:justify-between mb-8">
+  <div>
+    <%# Navegação de retorno ao evento %>
+    <nav class="mb-2">
+      <%= link_to organizer_event_path(@event), class: "text-sm font-medium text-blue-600 hover:text-blue-500 flex items-center gap-1" do %>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 19l-7-7 7-7" /></svg>
+        Painel do Evento
+      <% end %>
+    </nav>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Licenças e Alvarás</h1>
+    <p class="mt-2 text-sm text-gray-700 dark:text-gray-400">Controle o status legal e autorizações da <strong><%= @event.nome %></strong>.</p>
+  </div>
+  
+  <div class="mt-4 sm:ml-16 sm:mt-0">
+    <%# BOTÃO NOVA LICENÇA %>
+    <%= link_to new_organizer_event_license_path(@event), class: "inline-flex items-center gap-x-1.5 rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
+      <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+      </svg>
+      Nova Licença
+    <% end %>
+  </div>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+  <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+    <h3 class="text-lg font-bold dark:text-white flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+      Semáforo de Aprovações
+    </h3>
+  </div>
+  
+  <div class="p-6 space-y-4">
+    <% if @licenses.any? %>
+      <% @licenses.each do |license| %>
+        <div class="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <div class="flex items-center gap-4">
+            <!-- Círculo de Status (Semáforo) via Helper -->
+            <div class="w-4 h-4 rounded-full border-2 border-white shadow-sm <%= license_status_color(license) %>"></div>
+            
+            <div>
+              <p class="font-bold text-gray-900 dark:text-gray-200"><%= license.tipo %> - <%= license.orgao %></p>
+              <div class="flex items-center gap-4 mt-1">
+                <p class="text-xs text-gray-500 flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                  Prazo: <%= l license.prazo_aprovacao %>
+                </p>
+                <% if license.documento_pdf.attached? %>
+                  <%= link_to url_for(license.documento_pdf), target: "_blank", class: "text-xs text-blue-600 font-medium hover:underline flex items-center gap-1" do %>
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                    Ver Arquivo
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-4">
+             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border <%= status_badge_classes(license) %>">
+               <%= license.status %>
+             </span>
+             <%= link_to "Editar", edit_organizer_event_license_path(@event, license), class: "text-blue-600 hover:text-blue-900 text-sm font-bold" %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+        <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">Nenhuma licença cadastrada</h3>
+        <p class="mt-1 text-sm text-gray-500">Comece adicionando as autorizações necessárias para este evento.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

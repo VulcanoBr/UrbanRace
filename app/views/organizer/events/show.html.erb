@@ -1,0 +1,743 @@
+<div class="space-y-8">
+
+  <!-- HEADER -->
+
+  <div class="
+    flex flex-col
+    lg:flex-row
+    lg:items-center
+    lg:justify-between
+    gap-6
+  ">
+
+    <div class="flex items-start gap-4">
+
+      <%= link_to organizer_events_path,
+          class: "
+            p-2 rounded-xl
+            bg-white dark:bg-gray-800
+            border border-gray-200 dark:border-gray-700
+            shadow-sm hover:bg-gray-50
+          " do %>
+
+        <svg class="h-5 w-5 text-gray-500"
+             viewBox="0 0 20 20"
+             fill="currentColor">
+
+          <path fill-rule="evenodd"
+                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                clip-rule="evenodd" />
+        </svg>
+
+      <% end %>
+
+      <div>
+
+        <div class="flex items-center gap-3 flex-wrap">
+
+          <h1 class="
+            text-3xl
+            font-bold
+            text-gray-900 dark:text-white
+          ">
+            <%= @event.nome %>
+          </h1>
+
+          <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-1  <%= event_status_badge(@event.status) %>">
+            <%= event_status_label(@event.status) %>
+          </span>
+
+        </div>
+
+        <p class="
+          mt-2
+          text-sm
+          text-blue-200
+        ">
+          <%= @event.cidade %> - <%= @event.estado %>
+        </p>
+
+      </div>
+
+    </div>
+
+    <%= render "action_buttons", event: @event %>
+
+  </div>
+
+  <% if @event.status != "finished" && @event.status != "cancelled" %>
+    <p class=" text-gray-300 ml-12">Painel de Controle e Operação</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    
+    <!-- MÓDULO 1: CONFIGURAÇÃO E LOGÍSTICA -->
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 p-6 shadow-sm">
+      <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11.423 20.11l3.29-3.29m0 0l-3.29-3.29m3.29 3.29H3m14.577-10.82l-3.29 3.29m0 0l3.29 3.29m-3.29-3.29h11.423" /></svg>
+      </div>
+      <h3 class="font-bold text-gray-900 dark:text-white mb-2">Logística</h3>
+      <p class="text-xs text-gray-500 mb-6 italic">Distâncias, categorias, mapas e licenças governamentais.</p>
+      <div class="space-y-2">
+        <%= link_to "Distâncias e Lotes", organizer_event_distances_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Mapas de Percurso", organizer_event_routes_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Postos de Voluntários",
+      organizer_event_volunteer_stations_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Licenças e Alvarás", organizer_event_licenses_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+      </div>
+    </div>
+
+    <!-- MÓDULO 2: INSCRITOS E MARKETING -->
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 p-6 shadow-sm">
+      <div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
+      </div>
+      <h3 class="font-bold text-gray-900 dark:text-white mb-2">Comunicação</h3>
+      <p class="text-xs text-gray-500 mb-6 italic">Gestão de inscritos, e-mail marketing e cupons.</p>
+      <div class="space-y-2">
+        
+        <%= link_to "E-mail Marketing", organizer_event_email_campaigns_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Checklist Operacional", organizer_event_checklist_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+      </div>
+    </div>
+
+    <!-- MÓDULO 3: EXECUÇÃO (LIVE) -->
+    <div class="bg-slate-900 rounded-3xl border border-slate-700 p-6 shadow-xl">
+      <div class="w-10 h-10 bg-red-500 text-white rounded-xl flex items-center justify-center mb-4 animate-pulse">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+      </div>
+      <h3 class="font-bold text-white mb-2 text-red-500">Operação Live</h3>
+      <p class="text-xs text-slate-400 mb-6 italic">Ferramentas para o dia da prova em tempo real.</p>
+      <div class="space-y-2">
+        <%= link_to "CENTRO DE COMANDO", organizer_event_command_center_path(@event), class: "block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Check-in de Atletas", operation_event_checkins_path(@event), class: "block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Avisos (Live)", organizer_event_broadcasts_path(@event), class: "block w-full text-center py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-lg transition" %>
+      </div>
+    </div>
+  <% end %>
+  <% if @event.status != "cancelled" %>
+    <!-- MÓDULO 4: RESULTADOS -->
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 p-6 shadow-sm">
+      <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75c-.621 0-1.125.504-1.125 1.125v3.375m9 0h-9M12 3a3 3 0 110 6 3 3 0 010-6z" /></svg>
+      </div>
+      <h3 class="font-bold text-gray-900 dark:text-white mb-2">Pós-Evento</h3>
+      <p class="text-xs text-gray-500 mb-6 italic">Ranking, fotos, certificados e NPS.</p>
+      <div class="space-y-2">
+        <%= link_to "Tempos e Pódio", organizer_event_results_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Fotos (IA)", organizer_event_photos_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+        <%= link_to "Satisfação (NPS)", organizer_event_nps_report_path(@event), class: "block w-full text-center py-2 bg-gray-50 hover:bg-gray-100 text-sm font-bold rounded-lg transition" %>
+      </div>
+    </div>
+  <% end %>
+
+  </div>
+ 
+  <!-- GRID -->
+  <p class="text-gray-300 ml-12">Conteudo Principal</p>
+
+  <div class="
+    grid grid-cols-1
+    xl:grid-cols-3
+    gap-8
+  ">
+
+    <!-- CONTEÚDO PRINCIPAL -->
+
+    <div class="xl:col-span-2 space-y-8">
+
+      <!-- BANNER -->
+
+      <% if @event.banner.attached? %>
+
+        <div class="
+          overflow-hidden
+          rounded-3xl
+          shadow-sm
+          border border-gray-200
+        ">
+
+          <%= image_tag @event.banner,
+              class: "
+                w-full
+                h-[550px]
+                object-cover
+              " %>
+
+        </div>
+
+      <% end %>
+
+      <!-- DETALHES -->
+
+      <div class="<%= card_class %>">
+
+        <div class="card-header">
+          <h2 class="card-title">
+            Informações do Evento
+          </h2>
+        </div>
+
+        <div class="
+          grid grid-cols-1
+          md:grid-cols-2
+          gap-6
+        ">
+
+          <div>
+            <p class="detail-label">
+              Data da prova
+            </p>
+
+            <p class="detail-value">
+              <%= l @event.data_largada,
+                    format: :long %>
+            </p>
+          </div>
+
+          <div>
+            <p class="detail-label">
+              Horário largada
+            </p>
+
+            <p class="detail-value">
+              <%= @event.horario_largada.strftime("%H:%M") %>
+            </p>
+          </div>
+
+          <div>
+            <p class="detail-label">Capacidade</p>
+            <p class="detail-value"><%= @event.limite_atletas %> atletas</p>
+          </div>
+
+          <div class="md:col-span-2">
+            <p class="detail-label">
+              Local da largada
+            </p>
+
+            <p class="detail-value">
+              <%= @event.local_partida %>
+            </p>
+          </div>
+
+          <div class="md:col-span-2">
+
+            <p class="detail-label">
+              URL pública
+            </p>
+
+            <div class="
+              mt-2
+              flex flex-col sm:flex-row
+              sm:items-center
+              gap-3
+            ">
+
+              <%= link_to "/corridas/#{@event.slug_url}",
+                  target: "_blank",
+                  class: "
+                    inline-flex items-center
+                    gap-2
+                    text-sm
+                    font-semibold
+                    text-blue-400
+                    hover:text-blue-700
+                    hover:underline
+                    break-all
+                  " do %>
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-4 h-4">
+
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13.5 6H18m0 0v4.5m0-4.5L10.5 13.5" />
+
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M7.5 6.75h-1.5A2.25 2.25 0 003.75 9v9A2.25 2.25 0 006 20.25h9A2.25 2.25 0 0017.25 18v-1.5" />
+
+                </svg>
+
+                urbanrace.com/corridas/<%= @event.slug_url %>
+
+              <% end %>
+
+              <button
+                type="button"
+                onclick="navigator.clipboard.writeText('<%= request.base_url %>/corridas/<%= @event.slug_url %>')"
+                class="
+                  inline-flex items-center
+                  justify-center
+                  rounded-xl
+                  border border-gray-200
+                  dark:border-gray-700
+                  px-4 py-2
+                  text-xs font-semibold
+                  text-gray-700
+                  dark:text-gray-300
+                  hover:bg-gray-50
+                  dark:hover:bg-gray-800
+                  transition
+                ">
+
+                Copiar URL
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- CRONOGRAMA E KIT (Novos Cards) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="<%= card_class %>">
+          <div class="card-header"><h2 class="card-title">Cronograma</h2></div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">
+            <%= simple_format(@event.cronograma) %>
+          </div>
+        </div>
+
+        <div class="<%= card_class %>">
+          <div class="card-header"><h2 class="card-title">Itens do Kit</h2></div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">
+            <%= simple_format(@event.kit_descricao) %>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESCRIÇÃO -->
+
+      <div class="<%= card_class %>">
+
+        <div class="card-header">
+          <h2 class="card-title">
+            Descrição
+          </h2>
+        </div>
+
+        <div class="
+          prose
+          max-w-none
+          dark:prose-invert
+        ">
+          <%= simple_format(@event.descricao) %>
+        </div>
+
+      </div>
+
+      <!-- DISTÂNCIAS -->
+
+      <div class="<%= card_class %>">
+
+        <div class="
+          flex items-center
+          justify-between
+          mb-6
+        ">
+
+          <h2 class="card-title">
+            Distâncias
+          </h2>
+
+
+        </div>
+
+        <% if @event.distances.any? %>
+
+          <div class="space-y-4">
+
+            <% @event.distances.each do |distance| %>
+
+              <div class="
+                flex items-center
+                justify-between
+                rounded-2xl
+                border border-gray-200
+                dark:border-gray-700
+                p-5
+              ">
+
+                <div>
+
+                  <h3 class="
+                    font-semibold
+                    text-gray-900 dark:text-white
+                  ">
+                    <%= distance.nome %>
+                  </h3>
+
+                  <p class="
+                    text-sm
+                    text-gray-400
+                  ">
+                    <%= distance.km %> km
+                  </p>
+
+                </div>
+
+                <div class="text-right">
+
+                  <p class="
+                    text-lg
+                    font-bold
+                    text-gray-900 dark:text-white
+                  ">
+                    <%= distance.vagas_ocupadas %>
+                  </p>
+
+                  <p class="
+                    text-xs
+                    text-gray-400
+                  ">
+                    de <%= distance.vagas_total %> vagas
+                  </p>
+
+                </div>
+
+              </div>
+
+            <% end %>
+
+          </div>
+
+        <% else %>
+
+          <div class="
+            rounded-2xl
+            border border-dashed
+            border-gray-300
+            p-10
+            text-center
+          ">
+
+            <p class="text-gray-500">
+              Nenhuma distância cadastrada.
+            </p>
+
+          </div>
+
+        <% end %>
+
+      </div>
+
+      <!-- CONTATO E REDES SOCIAIS (Novo Card) -->
+      <div class="<%= card_class %>">
+        <div class="card-header"><h2 class="card-title">Canais de Contato</h2></div>
+        <div class="flex flex-wrap gap-6">
+          <% if @event.whatsapp_contato.present? %>
+            <div class="flex items-center gap-2">
+              <span class="text-green-500 font-bold text-sm">WhatsApp:</span>
+              <span class="text-sm">
+                <%= format_phone(@event.whatsapp_contato, fallback: "Sem contato") %>
+              </span>
+            </div>
+          <% end %>
+          <% if @event.instagram_url.present? %>
+            <div class="flex items-center gap-2">
+              <span class="text-pink-500 font-bold text-sm">Instagram:</span>
+              <%= link_to "Acessar Perfil", @event.instagram_url, target: "_blank", class: "text-sm text-blue-600 hover:underline" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- LOGÍSTICA -->
+
+      <div class="
+        grid grid-cols-1
+        md:grid-cols-3
+        gap-6
+      ">
+
+        <div class="<%= card_class %>">
+          <h3 class="metric-title">
+            Percursos
+          </h3>
+
+          <p class="metric-value">
+            <%= @event.routes.count %>
+          </p>
+        </div>
+
+        <div class="<%= card_class %>">
+          <h3 class="metric-title">
+            Voluntários
+          </h3>
+
+          <p class="metric-value">
+            <%= @event
+                  .volunteer_stations
+                  .joins(:volunteer_shifts)
+                  .count %>
+          </p>
+        </div>
+
+        <div class="<%= card_class %>">
+          <h3 class="metric-title">
+            Despesas
+          </h3>
+
+          <p class="
+            text-2xl
+            font-bold
+            text-red-600
+          ">
+            <%= number_to_currency(
+                  @event
+                    .supplier_contracts
+                    .sum(:valor)
+                ) %>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- CERTIFICADOS -->
+      <% if @event.status != "cancelled" %>
+      <div class="<%= card_class %>">
+
+        <div class="
+          flex items-center
+          justify-between
+          mb-6
+        ">
+
+          <div>
+
+            <h2 class="card-title">
+              Certificados
+            </h2>
+
+            <p class="
+              text-sm
+              text-gray-400
+              mt-1
+            ">
+              Gere certificados digitais.
+            </p>
+
+          </div>
+
+        </div>
+
+        <%= button_to(
+              "GERAR CERTIFICADOS",
+              create_batch_organizer_event_certificates_path(@event),
+              class: primary_button_full_class
+            ) %>
+
+      </div>
+      <% end %>
+
+    </div>
+
+    <!-- SIDEBAR -->
+
+    <aside class="space-y-6">
+      <%# Banner de status terminal (finished / cancelled) %>
+      <%= render "status_banner", event: @event %>
+
+      <!-- INSCRIÇÕES -->
+
+      <div class="
+        rounded-3xl
+        bg-blue-400
+        p-6
+        text-white
+        shadow-xl
+      ">
+
+        <h2 class="
+          text-xl
+          font-bold
+        ">
+          Inscrições
+        </h2>
+
+        <p class="
+          mt-2
+          text-blue-100
+          text-sm
+        ">
+          Gerencie atletas, pagamentos e kits.
+        </p>
+
+        <div class="mt-6">
+
+          <%= link_to "Ver Inscritos",
+              organizer_event_registrations_path(@event),
+              class: "
+                block w-full
+                rounded-2xl
+                bg-white
+                py-3
+                text-center
+                font-semibold
+                text-blue-600
+                hover:bg-blue-50
+              " %>
+
+        </div>
+
+      </div>
+
+      <!-- DOCUMENTOS -->
+
+      <div class="<%= card_class %>">
+
+        <h2 class="card-title mb-5">
+          Documentos
+        </h2>
+
+        <div class="space-y-4">
+
+          <% if @event.regulamento.attached? %>
+
+            <%= link_to "Baixar Regulamento",
+                rails_blob_path(
+                  @event.regulamento,
+                  disposition: "attachment"
+                ),
+                class: secondary_button_full_class %>
+
+          <% else %>
+
+            <p class="
+              text-sm
+              text-gray-400
+            ">
+              Nenhum regulamento enviado.
+            </p>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    <%# Localize a área de "Fases de Gestão" ou crie uma nova seção de "Ações Pós-Evento" %>
+    <% if @event.status != "cancelled" %>
+      <div class="bg-white dark:bg-gray-800 rounded-3xl border shadow-sm p-6 mt-6">
+        <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Certificados e Finalização</h3>
+        
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <p class="text-2xl font-black text-gray-900 dark:text-white"><%= @certificados_gerados %> / <%= @total_homologados %></p>
+            <p class="text-xs text-gray-500">certificados gerados / homologados</p>
+          </div>
+          
+          <% if @total_homologados > @certificados_gerados %>
+            <div class="flex items-center text-amber-600 gap-1 animate-pulse">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+              <span class="text-[10px] font-bold">PENDENTES</span>
+            </div>
+          <% else %>
+            <div class="flex items-center text-green-600 gap-1">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <span class="text-[10px] font-bold">CONCLUÍDO</span>
+            </div>
+          <% end %>
+        </div>
+
+      <%# BOTÃO QUE ACIONA O BATCH %>
+      <%= button_to create_batch_organizer_event_certificates_path(@event), 
+                    method: :post,
+                    data: { turbo_confirm: "Isso iniciará a geração de certificados para todos os #{@total_homologados} atletas homologados. Confirmar?" },
+                    class: "w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-black text-xs shadow-lg shadow-blue-200 dark:shadow-none transition transform active:scale-95 flex items-center justify-center gap-2" do %>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M6.72 13.844l11.76-11.76a.75.75 0 011.06 1.06l-11.76 11.76a.75.75 0 01-1.06-1.06zm-2.828 2.828l11.76-11.76a.75.75 0 011.06 1.06L4.952 17.732a.75.75 0 01-1.06-1.06zM2.25 18.75a.75.75 0 111.5 0 .75.75 0 01-1.5 0z" /></svg>
+        GERAR CERTIFICADOS EM MASSA
+      <% end %>
+
+      <p class="mt-4 text-[10px] text-gray-400 text-center leading-tight">
+        O processamento ocorre em segundo plano.<br>Os atletas serão notificados por e-mail.
+      </p>
+    </div>
+    <% end %>
+
+      <!-- GESTÃO -->
+
+      <div class="<%= card_class %>">
+
+        <h2 class="card-title mb-5">
+          Gestão
+        </h2>
+
+        <ul class="space-y-3">
+
+          <li>
+            <%= link_to "Lotes",
+                "#",
+                class: sidebar_link_class %>
+          </li>
+
+          <li>
+            <%= link_to "Cupons",
+                "#",
+                class: sidebar_link_class %>
+          </li>
+
+          <li>
+            <%= link_to "Checklist",
+                "#",
+                class: sidebar_link_class %>
+          </li>
+
+          <li>
+            <%= link_to "Financeiro",
+                "#",
+                class: sidebar_link_class %>
+          </li>
+
+        </ul>
+
+      </div>
+
+      <%# Banner de status final — aparece quando o evento já terminou ou foi cancelado %>
+      <% if @event.status.in?(%w[finished cancelled]) %>
+        <div class="
+          rounded-3xl p-6 border shadow-sm
+          <%= @event.finished? ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200" %>
+        ">
+          <div class="flex items-center gap-3 mb-3">
+            <% if @event.finished? %>
+              <div class="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <h3 class="font-bold text-green-800 text-sm">Evento Finalizado</h3>
+            <% else %>
+              <div class="w-9 h-9 bg-red-100 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                </svg>
+              </div>
+              <h3 class="font-bold text-red-800 text-sm">Evento Cancelado</h3>
+            <% end %>
+          </div>
+
+          <p class="text-xs <%= @event.finished? ? "text-green-700" : "text-red-700" %> bg-red leading-relaxed">
+            <% if @event.finished? %>
+              O evento foi encerrado. Resultados e certificados estão disponíveis para os atletas.
+            <% else %>
+              O evento foi cancelado. Nenhuma nova inscrição é possível.
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+
+    </aside>
+
+  </div>
+
+</div>

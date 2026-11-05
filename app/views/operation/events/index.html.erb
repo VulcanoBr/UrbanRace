@@ -1,0 +1,76 @@
+<div class="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+  <div class="w-full max-w-sm">
+
+    <%# Logo / Header %>
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+        <span class="text-xs font-black uppercase tracking-tighter text-white">Live Operation</span>
+      </div>
+      <h1 class="text-2xl font-black text-white tracking-tight">Selecione o Evento</h1>
+      <p class="text-slate-400 text-sm mt-1">
+        Olá, <strong class="text-white"><%= Current.user.name %></strong>. Qual evento você vai operar?
+      </p>
+    </div>
+
+    <%# Lista de eventos %>
+    <div class="space-y-3">
+      <% if @events.any? %>
+        <div class="grid gap-4">
+          <% @events.each do |event| %>
+            <%= link_to operation_event_checkins_path(event), 
+                class: "block p-6 rounded-3xl border-2 transition-all #{event.data_largada == Date.current ? 'border-orange-500 bg-orange-50' : 'border-slate-200 bg-white'}" do %>
+              
+              <div class="flex justify-between items-start">
+                <div>
+                  <% if event.data_largada == Date.current %>
+                    <span class="inline-block px-2 py-0.5 rounded-full bg-orange-500 text-white text-[8px] font-black uppercase mb-2 animate-pulse">
+                      Acontecendo Agora
+                    </span>
+                  <% end %>
+                  <h2 class="text-lg font-black text-slate-900 uppercase italic"><%= event.nome %></h2>
+                  <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">
+                    <%= l event.data_largada, format: :long %> • <%= event.cidade %>
+                  </p>
+                </div>
+                <svg class="w-6 h-6 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-12">
+          <svg class="w-12 h-12 text-slate-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <p class="text-slate-400 text-sm">Nenhum evento disponível.</p>
+          <p class="text-slate-600 text-xs mt-1">Solicite ao administrador que vincule você a um evento.</p>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Logout %>
+    <div class="mt-8 text-center">
+      <%= button_to "Sair", session_path, method: :delete,
+            class: "
+            w-full
+            flex
+            items-center
+            justify-center
+            gap-3
+            px-4
+            py-2
+            rounded-xl
+            bg-red-600
+            hover:bg-red-700
+            text-white
+            font-semibold
+            transition-colors
+            duration-200" %>
+    </div>
+
+  </div>
+</div>

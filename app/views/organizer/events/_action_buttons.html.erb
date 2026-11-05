@@ -1,0 +1,301 @@
+
+<% finish_blockers = event.finishable? ? event.finish_blockers : [] %>
+<% cancellation_blockers = event.cancellation_blockers %>
+
+<div class="flex items-center gap-3 flex-wrap">
+
+  <%# ── Editar — oculto quando evento está encerrado ─────────────────── %>
+  <% unless event.status.in?(%w[finished cancelled]) %>
+    <%= link_to edit_organizer_event_path(event),
+          class: primary_button_class do %>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
+      </svg>
+      Editar Evento
+    <% end %>
+  <% end %>
+
+  <%# ── Finalizar — abre modal de confirmação ─────────────────────────── %>
+  <% if event.finishable? %>
+    <button
+      type="button"
+      onclick="document.getElementById('<%= finish_blockers.any? ? 'modal-finish-blocked' : 'modal-finish-event' %>').classList.remove('hidden')"
+
+      class="
+        inline-flex items-center gap-2
+        rounded-xl px-4 py-2
+        bg-green-600 hover:bg-green-700 active:bg-green-800
+        text-white text-sm font-semibold
+        transition-colors active:scale-95
+      ">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      Finalizar Evento
+    </button>
+  <% end %>
+
+  <%# ── Cancelar — abre modal de confirmação com motivo ──────────────── %>
+  <% unless event.status == "cancelled" %>
+    <button
+      type="button"
+      onclick="document.getElementById('<%= cancellation_blockers.any? ? 'modal-cancel-blocked' : 'modal-cancel-event' %>').classList.remove('hidden')"
+      class="
+        inline-flex items-center gap-2
+        rounded-xl px-4 py-2
+        bg-white hover:bg-red-50 active:bg-red-100
+        border border-red-300
+        text-red-600 text-sm font-semibold
+        transition-colors
+      ">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+      </svg>
+      Cancelar Evento
+    </button>
+  <% end %>
+
+</div>
+
+<%# ── Modal de cancelamento ──────────────────────────────────────────────
+    Separado do button_to para permitir campo de motivo antes de confirmar.
+%>
+<% if event.status != "cancelled" && cancellation_blockers.empty? %>
+  <div id="modal-cancel-event"
+       class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background: rgba(0,0,0,.5)">
+
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-6">
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 dark:text-white">Cancelar evento</h3>
+          <p class="text-sm text-gray-500">Esta ação é irreversível.</p>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+        Ao cancelar <strong><%= event.nome %></strong>:
+      </p>
+      <ul class="text-sm text-gray-600 dark:text-gray-300 mb-5 space-y-1 pl-4 list-disc">
+        <li>Todas as inscrições confirmadas serão canceladas</li>
+        <li>Pagamentos via <strong>cartão/Pix</strong> serão estornados automaticamente</li>
+        <li>Pagamentos via <strong>boleto</strong> exigem devolução manual</li>
+        <li>Todos os atletas receberão e-mail de notificação</li>
+      </ul>
+
+      <%= form_with url: cancel_organizer_event_path(event), method: :patch do |f| %>
+        <div class="mb-4">
+          <%= f.label :cancellation_reason,
+                "Motivo do cancelamento (opcional — aparecerá no e-mail dos atletas)",
+                class: "block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.text_area :cancellation_reason,
+                rows: 3,
+                placeholder: "Ex: Condições climáticas adversas, problema de alvarás...",
+                class: "
+                  w-full rounded-xl border border-gray-300 dark:border-gray-600
+                  bg-white dark:bg-gray-800
+                  text-sm text-gray-900 dark:text-white
+                  px-4 py-3 resize-none
+                  focus:ring-2 focus:ring-red-400 focus:border-transparent outline-none
+                " %>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            type="button"
+            onclick="document.getElementById('modal-cancel-event').classList.add('hidden')"
+            class="
+              flex-1 rounded-xl px-4 py-3
+              border border-gray-300 dark:border-gray-600
+              text-gray-700 dark:text-gray-300
+              text-sm font-semibold
+              hover:bg-gray-50 dark:hover:bg-gray-800
+              transition-colors
+            ">
+            Voltar
+          </button>
+
+          <%= f.submit "Confirmar cancelamento",
+                class: "
+                  flex-1 rounded-xl px-4 py-3
+                  bg-red-600 hover:bg-red-700 active:bg-red-800
+                  text-white text-sm font-semibold
+                  transition-colors cursor-pointer
+                " %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+<% end %>
+
+<% if event.status != "cancelled" %>
+  <div
+    id="modal-cancel-blocked"
+    class="<%= flash[:cancellation_blocked_reasons].present? ? '' : 'hidden' %> fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-cancel-blocked-title">
+
+    <div class="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl dark:bg-gray-800">
+      <div class="mb-4 flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/40">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+          </svg>
+        </div>
+
+        <h2
+          id="modal-cancel-blocked-title"
+          class="text-lg font-semibold text-gray-900 dark:text-white">
+          Cancelamento não permitido
+        </h2>
+      </div>
+
+      <p class="mb-4 text-sm text-gray-600 dark:text-gray-300">
+        Este evento não pode ser cancelado pelos seguintes motivos:
+      </p>
+
+      <ul class="mb-6 list-disc space-y-2 pl-5 text-sm text-red-700 dark:text-red-300">
+        <% (flash[:cancellation_blocked_reasons].presence || cancellation_blockers).each do |reason| %>
+          <li><%= reason %></li>
+        <% end %>
+      </ul>
+
+      <div class="flex justify-end">
+        <button
+          type="button"
+          onclick="document.getElementById('modal-cancel-blocked').classList.add('hidden')"
+          class="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
+          Entendi
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%# ── Modal de confirmação da finalização ────────────────────────────── %>
+<% if event.finishable? && finish_blockers.any? %>
+  <%# Modal de impedimentos %>
+  <div id="modal-finish-blocked"
+       class="<%= flash[:finish_blocked_reasons].present? ? '' : 'hidden' %> fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background: rgba(0,0,0,.6)">
+
+    <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-2xl">
+
+      <div class="mb-4 flex items-center gap-3">
+        <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-amber-100">
+          <svg class="h-6 w-6 text-amber-600" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+          </svg>
+        </div>
+
+        <div>
+          <h3 class="font-bold text-gray-900 dark:text-white">
+            Não é possível finalizar o evento
+          </h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Existem requisitos que precisam ser atendidos.
+          </p>
+        </div>
+      </div>
+
+      <p class="mb-3 text-sm text-gray-600 dark:text-gray-300">
+        Antes de finalizar <strong><%= event.nome %></strong>, resolva as seguintes pendências:
+      </p>
+
+      <ul class="mb-6 space-y-3">
+        <% (flash[:finish_blocked_reasons].presence || finish_blockers).each do |reason| %>
+          <li class="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            <span class="font-bold">!</span>
+            <span><%= reason %></span>
+          </li>
+        <% end %>
+      </ul>
+
+      <div class="flex justify-end">
+        <button type="button"
+                onclick="document.getElementById('modal-finish-blocked').classList.add('hidden')"
+                class="rounded-xl border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800">
+          Entendi
+        </button>
+      </div>
+    </div>
+  </div>
+
+<% elsif event.finishable? %>
+  <%# Modal de confirmação: só aparece quando não há impedimentos %>
+  <div id="modal-finish-event"
+       class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background: rgba(0,0,0,.6)">
+
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-2xl">
+
+      <div class="mb-4 flex items-center gap-3">
+        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-green-100">
+          <svg class="h-5 w-5 text-green-600" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+
+        <div>
+          <h3 class="font-bold text-gray-900 dark:text-white">
+            Finalizar evento
+          </h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Esta ação encerrará oficialmente o evento.
+          </p>
+        </div>
+      </div>
+
+      <div class="mb-5 rounded-xl border border-green-200 bg-green-50 p-4">
+        <p class="font-bold text-gray-900"><%= event.nome %></p>
+        <p class="mt-1 text-sm text-green-800">
+          Os requisitos de data, resultados e certificados foram atendidos.
+        </p>
+      </div>
+
+      <p class="mb-5 text-sm text-gray-600 dark:text-gray-300">
+        Confirma a finalização? Após o encerramento, o evento não poderá mais ser editado normalmente.
+      </p>
+
+      <div class="flex gap-3">
+        <button type="button"
+                onclick="document.getElementById('modal-finish-event').classList.add('hidden')"
+                class="flex-1 rounded-xl border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800">
+          Voltar
+        </button>
+
+        <%= button_to "Confirmar finalização",
+              finish_organizer_event_path(event),
+              method: :patch,
+              class: "flex-1 cursor-pointer rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-700 active:scale-95" %>
+      </div>
+    </div>
+  </div>
+<% end %>

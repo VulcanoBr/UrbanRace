@@ -1,0 +1,98 @@
+<div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div>
+    <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tighter flex items-center gap-3">
+      <span class="flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-6 w-6 rounded-full bg-red-400 opacity-20"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+      </span>
+      CENTRO DE COMANDO LIVE
+    </h1>
+    <p class="text-gray-500 font-medium"><%= @event.nome %> • Monitoramento em Tempo Real</p>
+  </div>
+  
+  <div class="flex gap-3 bg-white dark:bg-gray-800 p-2 rounded-2xl shadow-sm border">
+    <div class="px-4 border-r dark:border-gray-700">
+      <p class="text-[10px] font-black text-gray-400 uppercase">Na Prova</p>
+      <p class="text-xl font-black text-blue-600"><%= @na_prova %></p>
+    </div>
+    <div class="px-4">
+      <p class="text-[10px] font-black text-gray-400 uppercase">Finalizados</p>
+      <p class="text-xl font-black text-green-600"><%= @finalizados %></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+  
+  <!-- COLUNA ESQUERDA: ALERTAS E INCIDENTES (6 colunas) -->
+  <div class="lg:col-span-7 space-y-6">
+    <div class="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden border border-slate-800">
+      <div class="p-5 bg-slate-800 flex justify-between items-center">
+        <h3 class="text-white font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+          <svg class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          Alertas Médicos e Emergências
+        </h3>
+      </div>
+      
+      <%# Canal de Transmissão de Incidentes %>
+      <%= turbo_stream_from "event_#{@event.id}_incidents" %>
+      
+      <div id="incidents_list" class="divide-y divide-slate-800 max-h-[500px] overflow-y-auto">
+        <% if @incidents.any? %>
+          <% @incidents.each do |incident| %>
+            <%= render "organizer/incidents/incident_row", incident: incident %>
+          <% end %>
+        <% else %>
+          <div class="p-10 text-center text-slate-500 italic">Nenhuma ocorrência registrada.</div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Solicitações de Recursos (Água/Gelo) -->
+    <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border shadow-sm">
+      <h3 class="font-bold text-gray-900 dark:text-white mb-4 uppercase text-xs tracking-widest">Suporte aos Postos (Logística)</h3>
+      <%= turbo_stream_from "command_center_event_#{@event.id}" %>
+      <div id="resource_alerts_list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <%# As notificações de falta de água caem aqui %>
+         <p class="col-span-2 text-center text-gray-400 text-sm py-4 border-2 border-dashed rounded-2xl">Aguardando solicitações de campo...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUNA DIREITA: STATUS PERCURSO E RANKING (5 colunas) -->
+  <div class="lg:col-span-5 space-y-6">
+    
+    <!-- Status dos Waypoints (Encerramento de Percurso EX-14) -->
+    <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border shadow-sm">
+      <h3 class="font-bold text-gray-900 dark:text-white mb-6 uppercase text-xs tracking-widest">Status do Percurso</h3>
+      <%= turbo_stream_from "event_#{@event.id}_course_status" %>
+      <div class="space-y-4">
+        <% @event.routes.first&.waypoints&.order(:km)&.each do |wp| %>
+          <div id="waypoint_<%= wp.id %>_status" class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-2 h-2 rounded-full <%= wp.aberto? ? 'bg-blue-500 animate-pulse' : 'bg-green-500' %>"></div>
+              <span class="text-sm font-bold dark:text-white"><%= wp.nome %></span>
+            </div>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded <%= wp.aberto? ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700' %> uppercase">
+              <%= wp.aberto? ? "Ativo" : "Encerrado" %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Ranking Top 5 (Live) -->
+    <div class="bg-gray-900 rounded-3xl p-6 shadow-xl text-white">
+      <h3 class="text-amber-400 font-bold mb-4 uppercase text-[10px] tracking-[0.2em]">Líderes da Prova</h3>
+      <div class="space-y-4">
+        <%# Aqui usaremos o canal de cronometragem que atualiza o ranking %>
+        <%= turbo_stream_from "ranking_event_#{@event.id}" %>
+        <div id="live_ranking_list" class="divide-y divide-gray-800">
+           <%# Top atletas renderizados aqui %>
+           <p class="text-center text-gray-600 text-xs py-4">Processando primeiros tempos...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

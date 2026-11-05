@@ -1,0 +1,75 @@
+<%# app/views/athletes/dashboards/show.html.erb %>
+<div class="max-w-5xl mx-auto">
+  <div class="mb-10">
+    
+    <h3 class="text-gray-500">Acompanhe suas inscrições e resultados abaixo.</h3>
+  </div>
+
+  <%# 1. Inscrições Pendentes (Pagamento) %>
+  <% if @data[:inscricoes_pendentes].any? %>
+    <div class="mb-12">
+      <h2 class="text-xs font-black text-amber-500 uppercase tracking-widest mb-4">Aguardando Pagamento</h2>
+      <div class="grid gap-4">
+        <% @data[:inscricoes_pendentes].each do |reg| %>
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border-2 border-amber-100 flex items-center justify-between shadow-sm">
+            <div>
+              <p class="font-black text-gray-900 dark:text-white"><%= reg.event.nome %></p>
+              <p class="text-sm text-gray-500">Inscrito em: <%= l reg.created_at, format: :short %></p>
+            </div>
+            <%= link_to "PAGAR AGORA", registration_payment_path(reg), class: "bg-amber-500 text-white px-6 py-2 rounded-xl font-black text-xs hover:bg-amber-600 transition" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# 2. Próximas Provas %>
+  <div class="mb-12">
+    <h2 class="text-xs font-black text-blue-600 uppercase tracking-widest mb-4">Minhas Próximas Provas</h2>
+    <% if @data[:proximas_provas].any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <% @data[:proximas_provas].each do |reg| %>
+          <div class="bg-white dark:bg-gray-800 rounded-[32px] border border-gray-100 p-2 shadow-sm hover:shadow-xl transition-all duration-300">
+            <div class="p-6">
+              <div class="flex justify-between items-start mb-4">
+                <span class="text-[10px] font-black bg-blue-50 text-blue-700 px-2 py-1 rounded-lg uppercase"><%= l reg.event.data_largada, format: "%d %b %Y" %></span>
+                <% if reg.checado? %>
+                  <span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-lg font-black">
+                    KIT RETIRADO ✅
+                  </span>
+                <% else %>
+                  <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-lg font-black">
+                    PAGAMENTO CONFIRMADO
+                  </span>
+                <% end %>
+                <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-lg font-black uppercase tracking-widest">Dorsal: #<%= reg.numero_dorsal %></span>
+              </div>
+              
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6"><%= reg.event.nome %></h3>
+              
+              <%# O LINK ABAIXO LEVA PARA O COMPROVANTE INDIVIDUAL %>
+              <%= link_to athletes_registration_path(reg), class: "block w-full text-center py-4 bg-gray-900 text-white rounded-2xl font-black text-sm hover:bg-blue-600 transition shadow-lg shadow-gray-200" do %>
+                VER COMPROVANTE / QR CODE
+              <% end %>
+              <%# BOTÃO DE TRANSFERÊNCIA: Só aparece se puder transferir %>
+              <% if reg.confirmado? && !reg.kit_entregue? && reg.event.data_largada >= Date.current %>
+                <%= link_to new_athletes_registration_transfer_path(reg), 
+                    class: "group flex items-center justify-center gap-2 w-full text-center py-3 border-2 border-dashed border-gray-200 hover:border-orange-500 hover:bg-orange-50 text-gray-400 hover:text-orange-600 rounded-2xl font-bold text-xs transition-all" do %>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                  TRANSFERIR MINHA VAGA
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="bg-gray-50 dark:bg-gray-900/50 rounded-3xl p-12 text-center border-2 border-dashed border-gray-200">
+        <p class="text-gray-400 font-medium">Você ainda não tem inscrições confirmadas para eventos futuros.</p>
+        <%= link_to "Encontrar Corridas", root_path, class: "text-blue-600 font-bold mt-4 inline-block hover:underline" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<div class="mx-auto max-w-4xl">
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Editar Fornecedor</h2>
+    <%= button_to "Excluir Fornecedor", organizer_supplier_path(@supplier), method: :delete, data: { turbo_confirm: "Confirma a remoção? Esta ação não pode ser desfeita." }, class: "text-sm text-red-600 hover:text-red-800" %>
+  </div>
+  <%= render "form", supplier_form: @supplier_form, url: organizer_supplier_path(@supplier) %>
+</div>

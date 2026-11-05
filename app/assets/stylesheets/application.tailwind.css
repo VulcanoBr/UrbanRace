@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "leaflet/dist/leaflet.css";
+@import "leaflet-draw/dist/leaflet.draw.css";
+
+@import "./route_map.css";
+
+.glass-card { background: rgba(239, 142, 72, 0.528); border: 1px solid rgba(255, 255, 255, 0.05); }
+
+.pagination {
+  @apply flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest;
+}
+
+.pagination span {
+  @apply inline-block;
+}
+
+.pagination a, .pagination .current, .pagination .gap {
+  @apply px-4 py-2 rounded-xl transition-all border border-transparent;
+}
+
+.pagination a {
+  @apply text-zinc-500 hover:text-white hover:bg-zinc-900;
+}
+
+.pagination .current {
+  @apply shadow-[0_0_10px_rgba(46,68,255,0.2)] font-black;
+}
+
+.pagination .prev a, .pagination .next a {
+  @apply  font-bold;
+}
+
+.pagination .first a, .pagination .last a {
+  @apply text-zinc-700 hover:text-zinc-300;
+}
+
+.input-urban {
+  @apply block w-full rounded-xl border-gray-300 shadow-sm 
+         focus:border-blue-500 focus:ring-blue-500 
+         dark:bg-gray-700 dark:border-gray-600 dark:text-white
+         !px-3 !py-1; /* O '!' garante a aplicação do padding */
+}
+
+.textarea-urban {
+  @apply block w-full rounded-xl border-gray-300 shadow-sm 
+         focus:border-blue-500 focus:ring-blue-500 
+         dark:bg-gray-700 dark:border-gray-600 dark:text-white
+         !px-3 !py-1 min-h-[100px];
+}
+
+
+/* app/assets/stylesheets/application.tailwind.css */
+#qr-reader {
+  border: none !important;
+}
+
+#qr-reader__scan_region {
+  background: #000;
+}
+
+#qr-reader__dashboard {
+  display: none !important; /* Esconde os botões padrão da biblioteca */
+}
+
+video {
+  border-radius: 1.5rem; /* rounded-3xl */
+}
+
+/* ... outros estilos ... */
+
+.text-urban-gradient {
+  /* Define o gradiente */
+  @apply bg-gradient-to-r from-orange-400 to-orange-600;
+  
+  /* Faz o clipping do texto */
+  -webkit-background-clip: text;
+  background-clip: text;
+  
+  /* Torna o preenchimento transparente para mostrar o fundo */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  
+  /* Firefox fix: Garante que o elemento seja inline-block para renderizar o clip corretamente */
+  display: inline-block;
+}

@@ -1,0 +1,133 @@
+<%# app/views/event_mailer/event_cancelled.html.erb %>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; margin: 0; padding: 32px 16px; color: #1f2937; }
+    .container { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .header { background: #dc2626; padding: 32px; text-align: center; }
+    .header h1 { color: #fff; margin: 0; font-size: 22px; }
+    .header p  { color: #fca5a5; margin: 8px 0 0; font-size: 14px; }
+    .body { padding: 32px; }
+    .body p { margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #374151; }
+    .info-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 24px 0; }
+    .info-box p { margin: 0 0 8px; font-size: 14px; }
+    .info-box p:last-child { margin: 0; }
+    .label { font-weight: 600; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+    .value { color: #111827; font-weight: 500; }
+    .refund-box { border-radius: 12px; padding: 20px; margin: 24px 0; }
+    .refund-not-charged    { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .refund-auto           { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .refund-manual         { background: #fffbeb; border: 1px solid #fde68a; }
+    .refund-box h3 { margin: 0 0 8px; font-size: 15px; }
+    .refund-box p  { margin: 0; font-size: 14px; line-height: 1.5; }
+    .refund-not-charged h3 { color: #166534; }
+    .refund-not-charged p  { color: #15803d; }
+    .refund-auto h3        { color: #1e40af; }
+    .refund-auto p         { color: #1d4ed8; }
+    .refund-manual h3      { color: #92400e; }
+    .refund-manual p       { color: #b45309; }
+    .footer { border-top: 1px solid #f3f4f6; padding: 24px 32px; text-align: center; }
+    .footer p { margin: 0; font-size: 12px; color: #9ca3af; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <h1>Evento Cancelado</h1>
+      <p>Lamentamos informar o cancelamento de <%= @event.nome %></p>
+    </div>
+
+    <div class="body">
+      <p>Olá, <strong><%= @athlete.nome %></strong>!</p>
+
+      <p>
+        Infelizmente o evento <strong><%= @event.nome %></strong>
+        <% if @event.cancellation_reason.present? %>
+          foi cancelado pelo seguinte motivo: <em><%= @event.cancellation_reason %></em>.
+        <% else %>
+          foi cancelado pelos organizadores.
+        <% end %>
+      </p>
+
+      <!-- Dados da inscrição -->
+      <div class="info-box">
+        <p><span class="label">Evento</span></p>
+        <p class="value"><%= @event.nome %></p>
+        <br>
+        <p><span class="label">Data prevista</span></p>
+        <p class="value"><%= l @event.data_largada, format: :long %></p>
+        <br>
+        <p><span class="label">Inscrição nº</span></p>
+        <p class="value">#<%= @registration.id %></p>
+        <% if @payment&.status_pago? %>
+          <br>
+          <p><span class="label">Valor pago</span></p>
+          <p class="value"><%= number_to_currency(@payment.valor) %></p>
+          <p><span class="label">Método</span></p>
+          <p class="value"><%= @payment.metodo.humanize %></p>
+        <% end %>
+      </div>
+
+      <!-- Status do reembolso -->
+      <% case @refund_status %>
+      <% when :not_charged %>
+        <div class="refund-box refund-not-charged">
+          <h3>✅ Você não será cobrado</h3>
+          <p>
+            Seu pagamento estava pendente e não chegou a ser processado.
+            Nenhum valor foi debitado da sua conta.
+          </p>
+        </div>
+
+      <% when :refunded_automatically %>
+        <div class="refund-box refund-auto">
+          <h3>💙 Estorno automático em andamento</h3>
+          <p>
+            O valor de <strong><%= number_to_currency(@payment.valor) %></strong>
+            foi solicitado para estorno junto ao gateway de pagamento.
+            O prazo de devolução depende da sua operadora:
+          </p>
+          <p style="margin-top:8px">
+            • <strong>Cartão de crédito:</strong> 1–2 faturas<br>
+            • <strong>Cartão de débito / Pix:</strong> até 7 dias úteis
+          </p>
+        </div>
+
+      <% when :manual_refund %>
+        <div class="refund-box refund-manual">
+          <h3>⚠️ Devolução manual necessária</h3>
+          <p>
+            <% if @payment&.metodo_boleto? %>
+              Pagamentos via <strong>boleto bancário</strong> não permitem
+              estorno automático. Entraremos em contato em até <strong>5 dias úteis</strong>
+              para solicitar sua <strong>chave Pix</strong> e processar a devolução de
+              <strong><%= number_to_currency(@payment.valor) %></strong>.
+            <% else %>
+              Não foi possível processar o estorno automaticamente.
+              Nossa equipe entrará em contato em até <strong>5 dias úteis</strong>
+              para devolver o valor de <strong><%= number_to_currency(@payment.valor) %></strong>.
+            <% end %>
+          </p>
+          <p style="margin-top:8px; font-size:13px">
+            Dúvidas? Responda este e-mail ou entre em contato pelo WhatsApp.
+          </p>
+        </div>
+      <% end %>
+
+      <p>
+        Pedimos desculpas pelo transtorno. Esperamos vê-lo em próximos eventos! 🏃
+      </p>
+    </div>
+
+    <div class="footer">
+      <p>UrbanRace · urbanrace.com.br</p>
+      <p style="margin-top:4px">Você recebeu este e-mail porque está inscrito no evento mencionado.</p>
+    </div>
+
+  </div>
+</body>
+</html>

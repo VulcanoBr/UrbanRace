@@ -1,0 +1,10 @@
+Ola, <%= @atleta.nome %>!
+
+Sua vaga no evento "<%= @evento.nome %>" foi transferida com sucesso.
+
+Evento: <%= @evento.nome %>
+Data: <%= l @evento.data_largada, format: :long %>
+Distancia: <%= @registration.distance.nome %>
+Dorsal: #<%= @registration.numero_dorsal %>
+
+Caso tenha duvidas, entre em contato.

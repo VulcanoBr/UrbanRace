@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
+      .wrapper { width: 100%; table-layout: fixed; background-color: #f8fafc; padding-bottom: 40px; }
+      .main { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; color: #1e293b; border-radius: 24px; overflow: hidden; margin-top: 20px; }
+      .header { background-color: #0f172a; padding: 40px; text-align: center; }
+      .content { padding: 40px; text-align: center; line-height: 1.6; }
+      .bib-box { background-color: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 20px; margin: 20px 0; display: inline-block; min-width: 150px; }
+      .bib-number { font-size: 48px; font-weight: 900; color: #0f172a; margin: 0; line-height: 1; }
+      .footer { padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; }
+      .btn { background-color: #f97316; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; display: inline-block; margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <table class="main">
+        <tr>
+          <td class="header">
+            <h1 style="color: #ffffff; margin: 0; font-style: italic; font-weight: 900; text-transform: uppercase;">Urban<span style="color: #f97316;">Race</span></h1>
+          </td>
+        </tr>
+        <tr>
+          <td class="content">
+            <h2 style="font-weight: 900; font-size: 24px; margin-bottom: 10px;">OLÁ, <%= @athlete.nome.split.first.upcase %>!</h2>
+            <p>Seu kit para o evento <strong><%= @event.nome %></strong> acaba de ser retirado com sucesso.</p>
+            
+            <p style="font-size: 14px; color: #64748b;">Este é o seu número de identificação oficial:</p>
+            
+            <div class="bib-box">
+              <p style="font-size: 10px; font-weight: bold; color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Número de Peito</p>
+              <p class="bib-number"><%= @registration.numero_dorsal %></p>
+            </div>
+
+            <p style="margin-top: 20px;">
+              <strong>Distância:</strong> <%= @registration.distance.nome %><br>
+              <strong>Camiseta:</strong> <%= @registration.tamanho_kit %><br>
+              <% if @registration.chip_code.present? %>
+                <strong>Chip ID:</strong> <span style="font-family: monospace;"><%= @registration.chip_code %></span>
+              <% end %>
+            </p>
+
+            <p style="margin-top: 30px; font-weight: bold;">Verifique se todos os itens estão corretos e boa prova!</p>
+            
+            <%= link_to "VER MEU PAINEL", athletes_dashboard_url, class: "btn" %>
+          </td>
+        </tr>
+        <tr>
+          <td class="footer">
+            © <%= Time.current.year %> UrbanRace High Performance System<br>
+            Este e-mail foi enviado automaticamente após a conferência do seu kit.
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

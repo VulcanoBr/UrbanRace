@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  registration: one
+  metodo: MyString
+  valor: 9.99
+  status: MyString
+  gateway_id: MyString
+  gateway_provider: MyString
+  pago_em: 2026-05-31 23:15:25
+  vencimento: 2026-05-31 23:15:25
+
+two:
+  registration: two
+  metodo: MyString
+  valor: 9.99
+  status: MyString
+  gateway_id: MyString
+  gateway_provider: MyString
+  pago_em: 2026-05-31 23:15:25
+  vencimento: 2026-05-31 23:15:25

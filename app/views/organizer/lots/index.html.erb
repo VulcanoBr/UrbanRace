@@ -1,0 +1,406 @@
+<div class="space-y-8">
+
+  <!-- HEADER -->
+  <div class="
+    flex flex-col lg:flex-row
+    lg:items-center
+    lg:justify-between
+    gap-6
+  ">
+
+    <div>
+
+      <p class="
+        text-sm
+        font-semibold
+        text-blue-600
+        mb-2
+      ">
+        <%= link_to "← #{@distance.event.nome}", organizer_event_path(@distance.event) %>
+      </p>
+
+      <h1 class="
+        text-4xl
+        font-black
+        tracking-tighter
+        dark:text-white
+      ">
+        Lotes
+      </h1>
+
+      <p class="
+        mt-3
+        text-sm
+        text-gray-500
+      ">
+        Gerencie preços, períodos e vagas da distância
+        <strong><%= @distance.nome %></strong>.
+      </p>
+
+    </div>
+
+    <%= link_to "Novo Lote",
+        new_organizer_distance_lot_path(@distance),
+        class: primary_button_class %>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="
+    overflow-hidden
+    rounded-3xl
+    border
+    bg-white
+    dark:bg-gray-800
+    shadow-sm
+  ">
+
+    <div class="overflow-x-auto">
+
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+
+        <!-- HEADER -->
+        <thead class="
+          bg-gray-50
+          dark:bg-gray-900
+        ">
+
+          <tr>
+
+            <th class="px-8 py-5 text-left text-xs font-black uppercase tracking-wider text-gray-500">
+              Lote
+            </th>
+
+            <th class="px-6 py-5 text-center text-xs font-black uppercase tracking-wider text-gray-500">
+              Preço
+            </th>
+
+            <th class="px-6 py-5 text-center text-xs font-black uppercase tracking-wider text-gray-500">
+              Ocupação
+            </th>
+
+            <th class="px-6 py-5 text-center text-xs font-black uppercase tracking-wider text-gray-500">
+              Período
+            </th>
+
+            <th class="px-6 py-5 text-center text-xs font-black uppercase tracking-wider text-gray-500">
+              Status
+            </th>
+
+            <th class="px-8 py-5 text-right text-xs font-black uppercase tracking-wider text-gray-500">
+              Ações
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <!-- BODY -->
+        <tbody class="
+          divide-y divide-gray-100
+          dark:divide-gray-700
+        ">
+
+          <% @lots.each do |lot| %>
+
+            <tr class="
+              hover:bg-gray-50
+              dark:hover:bg-gray-700/40
+              transition
+            ">
+
+              <!-- LOTE -->
+              <td class="px-8 py-6">
+
+                <div class="flex items-center gap-4">
+
+                  <div class="
+                    flex h-14 w-14
+                    items-center justify-center
+                    rounded-2xl
+                    bg-orange-50
+                    text-orange-700
+                    font-black
+                    text-lg
+                  ">
+                    <%= lot.numero %>
+                  </div>
+
+                  <div class="space-y-1">
+
+                    <p class="
+                      font-bold
+                      text-gray-900
+                      dark:text-white
+                    ">
+                      Lote <%= lot.numero %>
+                    </p>
+
+                    <p class="
+                      text-xs
+                      text-gray-500
+                    ">
+                      <%= pluralize(lot.vagas, "vaga") %>
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+              <!-- PREÇO -->
+              <td class="px-6 py-6 text-center">
+
+                <div>
+
+                  <p class="
+                    text-lg
+                    font-black
+                    text-gray-900
+                    dark:text-white
+                  ">
+                    <%= number_to_currency(lot.preco) %>
+                  </p>
+
+                </div>
+
+              </td>
+
+              <!-- OCUPAÇÃO -->
+              <td class="px-6 py-6">
+
+                <div class="max-w-[180px] mx-auto">
+
+                  <div class="
+                    mb-2
+                    flex items-center
+                    justify-between
+                    text-xs
+                    font-semibold
+                  ">
+
+                    <span class="
+                      rounded-full
+                      bg-gray-100
+                      px-3 py-1
+                      text-gray-700
+                    ">
+                      <%= lot.vagas_ocupadas %>
+                    </span>
+
+                    <span class="
+                      rounded-full
+                      bg-blue-50
+                      px-3 py-1
+                      text-blue-700
+                    ">
+                      <%= lot.percentual_ocupacao %>%
+                    </span>
+
+                  </div>
+
+                  <div class="
+                    h-2.5
+                    overflow-hidden
+                    rounded-full
+                    bg-gray-100
+                    dark:bg-gray-700
+                  ">
+
+                    <div
+                      class="h-full rounded-full bg-blue-600"
+                      style="width: <%= lot.percentual_ocupacao %>%">
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+              <!-- PERÍODO -->
+              <td class="px-6 py-6 text-center">
+
+                <div class="space-y-1 text-sm">
+
+                  <p class="font-semibold text-gray-700 dark:text-gray-200">
+                    <%= l lot.abertura, format: :short %>
+                  </p>
+
+                  <p class="text-xs text-gray-400">
+                    até
+                  </p>
+
+                  <p class="font-semibold text-gray-700 dark:text-gray-200">
+                    <%= l lot.encerramento, format: :short %>
+                  </p>
+
+                </div>
+
+              </td>
+
+              <!-- STATUS -->
+              <td class="px-6 py-6 text-center">
+
+                <span class="
+                  inline-flex items-center
+                  rounded-full
+                  px-4 py-2
+                  text-xs
+                  font-bold
+                  <%= lot_status_badge_classes(lot&.status) %>
+                ">
+
+                  <%= lot&.status %>
+
+                </span>
+
+              </td>
+
+              <!-- ACTIONS -->
+              <td class="px-8 py-6">
+
+                <div class="
+                  flex items-center
+                  justify-end
+                  gap-3
+                ">
+
+                  <!-- SHOW -->
+                  <%= link_to "Visualizar",
+                      organizer_lot_path(lot),
+                      class: "
+                        rounded-xl
+                        border
+                        px-4 py-2
+                        text-sm
+                        font-semibold
+                        text-gray-700
+                        hover:bg-gray-100
+                        transition
+                        dark:border-gray-700
+                        dark:text-gray-300
+                      " %>
+
+                  <!-- EDIT -->
+                  <%= link_to "Editar",
+                      edit_organizer_lot_path(lot),
+                      class: "
+                        rounded-xl
+                        bg-blue-600
+                        px-4 py-2
+                        text-sm
+                        font-semibold
+                        text-white
+                        hover:bg-blue-500
+                        transition
+                      " %>
+
+                  <!-- DELETE -->
+                  <%= button_to organizer_lot_path(lot),
+                      method: :delete,
+                      form: {
+                        data: {
+                          turbo_confirm: "Deseja remover este lote?"
+                        }
+                      },
+                      class: "
+                        rounded-xl
+                        bg-red-600
+                        px-4 py-2
+                        text-sm
+                        font-semibold
+                        text-white
+                        hover:bg-red-500
+                        transition
+                        cursor-pointer
+                      " do %>
+
+                    Excluir
+
+                  <% end %>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          <% end %>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- EMPTY STATE -->
+  <% if @lots.empty? %>
+
+    <div class="
+      rounded-3xl
+      border-2 border-dashed
+      border-gray-300
+      bg-white
+      dark:bg-gray-800
+      p-16
+      text-center
+    ">
+
+      <div class="
+        mx-auto
+        flex h-20 w-20
+        items-center justify-center
+        rounded-full
+        bg-gray-100
+        dark:bg-gray-700
+      ">
+
+        <svg class="h-10 w-10 text-gray-400"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 1.343-3 3m0 0c0 1.657 1.343 3 3 3m-3-3h6" />
+
+        </svg>
+
+      </div>
+
+      <h3 class="
+        mt-6
+        text-xl
+        font-bold
+        dark:text-white
+      ">
+        Nenhum lote cadastrado
+      </h3>
+
+      <p class="
+        mt-3
+        text-sm
+        text-gray-500
+      ">
+        Crie lotes para controlar preços,
+        vagas e períodos de venda.
+      </p>
+
+      <div class="mt-8">
+
+        <%= link_to "Novo Lote",
+            new_organizer_distance_lot_path(@distance),
+            class: primary_button_class %>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>

@@ -1,0 +1,26 @@
+Olá, <%= @athlete.nome %>!
+
+🏅 O evento <%= @event.nome %> foi oficialmente encerrado.
+Parabéns por completar a prova — foi incrível ter você!
+
+DADOS DA SUA PARTICIPAÇÃO
+---------------------------
+Evento:    <%= @event.nome %>
+Data:      <%= l @event.data_largada, format: :long %>
+Inscrição: #<%= @registration.id %>
+<% if @registration.numero_dorsal.present? %>
+Dorsal:    #<%= @registration.numero_dorsal %>
+<% end %>
+
+O QUE VOCÊ PODE ACESSAR AGORA
+--------------------------------
+🏆 Seu resultado e posição no ranking
+📜 Certificado digital de conclusão
+📸 Fotos do evento
+
+Acesse em: <%= Rails.application.config.action_mailer.default_url_options[:host] %>
+
+Gostou da experiência? Responda nossa pesquisa de satisfação!
+
+--
+UrbanRace · urbanrace.com.br

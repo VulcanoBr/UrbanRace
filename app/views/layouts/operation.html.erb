@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-50">
+  <head>
+    <title>STAFF - UrbanRace Live</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    
+    <%# Meta tags para PWA (Essencial para o modo Offline EX-02) %>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body class="h-full flex flex-col font-sans antialiased overflow-hidden">
+    
+    <!-- Header de Status (Reduzido) -->
+    <header class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center shrink-0">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+        <span class="text-xs font-black uppercase tracking-tighter">Live Operation</span>
+      </div>
+      <% if @event.present? %>
+        <%# Clicável: volta para seleção de evento %>
+        <%= link_to operation_events_path,
+              class: "text-right hover:opacity-75 transition-opacity" do %>
+          <p class="text-[10px] font-bold text-slate-400 uppercase leading-none">Evento Atual ↗</p>
+          <p class="text-xs font-bold truncate max-w-[150px]"><%= @event.nome %></p>
+        <% end %>
+      <% end %>
+    </header>
+
+    <!-- Área de Conteúdo Scrollável -->
+    <main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 pb-32">
+      <%= render "shared/flash" %> 
+      <%= yield %>
+    </main>
+
+    <!-- Navegação de Staff (Bottom Bar) -->
+    <%= render "shared/operation/bottom_nav" if @event.present? %>
+    <%= render "shared/confirm_modal" %>
+  </body>
+</html>

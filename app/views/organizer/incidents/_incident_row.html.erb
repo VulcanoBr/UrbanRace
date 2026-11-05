@@ -1,0 +1,28 @@
+<tr id="<%= dom_id(incident) %>" class="<%= incident.critica? ? 'bg-red-50 dark:bg-red-900/10' : '' %> animate-pulse-once">
+  <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold">
+    <%= incident.ocorrida_em.strftime("%H:%M:%S") %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm">
+    <span class="font-black text-gray-900 dark:text-white">KM <%= incident.km_local %></span>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <div class="flex items-center gap-2">
+      <span class="px-2 py-1 rounded text-[10px] font-black uppercase bg-gray-100 dark:bg-gray-700">
+        <%= incident.tipo %>
+      </span>
+      <span class="px-2 py-1 rounded text-[10px] font-black uppercase <%= severity_color(incident.gravidade) %>">
+        <%= incident.gravidade.upcase %>
+      </span>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm">
+    <% if incident.registration %>
+      <div class="font-bold text-blue-600">#<%= incident.registration.numero_dorsal %> - <%= incident.registration.athlete.nome %></div>
+    <% else %>
+      <span class="text-gray-400 italic">Não identificado</span>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+    <%= link_to "Detalhes", organizer_event_incident_path(incident.event, incident), class: "text-blue-600 font-bold hover:underline" %>
+  </td>
+</tr>

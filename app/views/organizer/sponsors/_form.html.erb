@@ -1,0 +1,72 @@
+<%= form_with model: [:organizer, sponsor_form], url: url, method: (sponsor_form.persisted? ? :patch : :post), class: "space-y-8" do |f| %>
+  <div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl p-6 md:p-8">
+     <% if sponsor_form.errors.any? %>
+      <div class=" mb-8 rounded-2xl border border-red-200 bg-red-50 p-6" >
+        <h3 class=" text-sm font-bold text-red-700 mb-3 ">
+          Corrija os erros abaixo
+        </h3>
+
+        <ul class=" list-disc ml-5 text-sm text-red-600 ">
+          <% sponsor_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6" data-controller="maskphone maskcpfcnpj">
+      
+      <div class="sm:col-span-4">
+        <%= f.label :nome, "Nome da Empresa/Marca", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :nome, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :cnpj, "CNPJ", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :cnpj, placeholder: '  00.000.000/0000-00', maxlength: "18", "data-maskcpfcnpj-target": "inputCpfCnpj", 
+                                "data-action": "keyup->maskcpfcnpj#addMaskToCpfCnpjFields",
+                                class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-3 border-t border-gray-100 dark:border-gray-700 pt-6">
+        <%= f.label :contato, "Nome do Responsável", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :contato, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-3 border-t border-gray-100 dark:border-gray-700 pt-6">
+        <%= f.label :email_contato, "E-mail para Contato", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.email_field :email_contato, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :website, "Website (sem http)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :website, placeholder: "www.empresa.com.br", class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :phone_contato, "Telefone", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :phone_contato, placeholder: "(99) 99999-9999",  maxlength: "15",
+                                  "data-maskphone-target": "inputPhone", 
+                                  "data-action": "keyup->maskphone#addMaskToPhoneFields", 
+                                  class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-6 border-t border-gray-100 dark:border-gray-700 pt-6">
+        <%= f.label :logo, "Logotipo da Marca", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.file_field :logo, class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+      </div>
+
+      <div class="sm:col-span-6">
+        <div class="flex items-center">
+          <%= f.check_box :active, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600" %>
+          <%= f.label :ativo, "Patrocinador ativo no site e app", class: "ml-3 px-3 py-1 text-sm text-gray-700 dark:text-gray-300" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-x-4">
+    <%= link_to "Cancelar", organizer_sponsors_path, class: "text-sm font-semibold text-gray-900 dark:text-white" %>
+    <%= f.submit "Salvar Patrocinador", class: "rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,0 +1,131 @@
+
+<%= form_with model: lot_form, url: url, method: (lot_form.persisted? ? :patch : :post), class: "space-y-8" do |f| %>
+  
+  <div class="
+    bg-white dark:bg-gray-800
+    rounded-3xl
+    border
+    shadow-sm
+    p-8
+  ">
+
+    <% if lot_form.errors.any? %>
+
+      <div class="
+        mb-8
+        rounded-2xl
+        border border-red-200
+        bg-red-50
+        p-6
+      ">
+
+        <ul class="
+          list-disc
+          ml-5
+          text-sm
+          text-red-600
+        ">
+          <% lot_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+
+      </div>
+
+    <% end %>
+
+    <div class="
+      grid grid-cols-1
+      md:grid-cols-2
+      gap-8
+    ">
+
+      <div>
+        <%= f.label :numero,
+            class: label_class %>
+
+        <%= f.number_field :numero,
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :preco,
+            class: label_class %>
+
+        <%= f.number_field :preco,
+            step: 0.01,
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"  %>
+      </div>
+
+      <div>
+        <%= f.label :vagas,
+            class: label_class %>
+
+        <%= f.number_field :vagas,
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"  %>
+      </div>
+
+      <div>
+        <%= f.label :status,
+            class: label_class %>
+
+        <%= f.select :status,
+            Lot.statuses.keys.map { |s|
+              [s.humanize, s]
+            },
+            {},
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"  %>
+      </div>
+
+      <div>
+        <%= f.label :abertura,
+            class: label_class %>
+
+        <%= f.datetime_local_field :abertura,
+            value: lot_form.abertura&.strftime("%Y-%m-%dT%H:%M"),
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"  %>
+      </div>
+
+      <div>
+        <%= f.label :encerramento,
+            class: label_class %>
+
+        <%= f.datetime_local_field :encerramento,
+            value: lot_form.encerramento&.strftime("%Y-%m-%dT%H:%M"),
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"  %>
+      </div>
+
+      <div class="md:col-span-2">
+
+        <%= f.label :descricao_kit,
+            "Descrição Kit",
+            class: label_class %>
+
+        <%= f.text_area :descricao_kit,
+            rows: 5,
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"  %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="
+    flex justify-end
+    gap-4
+  ">
+
+    <%= link_to "Cancelar",
+        organizer_distance_path(lot_form.distance_id),
+        class: secondary_button_class %>
+
+    <%= f.submit submit_label,
+        data: {
+          disable_with: "Salvando..."
+        },
+        class: primary_button_class %>
+
+  </div>
+
+<% end %>

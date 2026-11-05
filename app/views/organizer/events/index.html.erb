@@ -1,0 +1,63 @@
+<div class="sm:flex sm:items-center sm:justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Meus Eventos</h1>
+    <p class="mt-2 text-sm text-gray-700 dark:text-gray-400">Lista de todas as corridas cadastradas no sistema.</p>
+  </div>
+  <div class="mt-4 sm:ml-16 sm:mt-0">
+    <%= link_to "Novo Evento", new_organizer_event_path, class: "block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+</div>
+
+<div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
+  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+    <thead class="bg-gray-50 dark:bg-gray-900/50">
+      <tr>
+        <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Evento</th>
+        <th class="hidden md:table-cell px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Data</th>
+        <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+        <th class="relative py-3.5 pl-3 pr-6 sm:pr-0"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+      <% @events.each do |event| %>
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <td class="whitespace-nowrap px-6 py-4">
+            <div class="font-medium text-gray-900 dark:text-white"><%= event.nome %></div>
+            <div class="text-xs text-gray-500 md:hidden"><%= l event.data_largada %></div>
+          </td>
+          <td class="hidden md:table-cell whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+            <%= l event.data_largada %>
+          </td>
+          <td class="whitespace-nowrap px-6 py-4 text-sm">
+            <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset <%= event.published? ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-amber-50 text-amber-700 ring-amber-600/20' %>">
+              <%= event.status.humanize %>
+            </span>
+          </td>
+          <td class="whitespace-nowrap px-6 py-4 text-right">
+            <% unless event.finished? || event.cancelled? %>
+              <%= link_to organizer_event_path(event), class: "inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-black shadow-md transition transform active:scale-95" do %>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 12H13.5" /></svg>
+                GERENCIAR EVENTO
+              <% end %>
+            <% end %>
+          </td>
+          <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+            
+            <% unless event.finished? || event.cancelled? %>
+              <%= link_to "Editar", edit_organizer_event_path(event), class: "text-white hover:text-blue-900", title: "Editar" %>
+            <% else %>
+              <%= link_to "Ver", organizer_event_path(event), class: "text-white hover:text-blue-900 mr-4", title: "Visualizar" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <!-- Paginação -->
+    <div class="mt-2 flex justify-center">
+      <div class="glass-card p-2 rounded-2xl border-gray-500 flex items-center gap-1 text-white">
+        <%= paginate @events, window: 2, outer_window: 1, class: "urbanrace-pagination" %>
+      </div>
+    </div>
+</div>

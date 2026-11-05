@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  volunteer_station: one
+  sender: one
+  titulo: MyString
+  corpo: MyText
+  categoria: MyString
+  sent_at: 2026-06-15 18:29:49
+
+two:
+  event: two
+  volunteer_station: two
+  sender: two
+  titulo: MyString
+  corpo: MyText
+  categoria: MyString
+  sent_at: 2026-06-15 18:29:49

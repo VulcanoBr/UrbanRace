@@ -1,0 +1,59 @@
+<%# app/views/operation/kit_deliveries/show.html.erb %>
+<div class="max-w-md mx-auto" data-controller="kit-delivery">
+  <%= link_to "← Voltar", operation_event_kit_deliveries_path(@event), class: "text-[10px] font-black text-slate-400 uppercase mb-4 block" %>
+
+  <div class="bg-white rounded-[32px] overflow-hidden shadow-xl border border-slate-200">
+    <div class="bg-slate-900 p-6 text-center text-white">
+      <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Captura de Chip e Dorsal</p>
+      <h2 class="text-2xl font-black uppercase italic leading-none"><%= @registration.athlete.nome %></h2>
+    </div>
+
+    <div class="p-6 space-y-6">
+      <%# Informações de Apoio para o Staff %>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-blue-50 p-3 rounded-2xl border border-blue-100">
+          <p class="text-[8px] font-black text-blue-400 uppercase">Tamanho Camiseta</p>
+          <p class="text-xl font-black text-blue-900"><%= @registration.tamanho_kit %></p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+          <p class="text-[8px] font-black text-slate-400 uppercase">Distância</p>
+          <p class="text-sm font-black text-slate-900"><%= @registration.distance.nome %></p>
+        </div>
+      </div>
+
+      <%= form_with model: @registration, url: operation_event_kit_delivery_path(@event, @registration), method: :patch, class: "space-y-4" do |f| %>
+        
+        <%# Campo Dorsal: Geralmente já vem preenchido, mas pode ser alterado se o Staff trocar o número físico %>
+        <div>
+          <%= f.label :numero_dorsal, "NÚMERO DE PEITO (DORSAL)", class: "block text-[10px] font-black text-slate-500 mb-1 ml-1" %>
+          <%= f.number_field :numero_dorsal, 
+              class: "w-full rounded-xl border-slate-200 font-black text-2xl text-center bg-slate-50 focus:ring-blue-500",
+              placeholder: "000", required: true %>
+        </div>
+
+        <%# Campo Chip: Foco automático para facilitar o uso de leitores de código de barras/RFID %>
+        <div class="relative">
+          <%= f.label :chip_code, "CÓDIGO DO CHIP", class: "block text-[10px] font-black text-slate-500 mb-1 ml-1" %>
+          <%= f.text_field :chip_code, 
+              autofocus: true,
+              class: "w-full rounded-xl border-slate-200 font-mono text-lg text-center uppercase focus:ring-green-500 focus:border-green-500",
+              placeholder: "ESCANEIE OU DIGITE" %>
+          <p class="text-[8px] text-slate-400 mt-1 ml-1 italic">* Deixe em branco para gerar automaticamente baseado no dorsal.</p>
+        </div>
+
+        <div class="pt-4">
+          <% if @registration.kit_entregue? %>
+            <div class="bg-green-100 text-green-800 p-4 rounded-2xl text-center border border-green-200">
+               <p class="text-xs font-black uppercase">Kit entregue com sucesso!</p>
+               <p class="text-[10px] font-bold opacity-70">Dorsal: <%= @registration.numero_dorsal %> | Chip: <%= @registration.chip_code %></p>
+            </div>
+          <% else %>
+            <%= f.submit "FINALIZAR ENTREGA", 
+                class: "w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-transform cursor-pointer",
+                data: { turbo_confirm: "Confirmar a vinculação do chip #{@registration.chip_code} ao atleta?" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

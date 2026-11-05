@@ -1,0 +1,30 @@
+<div class="max-w-5xl mx-auto">
+
+  <div class="mb-10">
+
+    <p class="
+      text-sm
+      text-blue-600
+      font-semibold
+      mb-2
+    ">
+      <%= @event.nome %>
+    </p>
+
+    <h1 class="
+      text-4xl
+      font-black
+      tracking-tighter
+      dark:text-white
+    ">
+      Nova Distância
+    </h1>
+
+  </div>
+
+  <%= render "form",
+      distance_form: @distance_form,
+      url: organizer_event_distances_path(@event),
+      submit_label: "Criar Distância" %>
+
+</div>

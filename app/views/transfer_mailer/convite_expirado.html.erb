@@ -1,0 +1,55 @@
+
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
+
+  <h2 style="margin-bottom: 24px;">
+    Transferência não aceita dentro do prazo
+  </h2>
+
+  <p>
+    Olá, <strong><%= @atleta.nome %></strong>.
+  </p>
+
+  <p>
+    O convite de transferência da sua inscrição para o evento
+    <strong><%= @evento.nome %></strong> não foi aceito pelo atleta destinatário
+    dentro do prazo de 48 horas.
+  </p>
+
+  <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 24px 0;">
+    <p style="margin: 0 0 8px;">
+      <strong>Evento:</strong>
+      <%= @evento.nome %>
+    </p>
+
+    <p style="margin: 0 0 8px;">
+      <strong>Destinatário:</strong>
+      <%= @pending.email_destino %>
+    </p>
+
+    <p style="margin: 0;">
+      <strong>Status:</strong>
+      Convite expirado
+    </p>
+  </div>
+
+  <p>
+    A transferência não foi concluída porque o destinatário não confirmou o
+    recebimento da vaga dentro do prazo estabelecido.
+  </p>
+
+  <p>
+    Sua inscrição original não foi transferida para o destinatário.
+  </p>
+
+  <p>
+    Caso ainda queira transferir sua inscrição, acesse sua área do corredor
+    para verificar as opções disponíveis.
+  </p>
+
+  <p style="margin-top: 32px;">
+    Atenciosamente,<br>
+    <strong>Equipe UrbanRace</strong>
+  </p>
+
+</div>
+

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  distance: one
+  geojson_traca: 
+  pontos_apoio: 
+
+two:
+  event: two
+  distance: two
+  geojson_traca: 
+  pontos_apoio: 

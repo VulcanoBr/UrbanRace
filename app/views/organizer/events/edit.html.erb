@@ -1,0 +1,17 @@
+<div class="max-w-5xl mx-auto">
+
+  <h1 class="
+    text-4xl
+    font-black
+    tracking-tighter
+    mb-10
+    dark:text-white
+  ">
+    Editar Evento
+  </h1>
+
+  <%= render "form",
+      event_form: @event_form,
+      url: organizer_event_path(@event) %>
+
+</div>

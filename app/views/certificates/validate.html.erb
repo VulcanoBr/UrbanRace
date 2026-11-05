@@ -1,0 +1,186 @@
+<div class="min-h-screen bg-slate-50 dark:bg-slate-950 py-10 px-4">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+
+      <!-- Cabeçalho -->
+      <div class="bg-blue-700 text-white px-8 py-10 text-center">
+
+        <div class="mx-auto mb-5 w-16 h-16 rounded-full bg-white/15 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="2"
+               stroke="currentColor"
+               class="w-8 h-8">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m9 12.75 2.25 2.25 4.5-4.5" />
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 3.75 19.5 7.5v5.25c0 4.5-3.375 7.875-7.5 9-4.125-1.125-7.5-4.5-7.5-9V7.5L12 3.75Z" />
+          </svg>
+        </div>
+
+        <p class="text-xs font-black uppercase tracking-[0.25em] text-blue-100 mb-3">
+          UrbanRace
+        </p>
+
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight">
+          Certificado válido
+        </h1>
+
+        <p class="mt-3 text-blue-100 text-sm">
+          Este certificado foi emitido pelo sistema UrbanRace.
+        </p>
+      </div>
+
+      <!-- Dados -->
+      <div class="p-8 md:p-10">
+
+        <div class="text-center mb-10">
+          <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+            Atleta
+          </p>
+
+          <h2 class="text-3xl font-black text-slate-900 dark:text-white">
+            <%= @athlete.nome %>
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+              Evento
+            </p>
+
+            <p class="font-bold text-slate-900 dark:text-white">
+              <%= @event.nome %>
+            </p>
+          </div>
+
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+              Data da prova
+            </p>
+
+            <p class="font-bold text-slate-900 dark:text-white">
+              <%= l(@event.data_largada, format: :long) %>
+            </p>
+          </div>
+
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+              Distância
+            </p>
+
+            <p class="font-bold text-slate-900 dark:text-white">
+              <%= @registration.distance.nome %>
+            </p>
+          </div>
+
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+              Categoria
+            </p>
+
+            <p class="font-bold text-slate-900 dark:text-white">
+              <%= @registration.category.nome %>
+            </p>
+          </div>
+
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+              Dorsal
+            </p>
+
+            <p class="font-bold text-slate-900 dark:text-white">
+              #<%= @registration.numero_dorsal %>
+            </p>
+          </div>
+
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+              Status
+            </p>
+
+            <p class="font-bold text-green-600">
+              Resultado homologado
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Desempenho -->
+        <div class="mt-10 pt-8 border-t border-dashed border-slate-200 dark:border-slate-700">
+
+          <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-6">
+            Desempenho
+          </h3>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 text-center">
+              <p class="text-[10px] font-black uppercase text-slate-400">
+                Tempo
+              </p>
+              <p class="mt-2 text-lg font-black text-slate-900 dark:text-white">
+                <%= @result.tempo_liquido %>
+              </p>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 text-center">
+              <p class="text-[10px] font-black uppercase text-slate-400">
+                Pace
+              </p>
+              <p class="mt-2 text-lg font-black text-slate-900 dark:text-white">
+                <%= @result.pace_formatado || "—" %>
+              </p>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 text-center">
+              <p class="text-[10px] font-black uppercase text-slate-400">
+                Posição geral
+              </p>
+              <p class="mt-2 text-lg font-black text-slate-900 dark:text-white">
+                <%= @result.posicao_geral || "—" %>
+              </p>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 text-center">
+              <p class="text-[10px] font-black uppercase text-slate-400">
+                Categoria
+              </p>
+              <p class="mt-2 text-lg font-black text-slate-900 dark:text-white">
+                <%= @result.posicao_categoria || "—" %>
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Rodapé de validação -->
+        <div class="mt-10 pt-8 border-t border-slate-200 dark:border-slate-700 text-center">
+
+          <p class="text-xs text-slate-400">
+            Certificado gerado em
+            <%= l(@certificate.gerado_em, format: :long) if @certificate.gerado_em %>
+          </p>
+
+          <p class="mt-2 text-[10px] text-slate-400 break-all">
+            Código de validação:
+            <%= @certificate.qr_code_hash %>
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-slate-400 mt-6">
+      UrbanRace — Gestão de Corridas de Rua
+    </p>
+
+  </div>
+</div>

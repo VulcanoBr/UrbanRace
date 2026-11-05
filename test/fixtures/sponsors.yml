@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  nome: MyString
+  cota: MyString
+  link_indicacao: MyString
+  url_site: MyString
+  inscricoes_geradas: 1
+  valor_cota: 9.99
+  ativo: false
+
+two:
+  event: two
+  nome: MyString
+  cota: MyString
+  link_indicacao: MyString
+  url_site: MyString
+  inscricoes_geradas: 1
+  valor_cota: 9.99
+  ativo: false

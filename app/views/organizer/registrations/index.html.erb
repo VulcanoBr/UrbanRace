@@ -1,0 +1,101 @@
+<div class="sm:flex sm:items-center sm:justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Inscrições</h1>
+    <p class="mt-2 text-sm text-gray-700 dark:text-gray-400">Gerenciamento de atletas inscritos e status de pagamento.</p>
+  </div>
+  <div class="mt-4 sm:ml-16 sm:mt-0">
+    <%= link_to "Nova Inscrição Manual", new_organizer_registration_path(event_id: params[:event_id]), class: "block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+</div>
+
+
+<div class="mb-6 rounded-xl bg-white p-4 shadow-sm ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-gray-700">
+  <%= form_with url: organizer_registrations_path,
+                method: :get,
+                local: true,
+                class: "flex flex-col gap-3 sm:flex-row sm:items-center" do |form| %>
+
+    <% if params[:event_id].present? %>
+      <%= hidden_field_tag :event_id, params[:event_id] %>
+    <% end %>
+
+    <div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+      <%= form.label :nome_atleta,
+                     "Nome do atleta",
+                     class: "shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300" %>
+
+      <%= form.search_field :nome_atleta,
+                            value: @nome_atleta,
+                            placeholder: "Digite o nome do atleta...",
+                            class: "block min-w-0 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white" %>
+    </div>
+
+    <div class="flex shrink-0 items-center gap-2">
+      <%= form.submit "Pesquisar",
+                      class: "inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+
+      <% if @nome_atleta.present? %>
+        <%= link_to "Limpar",
+                    organizer_registrations_path(
+                      event_id: params[:event_id].presence
+                    ),
+                    class: "inline-flex h-10 items-center justify-center rounded-md border border-gray-300 px-4 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+
+<div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
+  <div class="min-w-full overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-900/50">
+        <tr>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Atleta / Dorsal</th>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Evento / Categoria</th>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+          <th class="hidden lg:table-cell px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Data</th>
+          <th class="relative py-3.5 pl-3 pr-6 sm:pr-0"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+        <% @registrations.each do |reg| %>
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <td class="whitespace-nowrap px-6 py-4">
+              <div class="font-medium text-gray-900 dark:text-white"><%= reg.athlete.nome %></div>
+              <div class="text-xs text-blue-600 font-bold">#<%= reg.numero_dorsal || 'S/N' %></div>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm">
+              <div class="text-gray-900 dark:text-gray-200"><%= reg.event.nome %></div>
+              <div class="text-gray-500 text-xs"><%= reg.category.nome %></div>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm">
+              <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset <%= reg.confirmado? ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-yellow-50 text-yellow-700 ring-yellow-600/20' %>">
+                <%= reg.status.humanize %>
+              </span>
+            </td>
+            <td class="hidden lg:table-cell whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+              <%= l reg.data_inscricao, format: :short %>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+              <%= link_to "Ver", organizer_registration_path(reg), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+              <%= link_to "Editar", edit_organizer_registration_path(reg), class: "text-gray-600 hover:text-gray-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="mt-2 flex justify-center">
+        <div class="glass-card p-2 rounded-2xl border-gray-500 flex items-center gap-1 text-white">
+          <%= paginate @registrations,
+             params: {
+               event_id: params[:event_id],
+               nome_atleta: @nome_atleta.presence
+             },
+             window: 2,
+             outer_window: 1,
+             class: "urbanrace-pagination" %>
+        </div>
+      </div>
+  </div>
+</div>

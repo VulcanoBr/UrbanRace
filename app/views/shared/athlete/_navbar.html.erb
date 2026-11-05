@@ -1,0 +1,31 @@
+<%# app/views/shared/athlete/_navbar.html.erb %>
+<header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center">
+      <span class="text-blue-600 font-black text-xl tracking-tighter">URBANRACE</span>
+    </div>
+
+    <!-- Menu para Desktop (Escondido no Mobile) -->
+    <div class="hidden md:flex items-center gap-6">
+      <%= link_to "Minhas Provas", athletes_area_do_corredor_path, class: "text-sm font-bold text-gray-600 hover:text-blue-600" %>
+      <%= link_to "Fotos IA", athletes_photos_path, class: "text-sm font-bold text-gray-600 hover:text-blue-600" %>
+      <%= link_to "Perfil", edit_athletes_profile_path, class: "text-sm font-bold text-gray-600 hover:text-blue-600" %>
+      
+      <div class="h-6 w-px bg-gray-200 mx-2"></div>
+      
+      <%= button_to session_path, method: :delete, class: "text-gray-400 hover:text-red-500 transition" do %>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m-3-3l-3 3m0 0l3 3m-3-3h12.75" />
+        </svg>
+      <% end %>
+    </div>
+
+    <!-- Ícone de Usuário para Mobile (Apenas um atalho) -->
+    <div class="md:hidden">
+      <%= link_to edit_athletes_profile_path, class: "text-gray-400" do %>
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+      <% end %>
+    </div>
+  </div>
+</header>

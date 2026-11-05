@@ -1,0 +1,45 @@
+
+<%= form_with model: category_form, url: url, method: (category_form.persisted? ? :patch : :post), class: "space-y-8" do |f| %>
+  
+  <div class="bg-white dark:bg-gray-800 rounded-3xl border shadow-sm p-8">
+    <% if category_form.errors.any? %>
+      <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 p-6">
+        <h3 class="text-sm font-bold text-red-700 mb-3">Corrija os erros abaixo</h3>
+        <ul class="list-disc ml-5 text-sm text-red-600">
+          <% category_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <%= f.label :nome, "Nome da Categoria", class: label_class %>
+        <%= f.text_field :nome, placeholder: "Ex: 30-39 anos", class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :sexo, "Sexo", class: label_class %>
+        <%# Category.sexos.keys.map { |s| [s.humanize, s] } gera ["Masculino", "masculino"] %>
+        <%= f.select :sexo, Category.sexos.keys.map { |s| [s.humanize, s] }, { include_blank: "Selecione" }, class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :idade_min, "Idade Mínima", class: label_class %>
+        <%= f.number_field :idade_min, min: 0, class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :idade_max, "Idade Máxima", class: label_class %>
+        <%= f.number_field :idade_max, min: 1, class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-4">
+    <%# Link de cancelar voltando para a distância %>
+    <%= link_to "Cancelar", organizer_distance_path(category_form.distance_id), class: secondary_button_class %>
+    <%= f.submit submit_label, class: primary_button_class %>
+  </div>
+<% end %>

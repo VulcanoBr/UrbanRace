@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  registration: one
+  waypoint: one
+  gun_time: 2026-05-31 23:24:08
+  chip_time: 2026-05-31 23:24:08
+  posicao_geral: 1
+  posicao_categoria: 1
+  pace_km: 9.99
+
+two:
+  registration: two
+  waypoint: two
+  gun_time: 2026-05-31 23:24:08
+  chip_time: 2026-05-31 23:24:08
+  posicao_geral: 1
+  posicao_categoria: 1
+  pace_km: 9.99

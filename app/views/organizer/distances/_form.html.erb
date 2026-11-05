@@ -1,0 +1,129 @@
+<%= form_with model: distance_form,
+              url: url, method: (distance_form.persisted? ? :patch : :post),
+              class: "space-y-8" do |f| %>
+
+  <div class="
+    bg-white dark:bg-gray-800
+    rounded-3xl
+    shadow-sm
+    border
+    p-8
+  ">
+
+    <% if distance_form.errors.any? %>
+
+      <div class="
+        mb-8
+        rounded-2xl
+        border border-red-200
+        bg-red-50
+        p-6
+      ">
+
+        <h3 class="
+          text-sm
+          font-bold
+          text-red-700
+          mb-3
+        ">
+          Corrija os erros abaixo
+        </h3>
+
+        <ul class="
+          list-disc
+          ml-5
+          text-sm
+          text-red-600
+        ">
+
+          <% distance_form.errors.full_messages.each do |message| %>
+
+            <li><%= message %></li>
+
+          <% end %>
+
+        </ul>
+
+      </div>
+
+    <% end %>
+
+    <div class="
+      grid grid-cols-1
+      md:grid-cols-2
+      gap-8
+    ">
+
+      <div>
+
+        <%= f.label :nome,
+            "Nome da Distância",
+            class: label_class %>
+
+        <%= f.text_field :nome,
+            placeholder: "Ex: Corrida 5K",
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+
+      </div>
+
+      <div>
+
+        <%= f.label :km,
+            "Quilometragem",
+            class: label_class %>
+
+        <div class="relative">
+
+          <%= f.number_field :km,
+              step: 0.1,
+              placeholder: "5",
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+
+          <span class="
+            absolute
+            right-4
+            top-1/2
+            -translate-y-1/2
+            text-sm
+            text-gray-400
+          ">
+            KM
+          </span>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <%= f.label :vagas_total,
+            "Limite de Atletas",
+            class: label_class %>
+
+        <%= f.number_field :vagas_total,
+            min: 1,
+            placeholder: "500",
+            class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="
+    flex items-center
+    justify-end
+    gap-4
+  ">
+
+    <%= link_to "Cancelar",
+        organizer_event_distances_path(@event),
+        class: secondary_button_class %>
+
+    <%= f.submit submit_label,
+        class: primary_button_class %>
+
+  </div>
+
+<% end %>

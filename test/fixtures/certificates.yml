@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  result: one
+  athlete: one
+  arquivo_pdf: MyString
+  qr_code_hash: MyString
+  gerado_em: 2026-05-31 23:28:46
+
+two:
+  result: two
+  athlete: two
+  arquivo_pdf: MyString
+  qr_code_hash: MyString
+  gerado_em: 2026-05-31 23:28:46

@@ -1,0 +1,26 @@
+<%# app/views/operation/broadcasts/index.html.erb %>
+<%= turbo_stream_from "event_#{@event.id}_broadcasts" %>
+<div class="max-w-md mx-auto">
+  <div class="mb-6 flex items-center justify-between">
+    <h2 class="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Mural de Avisos</h2>
+    <span id="event_status_badge">
+       <span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">Live</span>
+    </span>
+  </div>
+
+  <%# Canal de Escuta em Tempo Real (Solid Cable) %>
+
+  <div id="broadcast_alerts_list" class="space-y-4">
+    <% if @messages.any? %>
+      <% @messages.each do |message| %>
+        <%= render "operation/broadcasts/message_card", message: message %>
+      <% end %>
+    <% else %>
+      <div id="empty_state" class="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+        <svg class="mx-auto h-12 w-12 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+        <p class="mt-4 text-slate-500 font-medium">Nenhum aviso no momento.</p>
+        <p class="text-xs text-slate-400">Mensagens urgentes aparecerão aqui instantaneamente.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<h2>Licença com prazo se aproximando</h2>
+<p>Olá, <%= @organizer.nome %>.</p>
+<p>
+  O evento <strong><%= @event.nome %></strong> tem uma licença que precisa
+  de atenção:
+</p>
+
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+  <tr>
+    <td style="padding:8px;color:#6b7280;border-bottom:1px solid #f3f4f6;">Tipo</td>
+    <td style="padding:8px;font-weight:600;border-bottom:1px solid #f3f4f6;">
+      <%= @license.tipo_documento.humanize %>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:8px;color:#6b7280;border-bottom:1px solid #f3f4f6;">Órgão</td>
+    <td style="padding:8px;font-weight:600;border-bottom:1px solid #f3f4f6;">
+      <%= @license.orgao.presence || "–" %>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:8px;color:#6b7280;border-bottom:1px solid #f3f4f6;">Prazo de aprovação</td>
+    <td style="padding:8px;font-weight:600;border-bottom:1px solid #f3f4f6;color:<%= @days <= 7 ? "#dc2626" : "#d97706" %>;">
+      <%= @license.prazo_aprovacao.strftime("%d/%m/%Y") %>
+      (<%= @days %> dia<%= @days == 1 ? "" : "s" %>)
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:8px;color:#6b7280;">Status atual</td>
+    <td style="padding:8px;font-weight:600;">
+      <%= @license.status.humanize %>
+    </td>
+  </tr>
+</table>
+
+<p>
+  <a href="<%= organizer_event_url(@event) %>"
+     style="display:inline-block;background:#ea580c;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;">
+    Gerenciar licenças do evento
+  </a>
+</p>

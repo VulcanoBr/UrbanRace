@@ -1,0 +1,60 @@
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+  
+  <!-- Opção: Entrega de Kit (Novo) -->
+  <%= link_to operation_event_kit_deliveries_path(@event), 
+      class: "flex flex-col items-center gap-1 #{current_page?(operation_event_kit_deliveries_path(@event)) ? 'text-blue-600' : 'text-slate-400'}" do %>
+    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+    </svg>
+    <span class="text-[9px] font-black uppercase">Entrega Kit</span>
+  <% end %>
+
+  <!-- Opção: Check-in (EX-01) -->
+  <%= link_to operation_event_checkins_path(@event), class: "flex flex-col items-center gap-1 #{current_page?(operation_event_checkins_path(@event)) ? 'text-blue-600' : 'text-slate-400'}" do %>
+    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h2M4 8h2m12 0h2M4 6h16M4 18h16" /></svg>
+    <span class="text-[9px] font-black uppercase">Check-in</span>
+  <% end %>
+
+  <!-- Opção Central: Emergência (EX-12) -->
+  <%= link_to new_operation_event_incident_path(@event), class: "flex flex-col items-center gap-1 text-red-600" do %>
+    <div class="p-2 bg-red-100 rounded-full -mt-10 border-4 border-slate-50 shadow-lg">
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+    </div>
+    <span class="text-[9px] font-black uppercase mt-1">Emergência</span>
+  <% end %>
+
+  <!-- Opção: Avisos/Broadcast (EX-11) -->
+  <%= link_to operation_event_broadcasts_path(@event), class: "flex flex-col items-center gap-1 #{current_page?(operation_event_broadcasts_path(@event)) ? 'text-blue-600' : 'text-slate-400'}" do %>
+    <div class="relative">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+      </svg>
+      <span class="absolute -top-1 -right-1 w-2 h-2 bg-blue-600 rounded-full animate-ping"></span>
+    </div>
+    <span class="text-[9px] font-black uppercase">Avisos</span>
+  <% end %>
+
+  <%# CORREÇÃO: O link abaixo só aparece se for um Administrador/Organizador %>
+  <% if current_organizer %>
+    <%= link_to operation_events_path, class: "flex flex-col items-center gap-1 font-bold text-slate-400  hover:opacity-100 transition-opacity" do %>
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+      </svg>
+      <span class="
+            w-full
+            flex
+            items-center
+            justify-center
+            gap-3
+            px-4
+            rounded-xl
+            bg-red-600
+            hover:bg-red-700
+            text-white
+            font-semibold
+            transition-colors
+            duration-200">Sair Operação</span>
+    <% end %>
+  <% end %>
+
+</nav>

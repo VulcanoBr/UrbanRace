@@ -1,0 +1,257 @@
+<%= form_with model: [:organizer, event_form], url: url, method: (event_form.persisted? ? :patch : :post),class: "space-y-8", multipart: true do |f| %>
+
+  <div class="
+    bg-white dark:bg-gray-800
+    shadow-sm
+    ring-1 ring-gray-900/5
+    rounded-2xl
+    overflow-hidden
+  ">
+
+    <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-5">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+        Informações do Evento
+      </h2>
+
+      <p class="mt-1 text-sm text-gray-500">
+        Configure os dados principais da corrida.
+      </p>
+    </div>
+
+    <div class="p-6 md:p-8 space-y-8">
+
+      <% if event_form.errors.any? %>
+
+        <div class="
+          rounded-xl
+          border border-red-200
+          bg-red-50
+          p-5
+        ">
+
+          <div class="flex items-start gap-3">
+
+            <div>
+              <h3 class="font-semibold text-red-800">
+                Existem erros no formulário
+              </h3>
+
+              <ul class="mt-3 space-y-1 text-sm text-red-700">
+
+                <% event_form.errors.full_messages.each do |msg| %>
+                  <li>• <%= msg %></li>
+                <% end %>
+
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+
+      <% end %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="md:col-span-2">
+          <%= f.label :nome,
+                      "Nome da Corrida",
+                      class: label_class %>
+
+          <%= f.text_field :nome,
+              placeholder: "Ex: Urban Race Night Run 2026",
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div class="md:col-span-2">
+          <%= f.label :descricao,
+                      "Descrição",
+                      class: label_class %>
+
+          <%= f.text_area :descricao,
+              rows: 5,
+              placeholder: "Descreva o evento...",
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500
+                      dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <!-- NOVA SEÇÃO: CAPACIDADE E CONTATO -->
+        <div>
+          <%= f.label :limite_atletas, "Limite de Atletas", class: label_class %>
+          <%= f.number_field :limite_atletas, class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white", placeholder: "Ex: 500" %>
+        </div>
+
+        <div>
+          <%= f.label :whatsapp_contato, "WhatsApp de Contato (Apenas números)", class: label_class %>
+          <%= f.text_field :whatsapp_contato, class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white", placeholder: "Ex: 21999999999" %>
+        </div>
+
+        <div class="md:col-span-2">
+          <%= f.label :instagram_url, "URL do Instagram", class: label_class %>
+          <%= f.text_field :instagram_url, class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white", placeholder: "https://instagram.com/seuusuario" %>
+        </div>
+
+        <!-- NOVA SEÇÃO: DETALHES TÉCNICOS -->
+        <div class="md:col-span-2">
+          <%= f.label :kit_descricao, "O que vem no Kit?", class: label_class %>
+          <%= f.text_area :kit_descricao, rows: 4, placeholder: "Camiseta, medalha, sacochila...", 
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500
+                      dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div class="md:col-span-2">
+          <%= f.label :cronograma, "Cronograma do Evento", class: label_class %>
+          <%= f.text_area :cronograma, rows: 4, placeholder: "07:00 - Largada\n09:00 - Premiação...", 
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500
+                      dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div>
+          <%= f.label :cidade,
+                      class: label_class %>
+
+          <%= f.text_field :cidade,
+              placeholder: "Rio de Janeiro",
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div>
+          <%= f.label :estado,
+                      class: label_class %>
+
+          <%= f.select :estado,
+              [
+                ["Rio de Janeiro", "RJ"],
+                ["São Paulo", "SP"],
+                ["Minas Gerais", "MG"]
+              ],
+              {},
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div class="md:col-span-2">
+          <%= f.label :local_partida,
+                      "Local da largada",
+                      class: label_class %>
+
+          <%= f.text_field :local_partida,
+              placeholder: "Praia de Copacabana",
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"  %>
+        </div>
+
+        <div>
+          <%= f.label :data_largada,
+                      class: label_class %>
+
+          <%= f.date_field :data_largada,
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div>
+          <%= f.label :horario_largada,
+                      class: label_class %>
+
+          <%= f.time_field :horario_largada,
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div>
+          <%= f.label :slug_url,
+                      "URL amigável",
+                      class: label_class %>
+
+          <div class="flex rounded-xl shadow-sm">
+
+            <span class="
+              inline-flex items-center
+              rounded-l-xl
+              border border-r-0
+              border-gray-300
+              bg-gray-50
+              px-4
+              text-sm
+              text-gray-500
+            ">
+              urbanrace.com/
+            </span>
+
+            <%= f.text_field :slug_url,
+                class: " px-3 py-1
+                  block w-full
+                  rounded-r-xl
+                  border-gray-300
+                  focus:border-blue-500
+                  focus:ring-blue-500
+                " %>
+
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :status,
+                      class: label_class %>
+
+          <%= f.select :status,
+              Event.statuses.keys.map {
+                |s| [s.humanize, s]
+              },
+              {},
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div>
+          <%= f.label :banner,
+                      "Banner do Evento",
+                      class: label_class %>
+
+          <%= f.file_field :banner,
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+        <div>
+          <%= f.label :regulamento,
+                      "Regulamento PDF",
+                      class: label_class %>
+
+          <%= f.file_field :regulamento,
+              class: "block w-full px-3 py-1 rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="
+      border-t border-gray-200 dark:border-gray-700
+      bg-gray-50 dark:bg-gray-900/50
+      px-6 py-4
+      flex items-center justify-end gap-4
+    ">
+
+      <%= link_to "Cancelar",
+          organizer_events_path,
+          class: "
+            text-sm font-semibold
+            text-gray-700 dark:text-gray-300
+          " %>
+
+      <%= f.submit(
+            event_form.persisted? ? "Atualizar Evento" : "Criar Evento",
+            class: "
+              inline-flex items-center
+              rounded-xl
+              bg-blue-600
+              px-6 py-3
+              text-sm font-semibold
+              text-white
+              shadow-sm
+              hover:bg-blue-500
+              transition
+            "
+          ) %>
+
+    </div>
+
+  </div>
+
+<% end %>

@@ -1,0 +1,115 @@
+<div class="max-w-5xl mx-auto">
+
+  <div class="
+    flex items-center
+    justify-between
+    mb-10
+  ">
+
+    <div>
+
+      <p class="
+        text-sm
+        text-blue-600
+        font-semibold
+        mb-2
+      ">
+        <%= @category.distance.nome %>
+      </p>
+
+      <h1 class="
+        text-4xl
+        font-black
+        tracking-tighter
+        dark:text-white
+      ">
+        <%= @category.nome %>
+      </h1>
+
+    </div>
+
+    <%= link_to "Editar",
+        edit_organizer_category_path(@category),
+        class: secondary_button_class %>
+
+  </div>
+
+  <div class="
+    bg-white dark:bg-gray-800
+    rounded-3xl
+    border
+    shadow-sm
+    p-8
+  ">
+
+    <div class="
+      grid grid-cols-1
+      md:grid-cols-3
+      gap-8
+    ">
+
+      <div>
+
+        <p class="
+          text-sm
+          text-gray-500
+          mb-2
+        ">
+          Sexo
+        </p>
+
+        <p class="
+          text-2xl
+          font-black
+          dark:text-white
+        ">
+          <%= @category.sexo %>
+        </p>
+
+      </div>
+
+      <div>
+
+        <p class="
+          text-sm
+          text-gray-500
+          mb-2
+        ">
+          Idade Mínima
+        </p>
+
+        <p class="
+          text-2xl
+          font-black
+          dark:text-white
+        ">
+          <%= @category.idade_min %>
+        </p>
+
+      </div>
+
+      <div>
+
+        <p class="
+          text-sm
+          text-gray-500
+          mb-2
+        ">
+          Idade Máxima
+        </p>
+
+        <p class="
+          text-2xl
+          font-black
+          dark:text-white
+        ">
+          <%= @category.idade_max %>
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

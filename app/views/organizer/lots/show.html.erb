@@ -1,0 +1,123 @@
+<div class="max-w-6xl mx-auto">
+
+  <div class="
+    flex items-center
+    justify-between
+    mb-10
+  ">
+
+    <div>
+
+      <p class="
+        text-sm
+        font-semibold
+        text-blue-600
+        mb-2
+      ">
+        <%= link_to "← #{@lot.distance.nome}", organizer_distance_path(@lot.distance.id), class: "text-sm text-blue-600" %><
+      
+      </p>
+
+      <h1 class="
+        text-4xl
+        font-black
+        tracking-tighter
+        dark:text-white
+      ">
+        Lote <%= @lot.numero %>
+      </h1>
+
+    </div>
+
+    <%= link_to "Editar",
+        edit_organizer_lot_path(@lot),
+        class: secondary_button_class %>
+
+  </div>
+
+  <div class="
+    grid grid-cols-1
+    md:grid-cols-4
+    gap-6
+    mb-8
+  ">
+
+    <div class="metric_card font-semibold text-blue-400">
+      <p class="metric_label">Preço</p>
+      <p class="metric_value">
+        <%= number_to_currency(@lot.preco) %>
+      </p>
+    </div>
+
+    <div class="metric_card font-semibold text-blue-400">
+      <p class="metric_label">Vagas</p>
+      <p class="metric_value">
+        <%= @lot.vagas_disponiveis %>
+      </p>
+    </div>
+
+    <div class="metric_card font-semibold text-blue-400">
+      <p class="metric_label">Ocupação</p>
+      <p class="metric_value">
+        <%= @lot.percentual_ocupacao %>%
+      </p>
+    </div>
+
+    <div class="metric_card font-semibold text-blue-400">
+      <p class="metric_label">Status</p>
+      <p class="metric_value">
+        <%= @lot.status.humanize %>
+      </p>
+    </div>
+
+  </div>
+
+  <div class="
+    bg-white dark:bg-gray-800
+    rounded-3xl
+    border
+    shadow-sm
+    p-8
+  ">
+
+    <div class="mb-6">
+
+      <h3 class="
+        text-lg
+        font-bold
+        dark:text-white
+        mb-2
+      ">
+        Período
+      </h3>
+
+      <p class="text-gray-600 dark:text-gray-300">
+        <%= @lot.periodo %>
+      </p>
+
+    </div>
+
+    <div>
+
+      <h3 class="
+        text-lg
+        font-bold
+        dark:text-white
+        mb-2
+      ">
+        Kit do Atleta
+      </h3>
+
+      <p class="
+        text-gray-600
+        dark:text-gray-300
+        leading-relaxed
+      ">
+        <%= @lot.descricao_kit.presence || "Não informado." %>
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

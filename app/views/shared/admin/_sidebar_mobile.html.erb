@@ -1,0 +1,32 @@
+<%# app/views/shared/admin/_sidebar_mobile.html.erb %>
+<div 
+  data-menu-target="sidebar" 
+  class="relative z-50 lg:hidden hidden" 
+  role="dialog" aria-modal="true">
+  
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" data-action="click->menu#toggle"></div>
+
+  <div class="fixed inset-0 flex">
+    <div class="relative flex w-full max-w-xs flex-1 flex-col bg-white dark:bg-gray-800 pt-5 pb-4 transition duration-300 transform">
+      <div class="absolute top-0 right-0 -mr-12 pt-2">
+        <button data-action="click->menu#toggle" class="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white text-white">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <div class="flex flex-shrink-0 items-center px-4 mb-8">
+        <span class="text-blue-700 font-bold text-2xl dark:text-blue-400">CORRIDA.SYS</span>
+      </div>
+      
+      <div class="mt-5 h-0 flex-1 overflow-y-auto">
+        <nav class="space-y-1 px-2">
+           <%# Reaproveita os mesmos links do Desktop %>
+           <%= render "shared/admin/nav_link", label: "Dashboard", path: dashboard_path, icon: "chart" %>
+           <%= render "shared/admin/nav_link", label: "Atletas", path: "#", icon: "users" %>
+           <!-- ... outros links ... -->
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

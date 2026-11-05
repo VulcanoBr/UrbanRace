@@ -1,0 +1,91 @@
+<section class="relative min-h-screen bg-gray-950 flex flex-col items-center justify-center py-2 px-6 overflow-hidden">
+  
+  <%# Ornamentos de Fundo %>
+  <div class="absolute top-0 right-0 w-96 h-96 bg-orange-600/10 rounded-full blur-[120px]"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-green-600/5 rounded-full blur-[120px]"></div>
+
+  <div class="max-w-4xl w-full relative z-10">
+    
+    <%# Navigation Superior %>
+    <div class="flex justify-between items-center mb-2">
+      <%= link_to root_path, class: "transition transform hover:scale-105 duration-300" do %>
+        <%= image_tag "logo_urbanrace_3d.png", class: "h-16 md:h-24 w-auto", alt: "Urban Race" %>
+      <% end %>
+
+      <%= link_to root_path, class: "group flex items-center gap-2 text-[10px] font-black text-white/50 hover:text-orange-500 tracking-[0.2em] transition-all" do %>
+        <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        VOLTAR PARA HOME
+      <% end %>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-[40px] shadow-2xl">
+      
+      <%# Lado Esquerdo: Info %>
+      <div class="space-y-8">
+        <div>
+          <span class="inline-block px-4 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-500 text-[10px] font-black tracking-[0.3em] mb-4 uppercase">
+            Fale Conosco
+          </span>
+          <h1 class="text-4xl md:text-5xl font-black text-white italic leading-tight uppercase">
+            PRECISA DE <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">SUPORTE?</span>
+          </h1>
+          <p class="text-gray-400 mt-4 text-sm leading-relaxed">
+            Dúvidas sobre inscrições, resultados ou parcerias? Nossa equipe está pronta para te ajudar a cruzar essa linha de chegada.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 group">
+            <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition duration-300">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p class="text-white font-bold text-sm">contato@urbanrace.com.br</p>
+          </div>
+          <div class="flex items-center gap-4 group">
+            <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-white transition duration-300">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p class="text-white font-bold text-sm">(21) 94545-2300</p>
+          </div>
+        </div>
+      </div>
+
+      <%# Lado Direito: Formulário %>
+      <%= form_with model: @contact_form, url: contato_path, class: "space-y-5" do |f| %>
+        <% if @contact_form.errors.any? %>
+            <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 p-6">
+              <h3 class="text-sm font-bold text-red-700 mb-3">Corrija os erros abaixo</h3>
+              <ul class="list-disc ml-5 text-sm text-red-600">
+                <% @contact_form.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+        <% end %>
+        <div>
+          <%= f.label :nome, class: "block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2 ml-1" %>
+          <%= f.text_field :nome, placeholder: "Seu nome completo", class: "w-full bg-white/5 border-white/10 rounded-2xl text-white text-sm focus:ring-orange-500 focus:border-orange-500 transition-all px-4 py-4" %>
+        </div>
+
+        <div>
+          <%= f.label :email, class: "block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2 ml-1" %>
+          <%= f.email_field :email, placeholder: "seu@email.com", class: "w-full bg-white/5 border-white/10 rounded-2xl px-4 text-white text-sm focus:ring-orange-500 focus:border-orange-500 transition-all py-4" %>
+        </div>
+
+        <div>
+          <%= f.label :assunto, class: "block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2 ml-1" %>
+          <%= f.select :assunto, ["Dúvida sobre Inscrição", "Problema com Pagamento", "Imprensa", "Parcerias", "Outros"], {}, class: "w-full bg-white/5 border-white/10 rounded-2xl text-white text-sm focus:ring-orange-500 focus:border-orange-500 transition-all py-4" %>
+        </div>
+
+        <div>
+          <%= f.label :mensagem, class: "block text-[10px] font-black text-white/50 uppercase tracking-widest mb-2 ml-1" %>
+          <%= f.text_area :mensagem, rows: 4, placeholder: "Como podemos ajudar?", class: "w-full bg-white/5 border-white/10 rounded-2xl px-4 text-white text-sm focus:ring-orange-500 focus:border-orange-500 transition-all py-4" %>
+        </div>
+
+        <%= f.submit "ENVIAR MENSAGEM", class: "w-full bg-orange-500 hover:bg-orange-600 text-white font-black text-xs py-5 rounded-2xl shadow-xl transition-all transform active:scale-95 cursor-pointer tracking-widest" %>
+      <% end %>
+    </div>
+  </div>
+</section>

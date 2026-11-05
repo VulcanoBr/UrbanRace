@@ -1,0 +1,91 @@
+<div class="sm:flex sm:items-center sm:justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Base de Atletas</h1>
+    <p class="mt-2 text-sm text-gray-700 dark:text-gray-400">Gerencie todos os corredores cadastrados no sistema.</p>
+  </div>
+  <div class="mt-4 sm:ml-16 sm:mt-0">
+    <%= link_to "Cadastrar Atleta", new_organizer_athlete_path, class: "block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+</div>
+
+
+<%= form_with url: organizer_athletes_path,
+              method: :get,
+              scope: nil,
+              class: "mb-6",
+              data: { turbo: true } do |form| %>
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div class="w-full max-w-md">
+      <%= form.label :query,
+                     "Buscar atletas",
+                     class: "sr-only" %>
+
+      <%= form.search_field :query,
+                            value: params[:query],
+                            placeholder: "Filtrar por nome, CPF ou e-mail...",
+                            class: "block w-full rounded-md border-gray-300 px-2 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white sm:text-sm" %>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <%= form.submit "Buscar",
+                      class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 cursor-pointer" %>
+
+      <% if params[:query].present? %>
+        <%= link_to "Limpar filtros",
+                    organizer_athletes_path,
+                    class: "rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+
+<div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
+  <div class="min-w-full overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-900/50">
+        <tr>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Nome</th>
+          <th class="hidden lg:table-cell px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">E-mail</th>
+          <th class="hidden md:table-cell px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">CPF</th>
+          <th class="hidden md:table-cell px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Telefone</th>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Sexo</th>
+          <th class="relative py-3.5 pl-3 pr-6 sm:pr-0"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+        <% @athletes.each do |athlete| %>
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <td class="whitespace-nowrap px-6 py-4">
+              <div class="font-medium text-gray-900 dark:text-white"><%= athlete.nome %></div>
+              <div class="text-xs text-gray-500 lg:hidden"><%= athlete.email_address %></div>
+            </td>
+            <td class="hidden lg:table-cell whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+              <%= athlete.email_address %>
+            </td>
+            <td class="hidden md:table-cell whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+              <%= format_cpf(athlete.cpf) %>
+            </td>
+            <td class="hidden md:table-cell whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+              <%= format_phone(athlete.telefone, fallback: "Sem contato") %>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+              <%= athlete.sexo.to_s.upcase.presence || "—" %>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+              <%= link_to "Editar", edit_organizer_athlete_path(athlete), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+              <%= link_to "Histórico", history_organizer_athlete_path(athlete), class: "text-blue-600 hover:text-blue-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <!-- Paginação -->
+        <div class="mt-2 flex justify-center">
+        <div class="glass-card p-2 rounded-2xl border-gray-500 flex items-center gap-1 text-white">
+          <%= paginate @athletes, window: 2, outer_window: 1, class: "urbanrace-pagination" %>
+        </div>
+      </div>
+    
+  </div>
+</div>

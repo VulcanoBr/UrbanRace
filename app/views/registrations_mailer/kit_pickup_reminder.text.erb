@@ -1,0 +1,34 @@
+<%# app/views/registrations_mailer/kit_pickup_reminder.text.erb %>
+<%= @urgency ? "⚠️  URGENTE — Retire seu kit hoje!" : "📦  Lembrete: retirada de kit" %>
+Faltam <%= @hours_label %> para a largada de <%= @event.nome %>
+================================================================
+
+Olá, <%= @athlete.nome.split.first %>!
+
+<% if @urgency %>
+ATENÇÃO: Sua largada é amanhã e você ainda não retirou o kit.
+Sem o kit, não há dorsal — sem dorsal não é possível participar.
+
+<% end %>
+SUA INSCRIÇÃO
+-------------
+Evento:         <%= @event.nome %>
+Data da largada:<%= @event.data_largada.strftime("%d/%m/%Y às %Hh%M") %>
+Distância:      <%= @registration.distance.nome %>
+Categoria:      <%= @registration.category.nome %>
+Tamanho do kit: <%= @registration.tamanho_kit %>
+<% if @registration.numero_dorsal.present? %>
+Número (dorsal): <%= @registration.numero_dorsal %>
+<% end %>
+
+O QUE TRAZER NA RETIRADA
+-------------------------
+• Documento com foto (RG, CNH ou passaporte)
+• Confirmação da inscrição (este e-mail ou QR Code)
+• Retirada por terceiro: procuração simples + cópia do doc. do titular
+
+Dúvidas? Fale conosco: <%= Rails.application.config.x.support_email rescue "suporte@urbanrace.com.br" %>
+
+----------------------------------------------------------------
+Você recebeu este e-mail porque está inscrito em <%= @event.nome %>.
+© <%= Date.today.year %> UrbanRace. Todos os direitos reservados.

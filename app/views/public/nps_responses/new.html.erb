@@ -1,0 +1,46 @@
+<%# app/views/public/nps_responses/new.html.erb %>
+<div class="max-w-2xl mx-auto py-12 px-6">
+  <div class="text-center mb-12">
+    <h2 class="text-3xl font-black text-gray-900">Como foi sua corrida?</h2>
+    <p class="text-gray-500 mt-2">Sua opinião ajuda a melhorar as próximas edições.</p>
+  </div>
+
+  <%= form_with model: @nps_form, url: nps_responses_path(params[:registration_token]), class: "space-y-10" do |f| %>
+    
+    <!-- Pergunta Principal do NPS -->
+    <div class="bg-blue-50 p-8 rounded-3xl border-2 border-blue-100">
+      <p class="text-center font-bold text-blue-900 mb-6">Em uma escala de 0 a 10, qual a probabilidade de você recomendar esta corrida a um amigo?</p>
+      <div class="flex justify-between gap-1 sm:gap-2">
+        <% (0..10).each do |n| %>
+          <label class="flex-1">
+            <%= f.radio_button :nota_geral, n, class: "peer sr-only" %>
+            <div class="text-center py-3 rounded-lg bg-white border border-blue-200 cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600 hover:bg-blue-100 transition shadow-sm font-bold text-sm">
+              <%= n %>
+            </div>
+          </label>
+        <% end %>
+      </div>
+      <div class="flex justify-between mt-2 text-[10px] text-blue-400 font-bold uppercase tracking-widest">
+        <span>Não recomendo</span>
+        <span>Recomendo muito</span>
+      </div>
+    </div>
+
+    <!-- Notas por Dimensão -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <% [:nota_percurso, :nota_organizacao, :nota_estrutura, :nota_comunicacao].each do |dimensao| %>
+        <div class="space-y-2">
+          <%= f.label dimensao, dimensao.to_s.split('_').last.humanize, class: "text-sm font-bold text-gray-700" %>
+          <%= f.select dimensao, (1..10).to_a.reverse, { prompt: "Nota" }, class: "block w-full rounded-xl px-3 py-1 border-gray-200" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :comentario, "O que mais gostaria de nos contar? (Opcional)", class: "text-sm font-bold text-gray-700" %>
+      <%= f.text_area :comentario, rows: 4, class: "mt-1 block w-full rounded-2xl px-3 py-1 border-gray-200 focus:ring-blue-500" %>
+    </div>
+
+    <%= f.submit "ENVIAR AVALIAÇÃO", class: "w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 transition shadow-xl cursor-pointer" %>
+  <% end %>
+</div>

@@ -1,0 +1,140 @@
+<div class="min-h-screen flex bg-white dark:bg-gray-900">
+
+  <!-- Lado esquerdo -->
+  <div class="flex-1 flex flex-col justify-center px-6 py-12 lg:w-1/2">
+
+    <div class="mx-auto w-full max-w-md">
+
+      <h1 class="text-3xl font-black text-gray-900 dark:text-white uppercase">
+        Recuperar Senha
+      </h1>
+
+      <p class="mt-3 text-gray-500">
+        Informe o e-mail utilizado em sua conta.
+        Enviaremos um link para redefinir sua senha.
+      </p>
+
+      <%= form_with url: passwords_path,
+                    method: :post,
+                    data: { turbo: false },
+                    class: "mt-10 space-y-6" do |f| %>
+
+        <!-- Tipo de usuário -->
+
+        <div>
+
+          <label class="block text-xs font-black uppercase tracking-widest text-gray-400 mb-3">
+
+            Tipo de Conta
+
+          </label>
+
+          <div class="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-2xl">
+
+            <label class="flex-1 cursor-pointer">
+
+              <%= radio_button_tag :user_type, "athlete", checked: true,
+                                
+                                   class: "peer sr-only" %>
+
+              <div class="text-center py-3 rounded-xl
+                          peer-checked:bg-orange-500
+                          peer-checked:text-white
+                          font-bold">
+
+                ATLETA
+
+              </div>
+
+            </label>
+
+            <label class="flex-1 cursor-pointer">
+
+              <%= radio_button_tag :user_type,
+                                   "operation",
+                                   
+                                   class: "peer sr-only" %>
+
+              <div class="text-center py-3 rounded-xl
+                          peer-checked:bg-orange-500
+                          peer-checked:text-white
+                          font-bold">
+
+                OPERATION
+
+              </div>
+
+            </label>
+
+              <label class="flex-1 cursor-pointer">
+
+              <%= radio_button_tag :user_type,
+                                   "organizer",
+                                   
+                                   class: "peer sr-only" %>
+
+              <div class="text-center py-3 rounded-xl
+                          peer-checked:bg-orange-500
+                          peer-checked:text-white
+                          font-bold">
+
+                ORGANIZADOR
+
+              </div>
+
+            </label>
+
+          </div>
+
+        </div>
+
+        <!-- Email -->
+
+        <div>
+
+          <%= label_tag :email_address,
+                        "E-mail",
+                        class:"block text-white text-sm font-bold mb-2" %>
+
+          <%= email_field_tag :email_address,
+                              nil,
+                              required:true,
+                              autofocus:true,
+                              autocomplete:"email",
+                              placeholder:"voce@email.com",
+                              class:"w-full text-white rounded-xl border-gray-300 py-3 px-4" %>
+
+        </div>
+
+        <!-- Botão -->
+
+        <%= submit_tag "ENVIAR INSTRUÇÕES",
+            class:"w-full bg-green-700 hover:bg-blue-800
+                   text-white rounded-xl py-4
+                   font-black uppercase cursor-pointer" %>
+
+        <%= link_to "VOLTAR AO LOGIN",
+            new_session_path,
+            class:"block text-center border rounded-xl py-4
+                   font-bold text-gray-400 hover:bg-red-300" %>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+  <!-- Lado Direito -->
+
+  <div class="hidden flex-col lg:flex flex-1 bg-green-800 items-center justify-center">
+
+      <%= image_tag "logo_urbanrace_3d.png",
+          class:"w-full max-w-md" %>
+
+      <p class="mt-12 text-blue-200 text-lg font-medium text-center max-w-md">
+        A plataforma oficial para organizar e viver a melhor experiência em corridas de rua.
+      </p>
+
+  </div>
+
+</div>

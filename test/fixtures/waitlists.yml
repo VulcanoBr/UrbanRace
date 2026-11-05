@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  athlete: one
+  category: one
+  posicao: 1
+  data_entrada: 2026-05-31 23:08:24
+  status: MyString
+
+two:
+  athlete: two
+  category: two
+  posicao: 1
+  data_entrada: 2026-05-31 23:08:24
+  status: MyString

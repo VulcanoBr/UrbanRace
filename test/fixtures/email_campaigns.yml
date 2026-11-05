@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  assunto: MyString
+  segmento: MyString
+  enviados: 1
+  abertos: 1
+  clicados: 1
+  enviado_em: 2026-05-31 23:31:19
+
+two:
+  event: two
+  assunto: MyString
+  segmento: MyString
+  enviados: 1
+  abertos: 1
+  clicados: 1
+  enviado_em: 2026-05-31 23:31:19

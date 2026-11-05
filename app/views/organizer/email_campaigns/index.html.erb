@@ -1,0 +1,32 @@
+<div class="sm:flex sm:items-center sm:justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold dark:text-white">E-mail Marketing</h1>
+    <p class="text-sm text-gray-500">Campanhas enviadas para <%= @event.nome %></p>
+  </div>
+  <%= link_to "Nova Campanha", new_organizer_event_email_campaign_path(@event), class: "bg-blue-600 text-white px-4 py-2 rounded-xl font-bold text-sm" %>
+</div>
+
+<div class="grid grid-cols-1 gap-4">
+  <% @campaigns.each do |campaign| %>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border shadow-sm flex items-center justify-between">
+      <div class="flex-1">
+        <h3 class="font-bold text-gray-900 dark:text-white text-lg"><%= campaign.assunto %></h3>
+        <div class="flex gap-4 mt-1">
+          <span class="text-xs font-bold text-blue-600 uppercase tracking-widest"><%= campaign.segmento.humanize %></span>
+          <span class="text-xs text-gray-400">Enviado em: <%= campaign.enviado_em&.strftime("%d/%m/%Y %H:%M") || "Processando..." %></span>
+        </div>
+      </div>
+      
+      <div class="flex gap-8 text-center">
+        <div>
+          <p class="text-xl font-black text-gray-900 dark:text-white"><%= campaign.enviados %></p>
+          <p class="text-[10px] text-gray-400 uppercase font-bold">Enviados</p>
+        </div>
+        <div>
+          <p class="text-xl font-black text-green-600"><%= campaign.abertos || 0 %></p>
+          <p class="text-[10px] text-gray-400 uppercase font-bold">Abertos</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

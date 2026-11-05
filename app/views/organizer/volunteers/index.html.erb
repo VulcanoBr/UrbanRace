@@ -1,0 +1,111 @@
+<div class="sm:flex sm:items-center sm:justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Voluntários</h1>
+    <p class="mt-2 text-sm text-gray-700 dark:text-gray-400">Banco de talentos e equipe de apoio para os eventos.</p>
+  </div>
+  <div class="mt-4 sm:ml-16 sm:mt-0">
+    <%= link_to "Novo Voluntário", new_organizer_volunteer_path, class: "block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  </div>
+</div>
+
+<div class="mb-6 rounded-xl bg-white p-4 shadow-sm ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-gray-700">
+  <%= form_with url: organizer_volunteers_path,
+                method: :get,
+                local: true,
+                class: "grid grid-cols-1 gap-4 md:grid-cols-3 md:items-end" do |form| %>
+
+    <div>
+      <%= form.label :nome,
+                     "Nome do voluntário",
+                     class: "mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+
+      <%= form.search_field :nome,
+                            value: @nome,
+                            placeholder: "Digite o nome...",
+                            class: "block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white" %>
+    </div>
+
+    <div>
+      <%= form.label :funcao_preferida,
+                     "Função preferida",
+                     class: "mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+
+      <%= form.select :funcao_preferida,
+                      options_for_select(
+                        @funcoes_preferidas.map { |funcao| [funcao, funcao] },
+                        @funcao_preferida
+                      ),
+                      { include_blank: "Todas as funções" },
+                      class: "block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= form.submit "Filtrar",
+                      class: "inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+
+      <% if @nome.present? || @funcao_preferida.present? %>
+        <%= link_to "Limpar filtros",
+                    organizer_volunteers_path,
+                    class: "inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700" %>
+      <% end %>
+    </div>
+
+  <% end %>
+</div>
+
+<div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
+  <div class="min-w-full overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-900/50">
+        <tr>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Nome / Email</th>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Telefone</th>
+          <th class="px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Função Preferida</th>
+          <th class="hidden lg:table-cell px-6 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white">Participações</th>
+          <th class="relative py-3.5 pl-3 pr-6 sm:pr-0"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+        <% @volunteers.each do |volunteer| %>
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <td class="whitespace-nowrap px-6 py-4">
+              <div class="font-medium text-gray-900 dark:text-white"><%= volunteer.nome %></div>
+              <div class="text-xs text-gray-500"><%= volunteer.email %></div>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+              <%= volunteer.telefone.present? ? volunteer.telefone.gsub(/^(\d{2})(\d{5})(\d{4})$/, '(\1) \2-\3') : "Não informado" %>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-sm">
+              <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 dark:bg-purple-900/20 dark:text-purple-400">
+                <%= volunteer.funcao_preferida %>
+              </span>
+            </td>
+            <td class="hidden lg:table-cell whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+              <%= volunteer.volunteer_shifts.count %> eventos
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+              <%= link_to "Editar", edit_organizer_volunteer_path(volunteer), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+              <%= link_to assign_shift_organizer_volunteer_path(volunteer), class: "inline-flex items-center gap-1 text-green-600 hover:text-green-800 font-bold" do %>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                Escalar
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <!-- Paginação -->
+    <div class="mt-2 flex justify-center">
+      <div class="glass-card p-2 rounded-2xl border-gray-500 flex items-center gap-1 text-white">
+        <%= paginate @volunteers,
+             params: {
+               nome: @nome.presence,
+               funcao_preferida: @funcao_preferida.presence
+             },
+             window: 2,
+             outer_window: 1,
+             class: "urbanrace-pagination" %>
+      </div>
+    </div>
+  </div>
+</div>

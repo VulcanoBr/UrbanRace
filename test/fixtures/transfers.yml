@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  registration: one
+  athlete: one
+  taxa: 9.99
+  status: MyString
+  solicitada_em: 2026-05-31 23:13:58
+  concluida_em: 2026-05-31 23:13:58
+
+two:
+  registration: two
+  athlete: two
+  taxa: 9.99
+  status: MyString
+  solicitada_em: 2026-05-31 23:13:58
+  concluida_em: 2026-05-31 23:13:58

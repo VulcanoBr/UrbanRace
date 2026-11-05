@@ -1,0 +1,120 @@
+<%# ── Atleta: só re-renderiza quando evento muda (distance_id em branco) ── %>
+<% if @registration_form.selected_distance_id.blank? %>
+  <%= turbo_stream.replace "registration_athlete_wrapper" do %>
+    <div class="sm:col-span-3" id="registration_athlete_wrapper">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Atleta
+      </label>
+      <%= collection_select(
+            :organizer_registration_form,
+            :athlete_id,
+            @registration_form.athletes_options,
+            :id,
+            ->(a) { "#{a.nome} — #{a.cpf}" },
+            {
+              selected: @registration_form.selected_athlete_id,
+              prompt: @registration_form.event_id.present? ?
+                      "Selecione o Atleta" : "Selecione o Evento primeiro"
+            },
+            {
+              disabled: @registration_form.event_id.blank?,
+              class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300
+                      shadow-sm focus:ring-blue-500 dark:bg-gray-700
+                      dark:border-gray-600 dark:text-white sm:text-sm
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+            }
+          ) %>
+      <% if @registration_form.event_id.present? %>
+        <p class="mt-1 text-xs text-gray-400">
+          Exibindo apenas atletas sem inscrição ativa neste evento.
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<%# ── Distância: só re-renderiza quando evento muda ── %>
+<% if @registration_form.selected_distance_id.blank? %>
+  <%= turbo_stream.replace "registration_distance_wrapper" do %>
+    <div class="sm:col-span-3" id="registration_distance_wrapper">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Distância
+      </label>
+      <%= collection_select(
+            :organizer_registration_form,
+            :distance_id,
+            @registration_form.distances_options,
+            :id, :nome,
+            {
+              selected: @registration_form.selected_distance_id,
+              prompt: @registration_form.event_id.present? ?
+                      "Selecione a Distância" : "Selecione o Evento primeiro"
+            },
+            {
+              disabled: @registration_form.event_id.blank?,
+              data: {
+                action: "change->dynamic-select#distanceChanged",
+                dynamic_select_target: "distanceSelect"
+              },
+              class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300
+                      shadow-sm focus:ring-blue-500 dark:bg-gray-700
+                      dark:border-gray-600 dark:text-white sm:text-sm
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+            }
+          ) %>
+    </div>
+  <% end %>
+<% end %>
+
+<%# ── Categoria: sempre re-renderiza (muda com evento ou distância) ── %>
+<%= turbo_stream.replace "registration_category_wrapper" do %>
+  <div class="sm:col-span-3" id="registration_category_wrapper">
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+      Categoria
+    </label>
+    <%= collection_select(
+          :organizer_registration_form,
+          :category_id,
+          @registration_form.categories_options,
+          :id, :nome,
+          {
+            prompt: @registration_form.distance_id.present? ?
+                    "Selecione a Categoria" : "Selecione a Distância primeiro"
+          },
+          {
+            disabled: @registration_form.distance_id.blank?,
+            class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300
+                    shadow-sm focus:ring-blue-500 dark:bg-gray-700
+                    dark:border-gray-600 dark:text-white sm:text-sm
+                    disabled:opacity-50 disabled:cursor-not-allowed"
+          }
+        ) %>
+  </div>
+<% end %>
+
+<%# ── Lote: sempre re-renderiza (muda com evento ou distância) ── %>
+<%= turbo_stream.replace "registration_lot_wrapper" do %>
+  <div class="sm:col-span-3" id="registration_lot_wrapper">
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+      Lote
+    </label>
+    <%= collection_select(
+          :organizer_registration_form,
+          :lot_id,
+          @registration_form.lots_options,
+          :id,
+          ->(l) { "Lote #{l.numero} — #{number_to_currency(l.preco)}" },
+          {
+            prompt: @registration_form.distance_id.present? ?
+                    "Selecione o Lote" : "Selecione a Distância primeiro"
+          },
+          {
+            disabled: @registration_form.distance_id.blank?,
+            class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300
+                    shadow-sm focus:ring-blue-500 dark:bg-gray-700
+                    dark:border-gray-600 dark:text-white sm:text-sm
+                    disabled:opacity-50 disabled:cursor-not-allowed"
+          }
+        ) %>
+  </div>
+<% end %>

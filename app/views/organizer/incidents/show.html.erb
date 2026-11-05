@@ -1,0 +1,98 @@
+<%# app/views/organizer/incidents/show.html.erb %>
+<div class="max-w-4xl mx-auto pb-12">
+  <!-- Navegação e Status -->
+  <div class="flex items-center justify-between mb-6">
+    <%= link_to organizer_event_incidents_path(@event), class: "flex items-center text-sm font-bold text-gray-500 hover:text-blue-600 transition" do %>
+      <svg class="mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" /></svg>
+      Voltar para Central
+    <% end %>
+
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Status Atual:</span>
+      <%= form_with model: [:organizer, @event, @incident], class: "inline-block" do |f| %>
+        <%= f.select :status, Incident.statuses.keys.map { |s| [s.humanize, s] }, {}, 
+            { onchange: "this.form.requestSubmit()", class: "text-xs font-bold rounded-lg border-gray-300 py-1 bg-white dark:bg-gray-800 dark:text-white" } %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Hero de Gravidade -->
+  <div class="rounded-3xl p-8 mb-8 text-white shadow-lg <%= severity_bg_color(@incident.gravidade) %>">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-widest">
+            <%= @incident.tipo.humanize %>
+          </span>
+          <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-widest">
+            Gravidade <%= @incident.gravidade.humanize %>
+          </span>
+        </div>
+        <h1 class="text-4xl font-black tracking-tight">KM <%= @incident.km_local %></h1>
+        <p class="mt-2 text-white/80 font-medium">Registrado às <%= @incident.ocorrida_em.strftime("%H:%M:%S") %> • <%= time_ago_in_words(@incident.ocorrida_em) %> atrás</p>
+      </div>
+      
+      <% if @incident.registration %>
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
+          <p class="text-[10px] font-black uppercase opacity-70">Atleta Identificado</p>
+          <p class="text-xl font-bold">#<%= @incident.registration.numero_dorsal %> - <%= @incident.registration.athlete.nome %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Coluna: Detalhes e Descrição -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-100 dark:border-gray-700 shadow-sm">
+        <h3 class="text-lg font-bold mb-4 dark:text-white">Descrição da Ocorrência</h3>
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl italic">
+          "<%= @incident.descricao.presence || "Nenhuma descrição detalhada fornecida pelo voluntário." %>"
+        </p>
+        
+        <div class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-700 grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-xs font-bold text-gray-400 uppercase">Responsável pelo Registro</p>
+            <p class="text-sm font-bold dark:text-white"><%= @incident.responsavel.name %></p>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-gray-400 uppercase">Evento</p>
+            <p class="text-sm font-bold dark:text-white"><%= @incident.event.nome %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna: Ação de Emergência (Botão de Chamada) -->
+    <div class="lg:col-span-1">
+      <% if @incident.registration %>
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-3xl p-6 border-2 border-blue-100 dark:border-blue-800 sticky top-20">
+          <h3 class="text-blue-900 dark:text-blue-300 font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+            Contato de Emergência
+          </h3>
+          
+          <div class="mb-8">
+            <p class="text-2xl font-black text-blue-900 dark:text-white mb-1"><%= @incident.registration.contato_emergencia %></p>
+            <p class="text-blue-600 dark:text-blue-400 font-bold"><%= @incident.registration.fone_emergencia %></p>
+          </div>
+
+          <!-- BOTÃO DE CHAMADA DIRETA -->
+          <%= link_to "tel:#{@incident.registration.fone_emergencia.gsub(/\D/, '')}", 
+              class: "flex items-center justify-center gap-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-blue-200 dark:shadow-none transition transform active:scale-95" do %>
+            <svg class="w-6 h-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M2.25 6.62214C2.25 14.5629 8.93708 21.25 16.8779 21.25H17.1511C18.1565 21.25 19.0494 20.5937 19.3496 19.6436L20.2173 16.8942C20.4744 16.081 20.0631 15.2017 19.2612 14.8514L16.486 13.6384C15.7482 13.3157 14.8872 13.5658 14.4372 14.2307L13.4357 15.7042C11.1396 15.0345 8.96547 12.8604 8.29577 10.5643L9.76926 9.56281C10.4342 9.11276 10.6843 8.25178 10.3616 7.51403L9.14856 4.7388C8.7983 3.93693 7.91896 3.52559 7.10582 3.78267L4.35639 4.65039C3.4063 4.95058 2.75 5.84351 2.75 6.84888V7.12214C2.75 7.12214 2.25 6.62214 2.25 6.62214Z" /></svg>
+            LIGAR AGORA
+          <% end %>
+          
+          <p class="text-[10px] text-center text-blue-400 mt-4 font-bold uppercase tracking-tighter leading-tight">
+            Clique acima para iniciar uma chamada<br>de voz com o responsável.
+          </p>
+        </div>
+      <% else %>
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl p-6 border border-dashed border-gray-300 dark:border-gray-600 text-center">
+          <p class="text-sm text-gray-500 italic">Ocorrência não vinculada a um atleta inscrito. Informações de emergência indisponíveis.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

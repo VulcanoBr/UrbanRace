@@ -1,0 +1,118 @@
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <nav class="mb-2"><%= link_to "← #{@distance.event.nome}", organizer_event_path(@distance.event), class: "text-sm text-blue-600" %></nav>
+    <h1 class="text-3xl font-bold dark:text-white"><%= @distance.nome %> (<%= @distance.km %>km)</h1>
+  </div>
+  <%= link_to "Editar Distância", edit_organizer_distance_path(@distance), class: "text-sm bg-white border px-4 py-2 rounded-lg dark:bg-gray-800 dark:text-white" %>
+</div>
+
+<div class="
+  grid grid-cols-1
+  md:grid-cols-3
+  gap-6
+  mb-8
+">
+
+  <div class="
+    rounded-2xl
+    border
+    bg-white
+    p-6
+  ">
+
+    <p class="text-sm text-gray-500">
+      Vagas
+    </p>
+
+    <p class="
+      mt-2
+      text-3xl
+      font-black
+    ">
+      <%= @distance.vagas_disponiveis %>
+    </p>
+
+  </div>
+
+  <div class="
+    rounded-2xl
+    border
+    bg-white
+    p-6
+  ">
+
+    <p class="text-sm text-gray-500">
+      Ocupação
+    </p>
+
+    <p class="
+      mt-2
+      text-3xl
+      font-black
+    ">
+      <%= @distance.percentual_ocupacao %>%
+    </p>
+
+  </div>
+
+  <div class="
+    rounded-2xl
+    border
+    bg-white
+    p-6
+  ">
+
+    <p class="text-sm text-gray-500">
+      Lote Atual
+    </p>
+
+    <p class="
+      mt-2
+      text-3xl
+      font-black
+    ">
+      <%= @distance.current_lot&.numero || "-" %>
+    </p>
+
+  </div>
+
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <!-- Seção de Categorias -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-lg font-bold dark:text-white">Categorias (Faixas Etárias)</h3>
+      <%= link_to "+ Nova", new_organizer_distance_category_path(@distance), class: "text-xs bg-blue-600 text-white px-2 py-1 rounded" %>
+    </div>
+    <ul class="divide-y dark:divide-gray-700">
+      <% @distance.categories.each do |cat| %>
+        <li class="py-3 flex justify-between">
+          <span class="dark:text-gray-300"><%= cat.nome %> (<%= cat.sexo %>)</span>
+          <span class="text-gray-500 text-sm"><%= cat.idade_min %> a <%= cat.idade_max %> anos</span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <!-- Seção de Lotes -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-lg font-bold dark:text-white">Lotes de Inscrição</h3>
+      <%= link_to "+ Novo Lote", new_organizer_distance_lot_path(@distance), class: "text-xs bg-blue-600 text-white px-2 py-1 rounded" %>
+    </div>
+    <div class="space-y-4">
+      <% @distance.lots.order(:numero).each do |lot| %>
+        <div class="p-4 border rounded-lg <%= lot.ativo? ? 'border-green-200 bg-green-50 dark:bg-green-900/10' : 'bg-gray-50' %>">
+          <div class="flex justify-between font-bold">
+            <span class="dark:text-white">Lote <%= lot.numero %></span>
+            <span class="text-blue-600"><%= number_to_currency(lot.preco) %></span>
+          </div>
+          <div class="text-xs text-gray-500 mt-1">
+            <%= l lot.abertura, format: :short %> até <%= l lot.encerramento, format: :short %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

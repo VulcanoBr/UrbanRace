@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  tipo: MyString
+  orgao: MyString
+  prazo_solicitacao: 2026-05-31
+  prazo_aprovacao: 2026-05-31
+  status: MyString
+  arquivo_pdf: MyString
+
+two:
+  event: two
+  tipo: MyString
+  orgao: MyString
+  prazo_solicitacao: 2026-05-31
+  prazo_aprovacao: 2026-05-31
+  status: MyString
+  arquivo_pdf: MyString

@@ -1,0 +1,334 @@
+<div class="space-y-8">
+
+  <!-- HEADER -->
+  <div class="
+    flex flex-col lg:flex-row
+    lg:items-center
+    lg:justify-between
+    gap-6
+  ">
+
+    <div>
+
+      <p class="
+        text-sm
+        font-semibold
+        text-blue-600
+        mb-2
+      ">
+        <%= @distance.event.nome %>
+      </p>
+
+      <h1 class="
+        text-4xl
+        font-black
+        tracking-tighter
+        dark:text-white
+      ">
+        Categorias
+      </h1>
+
+      <p class="
+        mt-3
+        text-sm
+        text-gray-500
+      ">
+        Gerencie categorias da distância
+        <strong><%= @distance.nome %></strong>.
+      </p>
+
+    </div>
+
+    <%= link_to "Nova Categoria",
+        new_organizer_distance_category_path(@distance),
+        class: primary_button_class %>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="
+    overflow-hidden
+    rounded-3xl
+    border
+    bg-white
+    dark:bg-gray-800
+    shadow-sm
+  ">
+
+    <div class="overflow-x-auto">
+
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+
+        <!-- HEADER -->
+        <thead class="
+          bg-gray-50
+          dark:bg-gray-900
+        ">
+
+          <tr>
+
+            <th class="px-8 py-5 text-left text-xs font-black uppercase tracking-wider text-gray-500">
+              Categoria
+            </th>
+
+            <th class="px-6 py-5 text-center text-xs font-black uppercase tracking-wider text-gray-500">
+              Sexo
+            </th>
+
+            <th class="px-6 py-5 text-center text-xs font-black uppercase tracking-wider text-gray-500">
+              Faixa Etária
+            </th>
+
+            <th class="px-6 py-5 text-center text-xs font-black uppercase tracking-wider text-gray-500">
+              Inscritos
+            </th>
+
+            <th class="px-8 py-5 text-right text-xs font-black uppercase tracking-wider text-gray-500">
+              Ações
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <!-- BODY -->
+        <tbody class="
+          divide-y divide-gray-100
+          dark:divide-gray-700
+        ">
+
+          <% @categories.each do |category| %>
+
+            <tr class="
+              hover:bg-gray-50
+              dark:hover:bg-gray-700/40
+              transition
+            ">
+
+              <!-- CATEGORIA -->
+              <td class="px-8 py-6">
+
+                <div class="space-y-2">
+
+                  <p class="
+                    text-sm
+                    font-bold
+                    text-gray-900
+                    dark:text-white
+                  ">
+                    <%= category.nome %>
+                  </p>
+
+                  <p class="
+                    text-xs
+                    text-gray-500
+                  ">
+                    Categoria competitiva
+                  </p>
+
+                </div>
+
+              </td>
+
+              <!-- SEXO -->
+              <td class="px-6 py-6 text-center">
+
+                <span class="
+                  inline-flex items-center
+                  rounded-full
+                  px-4 py-2
+                  text-xs
+                  font-bold
+                  <%= sexo_badge_color(category.sexo) %>
+                ">
+
+                  <%= category.sexo %>
+
+                </span>
+
+              </td>
+
+              <!-- FAIXA -->
+              <td class="px-6 py-6 text-center">
+
+                <span class="
+                  inline-flex items-center
+                  rounded-full
+                  bg-gray-100
+                  px-4 py-2
+                  text-sm
+                  font-semibold
+                  text-gray-700
+                ">
+
+                  <%= category.faixa_etaria %>
+
+                </span>
+
+              </td>
+
+              <!-- INSCRITOS -->
+              <td class="px-6 py-6 text-center">
+
+                <div class="
+                  inline-flex items-center
+                  rounded-full
+                  bg-blue-50
+                  px-4 py-2
+                  text-sm
+                  font-bold
+                  text-blue-700
+                ">
+
+                  <%= category.registrations_for_event(@distance.event).count %>
+
+                </div>
+
+              </td>
+
+              <!-- ACTIONS -->
+              <td class="px-8 py-6">
+
+                <div class="
+                  flex items-center
+                  justify-end
+                  gap-3
+                ">
+
+                  <!-- VISUALIZAR -->
+                  <%= link_to "Visualizar",
+                      organizer_category_path(category),
+                      class: "
+                        rounded-xl
+                        border
+                        px-4 py-2
+                        text-sm
+                        font-semibold
+                        text-gray-700
+                        hover:bg-gray-100
+                        transition
+                        dark:border-gray-700
+                        dark:text-gray-300
+                      " %>
+
+                  <!-- EDITAR -->
+                  <%= link_to "Editar",
+                      edit_organizer_category_path(category),
+                      class: "
+                        rounded-xl
+                        bg-blue-600
+                        px-4 py-2
+                        text-sm
+                        font-semibold
+                        text-white
+                        hover:bg-blue-500
+                        transition
+                      " %>
+
+                  <!-- EXCLUIR -->
+                  <%= button_to organizer_category_path(category),
+                      method: :delete,
+                      form: {
+                        data: {
+                          turbo_confirm: "Deseja remover esta categoria?"
+                        }
+                      },
+                      class: "
+                        rounded-xl
+                        bg-red-600
+                        px-4 py-2
+                        text-sm
+                        font-semibold
+                        text-white
+                        hover:bg-red-500
+                        transition
+                        cursor-pointer
+                      " do %>
+
+                    Excluir
+
+                  <% end %>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          <% end %>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- EMPTY STATE -->
+  <% if @categories.empty? %>
+
+    <div class="
+      rounded-3xl
+      border-2 border-dashed
+      border-gray-300
+      bg-white
+      dark:bg-gray-800
+      p-16
+      text-center
+    ">
+
+      <div class="
+        mx-auto
+        flex h-20 w-20
+        items-center justify-center
+        rounded-full
+        bg-gray-100
+        dark:bg-gray-700
+      ">
+
+        <svg class="h-10 w-10 text-gray-400"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 11H5m14-7H5m14 14H5" />
+
+        </svg>
+
+      </div>
+
+      <h3 class="
+        mt-6
+        text-xl
+        font-bold
+        dark:text-white
+      ">
+        Nenhuma categoria cadastrada
+      </h3>
+
+      <p class="
+        mt-3
+        text-sm
+        text-gray-500
+      ">
+        Crie categorias para organizar atletas
+        por idade e sexo.
+      </p>
+
+      <div class="mt-8">
+
+        <%= link_to "Nova Categoria",
+            new_organizer_distance_category_path(@distance),
+            class: primary_button_class %>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>

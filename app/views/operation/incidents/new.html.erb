@@ -1,0 +1,78 @@
+<%# app/views/operation/incidents/new.html.erb %>
+<div class="max-w-lg mx-auto">
+  
+  <%# Header: Aumentado o contraste e adicionado um fundo de alerta %>
+  <div class="mb-8 p-4 bg-red-50 border-l-8 border-red-600 rounded-r-2xl flex items-center gap-4 shadow-sm">
+    <div class="p-3 bg-red-600 rounded-xl text-white shadow-lg shadow-red-200">
+      <svg class="w-8 h-8 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-2xl font-black text-red-700 uppercase tracking-tighter leading-none">Relatar Emergência</h2>
+      <p class="text-[10px] font-bold text-red-500 uppercase tracking-widest mt-1">Ação imediata • Central será notificada</p>
+    </div>
+  </div>
+
+  <%= form_with model: @incident_form, url: operation_event_incidents_path(@event), class: "space-y-6" do |f| %>
+    
+    <% if @incident_form.errors.any? %>
+      <div class="mb-8 rounded-2xl border-2 border-red-200 bg-red-50 p-6">
+        <h3 class="text-sm font-black text-red-700 mb-3 uppercase tracking-widest">Atenção:</h3>
+        <ul class="list-disc ml-5 text-sm text-red-600 font-bold">
+          <% @incident_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Dorsal e KM (Lado a lado) -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-white p-4 rounded-2xl border-2 border-slate-100 focus-within:border-red-500 transition-colors shadow-sm">
+        <%= f.label :dorsal, "Nº Peito (Dorsal)", class: "block text-[10px] font-black text-slate-400 uppercase mb-1" %>
+        <%= f.number_field :dorsal, placeholder: "0000", class: "w-full border-none p-0 text-3xl font-black text-slate-900 focus:ring-0 placeholder-slate-200" %>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border-2 border-slate-100 focus-within:border-red-500 transition-colors shadow-sm">
+        <%= f.label :km_local, "KM Local", class: "block text-[10px] font-black text-slate-400 uppercase mb-1" %>
+        <%= f.number_field :km_local, step: 0.1, placeholder: "0.0", class: "w-full border-none p-0 text-3xl font-black text-slate-900 focus:ring-0 placeholder-slate-200" %>
+      </div>
+    </div>
+
+    <!-- Gravidade -->
+    <div>
+      <p class="text-xs font-black text-slate-500 uppercase mb-3 ml-1 tracking-widest">Nível de Gravidade</p>
+      <div class="grid grid-cols-2 gap-3">
+        <% [['BAIXA', 'low', 'peer-checked:bg-green-600'], ['MÉDIA', 'medium', 'peer-checked:bg-yellow-500'], ['ALTA', 'high', 'peer-checked:bg-orange-500'], ['CRÍTICA', 'critical', 'peer-checked:bg-red-600']].each do |label, value, color| %>
+          <label class="cursor-pointer">
+            <%= f.radio_button :gravidade, value, class: "peer sr-only" %>
+            <div class="py-4 text-center rounded-2xl bg-slate-100 text-slate-400 font-black text-xs transition-all peer-checked:text-white peer-checked:shadow-lg peer-checked:scale-105 <%= color %>">
+              <%= label %>
+            </div>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Tipo de Ocorrência -->
+    <div class="bg-white rounded-2xl border-2 border-slate-100 focus-within:border-red-500 shadow-sm overflow-hidden">
+      <%= f.select :tipo, Incident.tipos.keys.map { |k| [k.humanize.upcase, k] }, { prompt: "TIPO DE INCIDENTE" }, class: "w-full border-none py-5 px-4 font-black text-slate-900 focus:ring-0 text-sm" %>
+    </div>
+
+    <!-- Descrição: Ajustado cor do texto e foco -->
+    <div class="bg-white p-4 rounded-2xl border-2 border-slate-100 focus-within:border-red-500 shadow-sm transition-colors">
+      <%= f.label :descricao, "Descrição da Vítima/Estado", class: "block text-[10px] font-black text-slate-400 uppercase mb-2" %>
+      <%= f.text_area :descricao, 
+          placeholder: "Ex: Atleta consciente, dor no peito, escoriações leves...", 
+          rows: 4, 
+          class: "w-full border-none p-0 text-base font-bold text-slate-900 placeholder-slate-300 focus:ring-0 bg-transparent" %>
+    </div>
+
+    <!-- Botão de Envio Gigante -->
+    <div class="pt-4">
+      <%= f.submit "DISPARAR ALERTA AGORA", 
+          class: "w-full bg-red-600 text-white py-6 rounded-[32px] font-black text-xl shadow-2xl shadow-red-300 active:scale-95 transition-all transform uppercase italic tracking-tighter cursor-pointer" %>
+      <p class="text-center text-[10px] text-slate-400 mt-4 font-bold uppercase tracking-widest">Pressione para notificar a equipe médica</p>
+    </div>
+  <% end %>
+</div>

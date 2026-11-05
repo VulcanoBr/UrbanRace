@@ -1,0 +1,38 @@
+Olá, <%= @athlete.nome %>!
+
+Infelizmente o evento <%= @event.nome %> foi cancelado<% if @event.cancellation_reason.present? %> pelo seguinte motivo: <%= @event.cancellation_reason %><% end %>.
+
+DADOS DA SUA INSCRIÇÃO
+-----------------------
+Evento:     <%= @event.nome %>
+Data:       <%= l @event.data_largada, format: :long %>
+Inscrição:  #<%= @registration.id %>
+<% if @payment&.status_pago? %>
+Valor pago: <%= number_to_currency(@payment.valor) %>
+Método:     <%= @payment.metodo.humanize %>
+<% end %>
+
+SITUAÇÃO DO REEMBOLSO
+----------------------
+<% case @refund_status %>
+<% when :not_charged %>
+Você NÃO será cobrado. Seu pagamento estava pendente e não chegou a ser debitado.
+
+<% when :refunded_automatically %>
+Estorno automático solicitado para <%= number_to_currency(@payment.valor) %>.
+Prazo: 1-2 faturas (cartão) ou até 7 dias úteis (Pix/débito).
+
+<% when :manual_refund %>
+<% if @payment&.metodo_boleto? %>
+Boletos não permitem estorno automático. Entraremos em contato em até 5 dias úteis
+para solicitar sua chave Pix e devolver <%= number_to_currency(@payment.valor) %>.
+<% else %>
+Não foi possível estornar automaticamente. Nossa equipe entrará em contato
+em até 5 dias úteis para devolver <%= number_to_currency(@payment.valor) %>.
+<% end %>
+<% end %>
+
+Pedimos desculpas pelo transtorno. Esperamos vê-lo em próximos eventos!
+
+--
+UrbanRace · urbanrace.com.br

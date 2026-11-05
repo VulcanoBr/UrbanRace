@@ -1,0 +1,50 @@
+# examples:
+#   periodic_cleanup:
+#     class: CleanSoftDeletedRecordsJob
+#     queue: background
+#     args: [ 1000, { batch_size: 500 } ]
+#     schedule: every hour
+#   periodic_cleanup_with_command:
+#     command: "SoftDeletedRecord.due.delete_all"
+#     priority: 2
+#     schedule: at 5am every day
+
+expirar_lista_espera:
+  class: ExpirarListaEsperaJob
+  schedule: every 6 hour # roda toda hora, expira quem passou de 48h
+  queue: default
+
+license_alert:
+  class: LicenseAlertJob
+  schedule: every day at 8:00 am
+  queue: default
+
+update_lot_status:
+  class: UpdateLotsStatusJob
+  schedule: every day at 8:00 am
+  queue: default
+
+# O scheduler roda às 8 h da manhã todos os dias.
+# Nesse horário ele encontra:
+#   - Eventos que largam em ~48 h → enfileira lembretes "48h"  (ex: largada amanhã às 8h → lembrete hoje)
+#   - Eventos que largam em ~24 h → enfileira lembretes "24h"  (ex: largada hoje à tarde → lembrete de manhã)
+#
+# A janela de tolerância de ±30 min (configurada no job) garante
+# que largadas em qualquer horário do dia-alvo sejam capturadas.
+
+kit_pickup_reminder_48h:
+  class: KitPickupReminderSchedulerJob
+  schedule: every day at 8:00 am
+  queue: default
+
+# Opcional: um segundo disparo à tarde captura eventos com largada
+# no dia seguinte cedo e garante maior precisão no horário do e-mail.
+kit_pickup_reminder_afternoon:
+  class: KitPickupReminderSchedulerJob
+  schedule: every day at 2:00 pm
+  queue: default
+
+production:
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every hour at minute 12

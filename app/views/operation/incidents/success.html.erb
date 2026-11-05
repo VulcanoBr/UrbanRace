@@ -1,0 +1,44 @@
+<%# app/views/operation/incidents/success.html.erb %>
+<div class="max-w-lg mx-auto text-center">
+  <div class="mb-8">
+    <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 text-green-600 rounded-full mb-4">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <h1 class="text-3xl font-black text-slate-900 uppercase">Alerta Enviado!</h1>
+    <p class="text-slate-500 font-bold">A central de controle já foi notificada.</p>
+  </div>
+
+  <% if @emergency_info %>
+    <div class="bg-red-50 border-2 border-red-200 rounded-[32px] p-6 mb-8 text-left">
+      <p class="text-[10px] font-black text-red-600 uppercase tracking-widest mb-4">Dados de Emergência do Atleta</p>
+      
+      <div class="space-y-4">
+        <div>
+          <p class="text-[10px] font-bold text-red-400 uppercase">Atleta</p>
+          <p class="text-lg font-black text-red-900 uppercase"><%= @emergency_info[:atleta] %></p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-[10px] font-bold text-red-400 uppercase">Contato</p>
+            <p class="font-black text-red-900"><%= @emergency_info[:contato] %></p>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold text-red-400 uppercase">Telefone</p>
+            <p class="font-black text-red-900"><%= format_phone(@emergency_info[:telefone]) %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="space-y-4">
+    <%= link_to "NOVA OCORRÊNCIA", new_operation_event_incident_path(@event), 
+        class: "block w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs tracking-widest hover:bg-slate-800 transition" %>
+    
+    <%= link_to "VOLTAR PARA OPERAÇÃO", operation_event_checkins_path(@event), 
+        class: "block w-full bg-white text-slate-500 py-4 rounded-2xl font-black text-xs tracking-widest border border-slate-200" %>
+  </div>
+</div>

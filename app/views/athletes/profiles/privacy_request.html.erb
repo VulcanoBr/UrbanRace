@@ -1,0 +1,60 @@
+<%# app/views/athletes/profiles/privacy_request.html.erb %>
+<div class="max-w-2xl mx-auto py-10 px-4">
+  <div class="mb-8">
+    <%= link_to edit_athletes_profile_path, class: "text-sm font-bold text-gray-500 hover:text-blue-600 flex items-center gap-1" do %>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 19l-7-7 7-7" /></svg>
+      Voltar para Perfil
+    <% end %>
+    <h1 class="text-3xl font-black text-red-600 mt-4 uppercase tracking-tighter">Encerrar minha Conta</h1>
+  </div>
+
+  <div class="bg-red-50 border-2 border-red-200 rounded-3xl p-6 mb-8">
+    <div class="flex gap-4">
+      <div class="bg-red-600 text-white p-2 rounded-xl h-fit">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+      </div>
+      <div>
+        <h3 class="font-black text-red-900 uppercase text-sm">Atenção: Esta ação é irreversível</h3>
+        <ul class="mt-2 space-y-2 text-sm text-red-700 font-medium">
+          <li>• Seu e-mail, CPF e telefone serão <strong>removidos permanentemente</strong>.</li>
+          <li>• Você perderá acesso a esta área e aos seus comprovantes.</li>
+          <li>• Seus resultados históricos serão mantidos apenas como "Atleta Anônimo" para fins estatísticos.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <%= form_with model: @privacy_form, url: anonymize_athletes_profile_path, method: :delete, class: "space-y-8" do |f| %>
+    
+    <% if @privacy_form.errors.any? %>
+      <div class="p-4 bg-red-100 text-red-700 rounded-xl text-xs font-bold">
+        <%= @privacy_form.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
+
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-6">
+      <div>
+        <%= f.label :password, "Para confirmar, digite sua senha atual", class: "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" %>
+        <%= f.password_field :password, class: "w-full rounded-xl border-gray-300 dark:bg-gray-900 py-3 focus:ring-red-500 focus:border-red-500" %>
+      </div>
+
+      <div class="relative flex items-start">
+        <div class="flex h-6 items-center">
+          <%= f.check_box :confirm_erasure, class: "h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-600" %>
+        </div>
+        <div class="ml-4 text-sm leading-6">
+          <%= f.label :confirm_erasure, class: "font-bold text-gray-900 dark:text-white" do %>
+            Estou ciente e desejo anonimizar meus dados pessoais.
+          <% end %>
+          <p class="text-gray-500">Eu entendo que não poderei recuperar minha conta após este processo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-4">
+      <%= f.submit "CONFIRMAR EXCLUSÃO PERMANENTE", 
+          class: "w-full bg-red-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-red-200 hover:bg-red-700 transition transform active:scale-95 cursor-pointer uppercase tracking-widest" %>
+    </div>
+
+  <% end %>
+</div>

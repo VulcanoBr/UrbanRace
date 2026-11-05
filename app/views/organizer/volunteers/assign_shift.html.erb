@@ -1,0 +1,107 @@
+<%# app/views/organizer/volunteers/assign_shift.html.erb %>
+<%# app/views/organizer/volunteers/assign_shift.html.erb %>
+<div class="max-w-3xl mx-auto py-10 px-4">
+  <div class="mb-8">
+    <%= link_to "← Voltar", organizer_volunteers_path,
+          class: "text-sm text-gray-500 font-bold hover:text-blue-600" %>
+    <h1 class="text-3xl font-black text-gray-900 mt-2">Escalar Voluntário</h1>
+    <p class="text-gray-500">
+      Defina o posto e o turno para
+      <span class="text-blue-600 font-bold"><%= @volunteer.nome %></span>
+    </p>
+  </div>
+
+  <%# URL agora aponta para create_shift no próprio volunteers_controller %>
+  <%= form_with model: @shift_form,
+        url: create_shift_organizer_volunteer_path(@volunteer),
+        method: :post,
+        data: { controller: "eventpost-select" } do |f| %>
+
+    <%= f.hidden_field :volunteer_id %>
+
+    <% if @shift_form.errors.any? %>
+      <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 p-6">
+        <h3 class="text-sm font-bold text-red-700 mb-3">Corrija os erros abaixo</h3>
+        <ul class="list-disc ml-5 text-sm text-red-600">
+          <% @shift_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="space-y-6 bg-white p-8 rounded-2xl border shadow-sm">
+
+      <!-- 1. Seleção de Evento -->
+      <div>
+        <%= f.label :event_id, "1. Escolha o Evento",
+              class: "block text-sm font-bold text-gray-700 mb-2" %>
+        <%= f.collection_select :event_id, @events, :id, :nome,
+              { prompt: "Selecione o evento..." },
+              {
+                class: "block w-full rounded-xl px-3 py-2 border border-gray-300 focus:ring-blue-500",
+                data: {
+                  eventpost_select_target: "eventSelect",
+                  action: "change->eventpost-select#filterStations"
+                }
+              } %>
+        <% if @shift_form.errors[:event_id].any? %>
+          <p class="text-red-500 text-xs mt-1">
+            <%= @shift_form.errors[:event_id].first %>
+          </p>
+        <% end %>
+      </div>
+
+      <!-- 2. Seleção de Posto -->
+      <div>
+        <%= f.label :volunteer_station_id, "2. Selecione o Posto de Trabalho",
+              class: "block text-sm font-bold text-gray-700 mb-2" %>
+        <select name="organizer_volunteer_shift_form[volunteer_station_id]"
+                id="organizer_volunteer_shift_form_volunteer_station_id"
+                data-eventpost-select-target="stationSelect"
+                class="block w-full rounded-xl px-3 py-2 border border-gray-300 focus:ring-blue-500">
+          <option value="">Selecione primeiro o evento...</option>
+          <% @events.each do |event| %>
+            <% event.volunteer_stations.each do |station| %>
+              <option value="<%= station.id %>"
+                      data-event-id="<%= event.id %>">
+                <%= station.nome %> (KM <%= station.km_posicao %>)
+                — <%= station.vagas %> vagas
+              </option>
+            <% end %>
+          <% end %>
+        </select>
+        <% if @shift_form.errors[:volunteer_station_id].any? %>
+          <p class="text-red-500 text-xs mt-1">
+            <%= @shift_form.errors[:volunteer_station_id].first %>
+          </p>
+        <% end %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+        <div>
+          <%= f.label :turno, "3. Turno",
+                class: "block text-sm font-bold text-gray-700 mb-2" %>
+          <%= f.select :turno,
+                VolunteerShift.turnos.keys.map { |t| [t.humanize, t] }, {},
+                class: "block w-full rounded-xl px-3 py-2 border border-gray-300" %>
+        </div>
+        <div>
+          <%= f.label :status, "Status Inicial",
+                class: "block text-sm font-bold text-gray-700 mb-2" %>
+          <%= f.select :status,
+                VolunteerShift.statuses.keys.map { |s| [s.humanize, s] }, {},
+                class: "block w-full rounded-xl px-3 py-2 border border-gray-300" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <%= f.submit "CONFIRMAR ESCALA",
+            class: "w-full bg-blue-600 text-white py-4 rounded-2xl font-black
+                    text-lg hover:bg-blue-700 shadow-xl cursor-pointer
+                    transition transform active:scale-95" %>
+    </div>
+
+  <% end %>
+</div>

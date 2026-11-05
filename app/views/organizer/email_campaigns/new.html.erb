@@ -1,0 +1,27 @@
+<div class="max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold mb-8 dark:text-white">Criar Nova Campanha</h2>
+
+  <%= form_with model: @campaign_form, url: organizer_event_email_campaigns_path(@event), class: "space-y-6" do |f| %>
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border shadow-sm space-y-6">
+      <div>
+        <%= f.label :segmento, "Público Alvo", class: "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" %>
+        <%= f.select :segmento, [["Todos (Inscritos + Espera)", "todos"], ["Apenas Pagos", "pagos"], ["Pagamentos Pendentes", "pendentes"], ["Apenas Lista de Espera", "espera"]], {}, class: "w-full rounded-xl border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :assunto, "Assunto do E-mail", class: "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" %>
+        <%= f.text_field :assunto, placeholder: "Ex: Últimas vagas para a corrida!", class: "w-full rounded-xl px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :conteudo, "Conteúdo da Mensagem", class: "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2" %>
+        <%= f.text_area :conteudo, rows: 10, class: "w-full rounded-xl px-3 py-1 border-gray-300 dark:bg-gray-700 font-serif dark:text-white", placeholder: "Escreva sua mensagem aqui..." %>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-4">
+      <%= link_to "Cancelar", organizer_event_email_campaigns_path(@event), class: "py-3 px-6 text-sm font-bold text-gray-500" %>
+      <%= f.submit "DISPARAR CAMPANHA", class: "bg-blue-600 text-white py-3 px-8 rounded-xl font-black shadow-lg hover:bg-blue-700 cursor-pointer" %>
+    </div>
+  <% end %>
+</div>

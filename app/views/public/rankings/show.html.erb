@@ -1,0 +1,110 @@
+<div class="min-h-screen bg-gray-100">
+  <%# Header Section %>
+  <div class="bg-gray-950 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <%# Barra Superior: Logo e Voltar %>
+      <div class="flex justify-between items-center py-6 border-b border-green-700/50 mb-8">
+        <%= link_to root_path, class: "group" do %>
+          <%= image_tag "logo_urbanrace_3d.png", 
+                        class: "h-16 md:h-24 w-auto transform group-hover:scale-105 transition duration-300", 
+                        alt: "Urban Race" %>
+        <% end %>
+
+        <%= link_to root_path, class: "flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-green-100 hover:text-white transition-all group" do %>
+          <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          VOLTAR PARA HOME
+        <% end %>
+      </div>
+
+      <%# Título da Página %>
+      <div class="pb-10">
+        <h1 class="text-4xl md:text-5xl font-black uppercase italic tracking-tighter">
+          Classificação <span class="text-orange-500">Geral</span>
+        </h1>
+        <p class="text-green-100 mt-2 font-bold tracking-widest uppercase text-xs opacity-80">
+          <%= @event.nome %> • Resultados Oficiais
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto py-8 px-6">
+    <%# Filtros %>
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-200 p-8 mb-8">
+      <%= form_with url: public_event_ranking_path(@event.slug_url),
+                    method: :get,
+                    local: true,
+                    class: "grid md:grid-cols-2 gap-8" do %>
+        <div>
+          <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Distância</label>
+          <%= select_tag(:distance_id,
+                options_from_collection_for_select(@event.distances.order(:km), :id, :nome, @distance.id),
+                onchange: "this.form.submit()",
+                class: "w-full rounded-2xl border-gray-200 font-bold text-gray-700 focus:ring-orange-500 focus:border-orange-500 py-3"
+          ) %>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Categoria</label>
+          <%= select_tag(:category_id,
+                options_from_collection_for_select(@distance.categories.order(:nome), :id, :nome, @category.id),
+                onchange: "this.form.submit()",
+                class: "w-full rounded-2xl border-gray-200 font-bold text-gray-700 focus:ring-orange-500 focus:border-orange-500 py-3"
+          ) %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Tabela de Resultados %>
+    <div class="bg-white rounded-[32px] shadow-xl border border-gray-100 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-100">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Posição</th>
+              <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Dorsal</th>
+              <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Atleta</th>
+              <th class="px-8 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Distância</th>
+              <th class="px-8 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Tempo Líquido</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <% @ranking.each do |result| %>
+              <tr class="hover:bg-orange-50/30 transition-colors group">
+                <td class="px-8 py-5 whitespace-nowrap">
+                  <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl font-black <%= result.posicao_categoria <= 3 ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' %>">
+                    <%= case result.posicao_categoria
+                      when 1 then "1º"
+                      when 2 then "2º"
+                      when 3 then "3º"
+                      else "#{result.posicao_categoria}º"
+                      end
+                    %>
+                  </span>
+                  <% if result.posicao_categoria == 1 %>🥇<% end %>
+                </td>
+                <td class="px-8 py-5 text-sm font-mono font-bold text-gray-400">
+                  #<%= result.numero_dorsal %>
+                </td>
+                <td class="px-8 py-5 font-bold text-gray-900 group-hover:text-orange-600 transition">
+                  <%= result.athlete_name %>
+                </td>
+                <td class="px-8 py-5 text-center">
+                  <span class="text-xs font-black text-gray-500 bg-gray-100 px-3 py-1 rounded-full uppercase">
+                    <%= @distance.nome %>
+                  </span>
+                </td>
+                <td class="px-8 py-5 text-center font-black text-xl text-green-700 tabular-nums">
+                  <%= result.tempo_liquido %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

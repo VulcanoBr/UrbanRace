@@ -1,0 +1,55 @@
+<%# app/views/organizer/checkins/index.html.erb %>
+<div class="max-w-2xl mx-auto py-6" data-controller="qr-scanner" data-qr-scanner-event-id-value="<%= @event.slug_url %>">
+  <div class="mb-8 flex justify-between items-center px-4">
+    <h1 class="text-2xl font-black dark:text-white uppercase tracking-tighter">Check-in Staff</h1>
+    <div class="text-right">
+      <span class="text-3xl font-black text-blue-600"><%= @stats[:presentes] %></span>
+      <span class="text-gray-400">/ <%= @stats[:total] %></span>
+    </div>
+  </div>
+
+  <!-- Botão para Abrir Scanner (Simulação Stimulus) -->
+  <div class="px-4 mb-8">
+    <button data-action="click->qr-scanner#start" 
+            class="w-full bg-blue-600 text-white py-8 rounded-3xl font-black text-xl shadow-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+      ABRIR SCANNER
+    </button>
+    
+    <!-- Container da Câmera (Escondido por padrão) -->
+    <div data-qr-scanner-target="container" class="hidden mt-6 relative rounded-3xl overflow-hidden bg-black shadow-2xl ring-4 ring-blue-500/20">
+      <div id="qr-reader" class="w-full"></div>
+      <button data-action="click->qr-scanner#stop" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-2 rounded-full font-bold text-xs">
+        CANCELAR
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Busca Manual -->
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border shadow-sm">
+    <h3 class="text-sm font-bold text-gray-500 uppercase mb-4">Busca Manual</h3>
+    <%= form_with url: operation_event_checkins_path(@event), method: :get, class: "flex gap-2" do |f| %>
+      <%= f.text_field :query, placeholder: "Nome ou CPF...", class: "flex-1 rounded-xl border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      <%= f.submit "BUSCAR", class: "bg-gray-900 text-white px-6 py-2 rounded-xl font-bold text-sm" %>
+    <% end %>
+
+    <% if @registrations&.any? %>
+      <div class="mt-6 divide-y dark:divide-gray-700">
+        <% @registrations.each do |reg| %>
+          <div class="py-4 flex justify-between items-center">
+            <div>
+              <p class="font-bold dark:text-white"><%= reg.athlete.nome %></p>
+              <p class="text-xs text-gray-500">Dorsal: #<%= reg.numero_dorsal %> | Kit: <%= reg.tamanho_kit %></p>
+            </div>
+            <% if reg.status == 'checked_in' %>
+              <span class="text-green-600 font-black text-xs uppercase">✓ Confirmado</span>
+            <% else %>
+              <%= button_to "CONFIRMAR", operation_event_checkins_path(@event, qr_code_hash: reg.qr_code_hash), method: :post, class: "bg-green-50 text-green-700 px-4 py-1.5 rounded-lg font-bold text-xs border border-green-200" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

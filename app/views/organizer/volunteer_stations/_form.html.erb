@@ -1,0 +1,52 @@
+<%= form_with model: [:organizer, @event, station_form], url: url, method: (station_form.persisted? ? :patch : :post),class: "space-y-8" do |f| %>
+  <div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl p-6 md:p-8">
+    <% if station_form.errors.any? %>
+      <div class=" mb-8 rounded-2xl border border-red-200 bg-red-50 p-6" >
+        <h3 class=" text-sm font-bold text-red-700 mb-3 ">
+          Corrija os erros abaixo
+        </h3>
+
+        <ul class=" list-disc ml-5 text-sm text-red-600 ">
+          <% station_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+      <%= f.hidden_field :event_id %>
+
+      <div class="sm:col-span-4">
+        <%= f.label :nome, "Nome do Posto (Ex: Hidratação 1)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :nome, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :tipo, "Tipo de Posto", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.select :tipo, ["Hidratação", "Médico", "Sinalização", "Entrega de Kit", "Guarda-volumes", "Pódio"], { prompt: "Selecione..." }, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :distance_id, "Distância Relacionada", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.collection_select :distance_id, @event.distances, :id, :nome, { prompt: "Selecione a distância" }, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-1">
+        <%= f.label :km_posicao, "KM Local", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.number_field :km_posicao, step: 0.1, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :vagas, "Vagas (Qtd Voluntários)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.number_field :vagas, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 dark:bg-gray-700 dark:text-white" %>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-x-4">
+    <%= link_to "Cancelar", organizer_event_volunteer_stations_path(@event), class: "text-sm font-semibold text-gray-900 dark:text-white" %>
+    <%= f.submit "Salvar Posto", class: "rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

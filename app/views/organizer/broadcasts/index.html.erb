@@ -1,0 +1,60 @@
+<%= turbo_stream_from "event_#{@event.id}_broadcasts" %>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  
+  <!-- Coluna: Enviar Novo Comunicado -->
+  <div class="lg:col-span-1">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-[32px] shadow-xl border border-gray-200 dark:border-gray-700 sticky top-24">
+      <h3 class="text-xl font-black mb-6 flex items-center gap-2 text-slate-900 dark:text-white uppercase italic">
+        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+        Novo Broadcast
+      </h3>
+
+      <%= form_with model: @broadcast_form, url: organizer_event_broadcasts_path(@event), class: "space-y-5" do |f| %>
+        <% if @broadcast_form.errors.any? %>
+          <div class="p-3 bg-red-50 text-red-600 rounded-xl text-xs font-bold">
+            <%= @broadcast_form.errors.full_messages.to_sentence %>
+          </div>
+        <% end %>
+        <div>
+          <%= f.label :categoria, "Prioridade", class: "text-[10px] font-black uppercase text-orange-500 ml-1" %>
+          <%= f.select :categoria, [["Informativo", "info"], ["Alerta", "warning"], ["URGENTE", "critical"]], {}, 
+              class: "w-full rounded-2xl border-slate-300 dark:border-gray-600 bg-slate-50 dark:bg-gray-700 text-slate-900 dark:text-white font-bold mt-1 focus:ring-orange-500" %>
+        </div>
+
+        <div>
+          <%= f.label :volunteer_station_id, "Destinatário", class: "text-[10px] font-black uppercase text-orange-500 ml-1" %>
+          <%= f.collection_select :volunteer_station_id, @event.volunteer_stations, :id, :nome, { include_blank: "Todos os Postos (Geral)" }, 
+              class: "w-full rounded-2xl border-slate-300 dark:border-gray-600 bg-slate-50 dark:bg-gray-700 text-slate-900 dark:text-white font-bold mt-1 focus:ring-orange-500" %>
+        </div>
+
+        <div>
+          <%= f.label :titulo, "Título do Alerta", class: "text-[10px] font-black uppercase text-orange-500 ml-1" %>
+          <%= f.text_field :titulo, placeholder: "Ex: Largada Autorizada", 
+              class: "w-full rounded-2xl border-slate-300 dark:border-gray-600 bg-slate-50 dark:bg-gray-700 text-slate-900 dark:text-white font-black mt-1 focus:ring-orange-500 placeholder-slate-400" %>
+        </div>
+
+        <div>
+          <%= f.label :corpo, "Conteúdo da Mensagem", class: "text-[10px] font-black uppercase text-orange-500 ml-1" %>
+          <%= f.text_area :corpo, rows: 4, placeholder: "Escreva o aviso aqui...", 
+              class: "w-full rounded-2xl border-slate-300 dark:border-gray-600 bg-slate-50 dark:bg-gray-700 text-slate-900 dark:text-white font-medium mt-1 focus:ring-orange-500 placeholder-slate-400" %>
+        </div>
+
+        <%= f.submit "DISPARAR AGORA", 
+            class: "w-full bg-blue-600 text-white py-4 rounded-2xl font-black hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-none transition-all transform active:scale-95 cursor-pointer italic" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Coluna: Histórico Enviado -->
+  <div class="lg:col-span-2">
+    <h3 class="text-xl font-black text-slate-900 dark:text-white mb-6 uppercase italic tracking-tighter">Histórico de Mensagens</h3>
+    
+    <%# ID crucial para o Turbo Stream Prepend funcionar %>
+    <div class="space-y-4" id="broadcast_alerts_list">
+      <% @messages.each do |msg| %>
+        <%= render "organizer/broadcasts/message_card", message: msg %>
+      <% end %>
+    </div>
+  </div>
+</div>

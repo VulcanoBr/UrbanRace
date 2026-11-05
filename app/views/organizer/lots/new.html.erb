@@ -1,0 +1,18 @@
+<div class="max-w-5xl mx-auto">
+
+  <h1 class="
+    text-4xl
+    font-black
+    tracking-tighter
+    mb-10
+    dark:text-white
+  ">
+    Novo Lote
+  </h1>
+
+  <%= render "form",
+      lot_form: @lot_form,
+      url: organizer_distance_lots_path(@distance),
+      submit_label: "Criar Lote" %>
+
+</div>

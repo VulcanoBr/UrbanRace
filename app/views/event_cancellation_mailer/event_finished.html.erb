@@ -1,0 +1,84 @@
+<%# app/views/event_mailer/event_finished.html.erb %>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; margin: 0; padding: 32px 16px; color: #1f2937; }
+    .container { max-width: 560px; margin: 0 auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .header { background: linear-gradient(135deg, #1d4ed8, #7c3aed); padding: 40px 32px; text-align: center; }
+    .header .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+    .header h1 { color: #fff; margin: 0; font-size: 24px; font-weight: 700; }
+    .header p  { color: #bfdbfe; margin: 8px 0 0; font-size: 14px; }
+    .body { padding: 32px; }
+    .body p { margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #374151; }
+    .info-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 24px 0; }
+    .info-box p { margin: 0 0 8px; font-size: 14px; }
+    .info-box p:last-child { margin: 0; }
+    .label { font-weight: 600; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+    .value { color: #111827; font-weight: 500; font-size: 15px; }
+    .cta-btn { display: block; width: fit-content; margin: 24px auto; background: #1d4ed8; color: #fff !important; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 700; font-size: 15px; text-align: center; }
+    .footer { border-top: 1px solid #f3f4f6; padding: 24px 32px; text-align: center; }
+    .footer p { margin: 0; font-size: 12px; color: #9ca3af; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <span class="emoji">🏅</span>
+      <h1>Evento Finalizado!</h1>
+      <p>Parabéns por completar <%= @event.nome %></p>
+    </div>
+
+    <div class="body">
+      <p>Olá, <strong><%= @athlete.nome %></strong>!</p>
+
+      <p>
+        O evento <strong><%= @event.nome %></strong> foi oficialmente encerrado.
+        Agradecemos muito a sua participação — foi incrível ter você na prova! 🎉
+      </p>
+
+      <div class="info-box">
+        <p><span class="label">Evento</span></p>
+        <p class="value"><%= @event.nome %></p>
+        <br>
+        <p><span class="label">Data</span></p>
+        <p class="value"><%= l @event.data_largada, format: :long %></p>
+        <br>
+        <p><span class="label">Inscrição nº</span></p>
+        <p class="value">#<%= @registration.id %></p>
+        <% if @registration.numero_dorsal.present? %>
+          <br>
+          <p><span class="label">Seu dorsal</span></p>
+          <p class="value">#<%= @registration.numero_dorsal %></p>
+        <% end %>
+      </div>
+
+      <p>Acesse a plataforma para conferir:</p>
+      <ul style="margin:0 0 16px; padding-left:20px; font-size:15px; color:#374151; line-height:2">
+        <li>🏆 <strong>Seu resultado</strong> e posição no ranking</li>
+        <li>📜 <strong>Certificado digital</strong> de conclusão</li>
+        <li>📸 <strong>Fotos</strong> do evento</li>
+      </ul>
+
+      <a href="<%= Rails.application.config.action_mailer.default_url_options[:host] %>"
+         class="cta-btn">
+        Ver Resultados e Certificado
+      </a>
+
+      <p style="margin-top:24px; font-size:14px; color:#6b7280">
+        Gostou da experiência? Responda nossa pesquisa de satisfação e nos ajude
+        a melhorar ainda mais os próximos eventos!
+      </p>
+    </div>
+
+    <div class="footer">
+      <p>UrbanRace · urbanrace.com.br</p>
+      <p style="margin-top:4px">Você recebeu este e-mail porque participou do evento mencionado.</p>
+    </div>
+
+  </div>
+</body>
+</html>

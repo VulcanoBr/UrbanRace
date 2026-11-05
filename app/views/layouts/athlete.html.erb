@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-gray-50">
+  <head>
+    <title>Portal do Atleta - UrbanRace</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
+  </head>
+
+  <body class="h-full flex dark:bg-gray-900">
+    <!-- Sidebar Desktop (Visível apenas em lg:) -->
+    <%= render "shared/athlete/sidebar_desktop" %>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <!-- Topbar Mobile (Apenas para mostrar o logo no celular) -->
+      <header class="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 flex justify-between items-center shadow-sm">
+        <%= image_tag "logo_urbanrace_3d.png", alt: "UrbanRace", class: "h-12 w-auto object-contain" %>
+        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shadow-md">
+          <%= current_user.nome[0..1].upcase %>
+        </div>
+      </header>
+
+      <!-- Conteúdo Principal -->
+      <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 lg:pb-8">
+        <div class="max-w-5xl mx-auto">
+          <%= render "shared/flash" %> 
+          <%= yield %>
+        </div>
+      </main>
+    </div>
+
+    <!-- Navegação Inferior (Apenas Mobile) -->
+    <%= render "shared/athlete/bottom_nav" %>
+    <%= render "shared/confirm_modal" %>
+  </body>
+</html>

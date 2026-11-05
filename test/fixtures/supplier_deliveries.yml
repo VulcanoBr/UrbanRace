@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  supplier_contract: one
+  descricao: MyString
+  data_prevista: 2026-05-31
+  data_real: 2026-05-31
+  status: MyString
+  observacao: MyText
+
+two:
+  supplier_contract: two
+  descricao: MyString
+  data_prevista: 2026-05-31
+  data_real: 2026-05-31
+  status: MyString
+  observacao: MyText

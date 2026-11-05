@@ -1,0 +1,29 @@
+<div class="max-w-md mx-auto py-12 px-4">
+  <h2 class="text-2xl font-bold text-center mb-8">Acompanhe seu Atleta</h2>
+  
+  <%= form_with url: public_tracking_path(@event.slug_url), method: :get, class: "mb-8" do |f| %>
+    <div class="flex gap-2">
+      <%= f.number_field :dorsal, placeholder: "Nº do Dorsal (ex: 152)", class: "flex-1 rounded-lg border-gray-300" %>
+      <%= f.submit "BUSCAR", class: "bg-blue-600 text-white px-4 py-2 rounded-lg font-bold" %>
+    </div>
+  <% end %>
+
+  <% if @registration %>
+    <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-blue-600">
+      <p class="text-gray-500 text-xs font-bold uppercase">Atleta</p>
+      <h3 class="text-xl font-bold mb-4"><%= @registration.athlete.nome %></h3>
+      
+      <% if @last_timing %>
+        <div class="bg-blue-50 p-4 rounded-xl">
+          <p class="text-blue-800 text-sm">Última passagem:</p>
+          <p class="text-2xl font-black text-blue-900"><%= @last_timing.waypoint.nome %></p>
+          <p class="text-sm text-blue-700">Tempo: <%= @last_timing.chip_time.strftime("%H:%M:%S") %></p>
+        </div>
+      <% else %>
+        <p class="text-center text-gray-400 py-4 italic">Aguardando primeira leitura de chip...</p>
+      <% end %>
+    </div>
+  <% elsif params[:dorsal] %>
+    <p class="text-center text-red-500">Atleta não encontrado.</p>
+  <% end %>
+</div>

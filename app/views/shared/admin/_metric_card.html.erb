@@ -1,0 +1,24 @@
+<%# app/views/shared/admin/_metric_card.html.erb %>
+<div class="bg-white dark:bg-gray-800 px-4 py-5 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-shadow duration-200">
+  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate"><%= title %></dt>
+  <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+    <div class="flex items-baseline text-2xl font-bold text-blue-600 dark:text-blue-400">
+      <%= value %>
+    </div>
+
+    <% if trend == "up" %>
+      <div class="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
+        <svg class="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" /></svg>
+        <span class="sr-only">Aumento de</span>
+        <%= sub %>
+      </div>
+    <% elsif trend == "down" %>
+      <div class="inline-flex items-baseline px-2.5 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800 md:mt-2 lg:mt-0">
+        <svg class="-ml-1 mr-0.5 h-4 w-4 flex-shrink-0 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 112 0v7.586l2.293-2.293a1 1 0 011.414 0z" /></svg>
+        <%= sub %>
+      </div>
+    <% else %>
+      <div class="text-xs text-gray-500 mt-1"><%= sub %></div>
+    <% end %>
+  </dd>
+</div>

@@ -1,0 +1,186 @@
+<<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
+  <!-- CABEÇALHO -->
+
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
+
+    <div>
+
+      <%= link_to "← Voltar",
+          organizer_event_routes_path(@event),
+          class: "text-sm font-medium text-gray-500 hover:text-gray-900" %>
+
+      <h1 class="mt-3 text-2xl font-bold text-gray-900 dark:text-white">
+        <%= @route.distance.nome %>
+      </h1>
+
+      <p class="mt-1 text-sm text-gray-600 dark:text-white">
+        <%= @event.nome %>
+      </p>
+
+    </div>
+
+
+    <div class="flex gap-3">
+
+      <%= link_to "Editar percurso",
+          edit_organizer_event_route_path(@event, @route),
+          class: "rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-500" %>
+
+      <%= link_to "Excluir",
+          organizer_event_route_path(@event, @route),
+          data: {
+            turbo_method: :delete,
+            turbo_confirm: "Tem certeza que deseja excluir este percurso?"
+          },
+          class: "rounded-xl border border-red-300 px-5 py-3 text-sm font-bold text-red-600 hover:bg-red-50" %>
+
+    </div>
+
+  </div>
+
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+
+    <!-- INFORMAÇÕES -->
+
+    <div class="lg:col-span-1 space-y-6">
+
+
+      <!-- DISTÂNCIA -->
+
+      <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+
+        <p class="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-white">
+          Distância da prova
+        </p>
+
+        <p class="mt-2 text-3xl font-black text-gray-900 dark:text-white">
+          <%= @route.distance.km %> km
+        </p>
+
+      </div>
+
+
+      <!-- PONTOS DE APOIO -->
+
+      <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+
+        <p class="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-white">
+          Pontos de apoio
+        </p>
+
+        <p class="mt-2 text-3xl font-black text-orange-600">
+          <%= @route.pontos_apoio&.size || 0 %>
+        </p>
+
+      </div>
+
+
+      <!-- LEGENDA -->
+
+      <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+
+        <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-white">
+          Legenda
+        </h2>
+
+        <div class="mt-4 space-y-3 text-sm">
+
+          <div class="flex items-center gap-3">
+            <span class="h-4 w-4 rounded-full bg-green-500"></span>
+            <span class="text-white">Largada</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="h-4 w-4 rounded-full bg-red-500"></span>
+            <span class="text-white">Chegada</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="h-4 w-4 rounded-full bg-orange-500"></span>
+            <span class="text-white">Ponto de apoio</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="h-1 w-8 bg-blue-600"></span>
+            <span class="text-white">Percurso</span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- LISTA DE APOIO -->
+
+      <% if @route.pontos_apoio.present? %>
+
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+
+          <h2 class="text-sm font-bold uppercase tracking-wider text-gray-500">
+            Pontos de apoio
+          </h2>
+
+          <div class="mt-4 space-y-4">
+
+            <% @route.pontos_apoio.each_with_index do |ponto, index| %>
+
+              <div class="border-b border-gray-100 pb-3 last:border-0 dark:border-gray-700">
+
+                <p class="text-sm font-bold text-gray-900 dark:text-white">
+                  <%= index + 1 %>.
+                  <%= ponto["nome"] || "Ponto de apoio" %>
+                </p>
+
+                <p class="mt-1 text-xs text-gray-500">
+                  <%= ponto["tipo"] || "Apoio" %>
+                </p>
+
+              </div>
+
+            <% end %>
+
+          </div>
+
+        </div>
+
+      <% end %>
+
+    </div>
+
+
+    <!-- MAPA -->
+
+    <div class="lg:col-span-3">
+
+      <div
+        data-controller="route-map-show"
+        data-route-map-show-geojson-value="<%= @route.geojson_traca.to_json %>"
+        data-route-map-show-pontos-apoio-value="<%= (@route.pontos_apoio || []).to_json %>"
+        class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+      >
+
+        <div class="bg-orange-500 border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+
+          <h2 class="font-bold text-gray-900 dark:text-white">
+            Mapa do percurso
+          </h2>
+
+        </div>
+
+
+        <div
+          data-route-map-show-target="map"
+          class="h-[700px] w-full"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

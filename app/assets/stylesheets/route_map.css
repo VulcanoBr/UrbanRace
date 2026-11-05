@@ -1,0 +1,93 @@
+/* =========================================================
+   MARCADORES DO PERCURSO
+   ========================================================= */
+
+.route-custom-marker-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.route-custom-marker {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 9999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  font-size: 18px;
+  font-weight: 900;
+
+  border: 3px solid white;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.35);
+
+  transform: scale(1);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.route-custom-marker:hover {
+  transform: scale(1.12);
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.45);
+}
+
+
+/* ---------------------------------------------------------
+   LARGADA
+   --------------------------------------------------------- */
+
+.route-marker-largada {
+  background: #16a34a;
+}
+
+
+/* ---------------------------------------------------------
+   CHEGADA
+   --------------------------------------------------------- */
+
+.route-marker-chegada {
+  background: #dc2626;
+}
+
+
+/* ---------------------------------------------------------
+   PONTO DE APOIO
+   --------------------------------------------------------- */
+
+.route-marker-apoio {
+  background: #f97316;
+}
+
+
+/* ---------------------------------------------------------
+   TOOLTIP
+   --------------------------------------------------------- */
+
+.route-marker-tooltip {
+  border: none !important;
+
+  border-radius: 8px !important;
+
+  padding: 5px 8px !important;
+
+  font-size: 11px !important;
+
+  font-weight: 700 !important;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.route-marker-tooltip::before {
+  border-top-color: white !important;
+}

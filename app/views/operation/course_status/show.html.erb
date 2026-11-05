@@ -1,0 +1,62 @@
+<%# app/views/operation/course_status/show.html.erb %>
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <div class="mb-8">
+    <h1 class="text-3xl font-black text-gray-900 dark:text-white">Status do Percurso</h1>
+    <p class="text-gray-500">Acompanhe e encerre os pontos de passagem.</p>
+  </div>
+
+  <%# Canal de Atualização em Tempo Real %>
+  <%= turbo_stream_from "event_#{@event.id}_course_status" %>
+
+  <div class="space-y-6">
+    <% @event.routes.each do |route| %>
+      <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-blue-600 mb-6 uppercase tracking-widest text-xs"><%= route.distance.nome %></h3>
+        
+        <div class="relative">
+          <% route.waypoints.order(:km).each_with_index do |wp, index| %>
+            <div id="waypoint_<%= wp.id %>_status" class="flex gap-4 pb-8 last:pb-0">
+              <!-- Linha Vertical e Indicador -->
+              <div class="flex flex-col items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center border-4 <%= wp.aberto? ? 'border-blue-100 bg-blue-600 animate-pulse' : 'border-green-100 bg-green-600' %> text-white z-10">
+                  <% if wp.aberto? %>
+                    <span class="text-[10px] font-black"><%= index + 1 %></span>
+                  <% else %>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7" /></svg>
+                  <% end %>
+                </div>
+                <% unless wp == route.waypoints.last %>
+                  <div class="w-1 h-full bg-gray-100 -mt-1"></div>
+                <% end %>
+              </div>
+
+              <!-- Conteúdo do Ponto -->
+              <div class="flex-1 pt-1">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p class="font-black text-gray-900 dark:text-white leading-none"><%= wp.nome %></p>
+                    <p class="text-xs text-gray-500 mt-1 font-bold italic">KM <%= wp.km %></p>
+                  </div>
+                  
+                  <% if wp.aberto? %>
+                    <%= button_to operation_course_closing_path(wp), 
+                        method: :patch,
+                        params: { confirmacao_ultimo_atleta: true },
+                        class: "bg-gray-900 text-white text-[10px] font-black px-3 py-1.5 rounded-lg hover:bg-red-600 transition" do %>
+                      ENCERRAR PONTO
+                    <% end %>
+                  <% else %>
+                    <div class="text-right">
+                      <span class="text-[10px] font-black text-green-600 uppercase">Encerrado</span>
+                      <p class="text-[9px] text-gray-400 font-mono"><%= wp.closed_at.strftime("%H:%M:%S") %></p>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

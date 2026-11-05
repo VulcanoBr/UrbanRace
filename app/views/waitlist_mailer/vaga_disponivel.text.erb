@@ -1,0 +1,20 @@
+UrbanRace — Vaga disponível!
+=============================
+
+Olá, <%= @athlete.nome %>!
+
+🎉 Uma vaga abriu para você na lista de espera!
+
+⏰ ATENÇÃO: você tem 48 horas para concluir a inscrição.
+   Após este prazo, a vaga será oferecida ao próximo da lista.
+
+Evento:    <%= @event.nome %>
+Data:      <%= I18n.l(@event.data_largada, format: :long) %>
+Categoria: <%= @category.nome %>
+Distância: <%= @category.distance.nome %>
+
+Para garantir sua vaga, acesse:
+<%= @inscricao_url %>
+
+---
+© <%= Date.today.year %> UrbanRace

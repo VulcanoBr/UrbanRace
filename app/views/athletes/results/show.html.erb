@@ -1,0 +1,255 @@
+<div class="max-w-5xl mx-auto px-6 py-8">
+
+  <div class="mb-8">
+
+    <%= link_to athletes_results_path,
+        class: "inline-flex items-center text-blue-600 hover:text-blue-700 font-bold text-sm" do %>
+
+      ← Voltar para Resultados
+
+    <% end %>
+
+  </div>
+
+  <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+
+    <div class="bg-gradient-to-r from-blue-700 to-blue-800 text-white p-8">
+
+      <div class="flex justify-between items-start">
+
+        <div>
+
+          <p class="text-blue-200 uppercase text-xs font-bold tracking-widest">
+            Resultado Oficial
+          </p>
+
+          <h1 class="text-3xl font-black mt-2">
+            <%= @result.event.nome %>
+          </h1>
+
+          <p class="text-blue-100 mt-2">
+            <%= l @result.event.data_largada, format: "%d/%m/%Y" %>
+          </p>
+
+        </div>
+
+        <% if @result.homologado? %>
+
+          <span class="bg-green-500 px-4 py-2 rounded-full text-sm font-black">
+            HOMOLOGADO
+          </span>
+
+        <% else %>
+
+          <span class="bg-yellow-500 px-4 py-2 rounded-full text-sm font-black">
+            PROVISÓRIO
+          </span>
+
+        <% end %>
+
+      </div>
+
+    </div>
+
+    <div class="p-8">
+
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="bg-blue-50 rounded-2xl p-6 text-center">
+
+          <p class="text-xs uppercase font-bold text-blue-500">
+            Tempo Líquido
+          </p>
+
+          <h2 class="text-4xl font-black text-blue-700 mt-3">
+            <%= @result.tempo_liquido %>
+          </h2>
+
+        </div>
+
+        <div class="bg-gray-50 rounded-2xl p-6 text-center">
+
+          <p class="text-xs uppercase font-bold text-gray-500">
+            Tempo Bruto
+          </p>
+
+          <h2 class="text-4xl font-black text-gray-800 mt-3">
+            <%= @result.tempo_bruto %>
+          </h2>
+
+        </div>
+
+        <div class="bg-green-50 rounded-2xl p-6 text-center">
+
+          <p class="text-xs uppercase font-bold text-green-600">
+            Pace Médio
+          </p>
+
+          <h2 class="text-4xl font-black text-green-700 mt-3">
+            <%= @result.pace_medio %>
+          </h2>
+
+        </div>
+
+      </div>
+
+      <div class="mt-10">
+
+        <h2 class="text-sm font-black uppercase tracking-widest text-gray-500 mb-4">
+          Classificação
+        </h2>
+
+        <div class="grid md:grid-cols-4 gap-5">
+
+          <div class="rounded-2xl border p-5 text-center">
+
+            <p class="text-xs uppercase text-gray-400 font-bold">
+              Geral
+            </p>
+
+            <h3 class="text-3xl font-black mt-2">
+              <%= @result.posicao_geral %>º
+            </h3>
+
+          </div>
+
+          <div class="rounded-2xl border p-5 text-center">
+
+            <p class="text-xs uppercase text-gray-400 font-bold">
+              Sexo
+            </p>
+
+            <h3 class="text-3xl font-black mt-2">
+              <%= @result.posicao_sexo %>º
+            </h3>
+
+          </div>
+
+          <div class="rounded-2xl border p-5 text-center">
+
+            <p class="text-xs uppercase text-gray-400 font-bold">
+              Faixa Etária
+            </p>
+
+            <h3 class="text-3xl font-black mt-2">
+              <%= @result.posicao_faixa_etaria %>º
+            </h3>
+
+          </div>
+
+          <div class="rounded-2xl border p-5 text-center">
+
+            <p class="text-xs uppercase text-gray-400 font-bold">
+              Categoria
+            </p>
+
+            <h3 class="text-3xl font-black mt-2">
+              <%= @result.posicao_categoria %>º
+            </h3>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="mt-12">
+
+        <h2 class="text-sm font-black uppercase tracking-widest text-gray-500 mb-5">
+          Dados da Prova
+        </h2>
+
+        <dl class="grid md:grid-cols-2 gap-6">
+
+          <div>
+            <dt class="text-xs uppercase text-gray-400 font-bold">
+              Distância
+            </dt>
+
+            <dd class="text-lg font-bold mt-1">
+              <%= @result.registration.distance.nome %>
+            </dd>
+          </div>
+
+          <div>
+            <dt class="text-xs uppercase text-gray-400 font-bold">
+              Número de Peito
+            </dt>
+
+            <dd class="text-lg font-bold mt-1">
+              #<%= @result.registration.numero_dorsal %>
+            </dd>
+          </div>
+
+          <div>
+            <dt class="text-xs uppercase text-gray-400 font-bold">
+              Categoria
+            </dt>
+
+            <dd class="text-lg font-bold mt-1">
+              <%= @result.registration.category.nome %>
+            </dd>
+          </div>
+
+          <div>
+            <dt class="text-xs uppercase text-gray-400 font-bold">
+              Status
+            </dt>
+
+            <dd class="mt-1">
+
+              <% if @result.homologado? %>
+
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold">
+                  Homologado
+                </span>
+
+              <% else %>
+
+                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-bold">
+                  Em análise
+                </span>
+
+              <% end %>
+
+            </dd>
+          </div>
+
+        </dl>
+
+      </div>
+
+      <div class="mt-12 flex flex-wrap gap-4">
+
+        <% if @result.certificate.present? %>
+
+          <%= link_to certificate_athletes_registration_path(@result.registration),
+              class: "px-6 py-4 rounded-2xl bg-blue-600 text-white font-black hover:bg-blue-700 transition" do %>
+
+            📄 Baixar Certificado
+
+          <% end %>
+
+        <% end %>
+
+        <%= link_to athletes_photos_path(event_id: @result.event_id),
+            class: "px-6 py-4 rounded-2xl bg-gray-100 hover:bg-gray-200 font-black transition" do %>
+
+          📸 Ver Minhas Fotos
+
+        <% end %>
+
+        <button
+          class="px-6 py-4 rounded-2xl bg-green-600 text-white font-black hover:bg-green-700">
+
+          Compartilhar Resultado
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

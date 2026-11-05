@@ -1,0 +1,72 @@
+<%= form_with model: [:organizer, athlete_form], url: url, method: (athlete_form.persisted? ? :patch : :post), class: "space-y-8" do |f| %>
+  <div class="bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl p-6 md:p-8">
+    
+    <% if athlete_form.errors.any? %>
+      <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+        <p class="font-bold">Erros ao salvar:</p>
+        <ul class="list-disc ml-5">
+          <% athlete_form.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6" data-controller="maskphone maskcpfcnpj">
+      <div class="sm:col-span-4">
+        <%= f.label :nome, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :nome, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :cpf, "CPF (Apenas números)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :cpf, placeholder: '000.000.000-00', maxlength: "14", "data-maskcpfcnpj-target": "inputCpfCnpj", 
+                                    "data-action": "keyup->maskcpfcnpj#addMaskToCpfCnpjFields",
+
+            class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :email_address, "E-mail", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.email_field :email_address, class: "mt-1 block w-full rounded-md  px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-3">
+        <%= f.label :telefone, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.text_field :telefone, placeholder: "  (99) 99999-9999",  maxlength: "15",
+                                    "data-maskphone-target": "inputPhone", "data-action": "keyup->maskphone#addMaskToPhoneFields",
+            class: "mt-1 block w-full rounded-md  px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :nascimento, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.date_field :nascimento, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :sexo, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <%= f.select :sexo, [["Masculino", "m"], ["Feminino", "f"]], { include_blank: "Selecione" }, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-6 border-t border-gray-200 dark:border-gray-700 pt-6 mt-2">
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">Segurança (Senha)</h3>
+        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+          <div>
+            <%= f.label :password, "Nova Senha", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <%= f.password_field :password, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+            <p class="mt-1 text-xs text-gray-500">Mínimo 8 caracteres. Deixe em branco para não alterar.</p>
+          </div>
+          <div>
+            <%= f.label :password_confirmation, "Confirmar Senha", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <%= f.password_field :password_confirmation, class: "mt-1 block w-full rounded-md px-3 py-1 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-x-4">
+    <%= link_to "Cancelar", organizer_athletes_path, class: "text-sm font-semibold text-gray-900 dark:text-white" %>
+    <%= f.submit "Salvar Atleta", class: "rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

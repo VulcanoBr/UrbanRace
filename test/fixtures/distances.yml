@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event: one
+  nome: MyString
+  km: 9.99
+  vagas_total: 1
+  vagas_ocupadas: 1
+
+two:
+  event: two
+  nome: MyString
+  km: 9.99
+  vagas_total: 1
+  vagas_ocupadas: 1

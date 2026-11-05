@@ -1,0 +1,52 @@
+<div id="status_<%= dom_id(message) %>" class="bg-black/5 px-3 py-1 rounded-full">
+  <% if message.lida_em.present? %>
+    <span class="text-[8px] font-black uppercase text-green-600 bg-green-50 px-2 py-1 rounded-full">✓ Lida na Estação</span>
+  <% else %>
+    <span class="text-[8px] text-white uppercase tracking-tighter ">Aguardando Leitura</span>
+  <% end %>
+</div>
+
+<div id="<%= dom_id(message) %>" 
+     class="p-6 rounded-[32px] border-l-[12px] shadow-sm transition-all duration-500 animate-in fade-in slide-in-from-top-4 
+            <%= broadcast_theme(message.categoria) %>">
+  
+  <div class="flex justify-between items-start mb-4">
+    <div class="flex items-center gap-3">
+      <div class="p-2 rounded-xl bg-white/60 shadow-sm">
+        <%= broadcast_icon(message.categoria) %>
+      </div>
+      <div>
+        <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 block leading-none">
+          <%= message.sent_at&.strftime("%H:%M") || Time.current.strftime("%H:%M") %>
+        </span>
+        <span class="text-[10px] font-bold uppercase opacity-80">
+          📍 <%= message.volunteer_station&.nome || "TODOS OS POSTOS" %>
+        </span>
+      </div>
+    </div>
+    
+    <% if message.urgente? %>
+      <span class="flex h-3 w-3 relative">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+      </span>
+    <% end %>
+  </div>
+
+  <h4 class="font-black text-xl leading-tight mb-2 uppercase italic tracking-tighter">
+    <%= message.titulo %>
+  </h4>
+  
+  <p class="text-base leading-relaxed font-bold opacity-90">
+    <%= message.corpo %>
+  </p>
+  
+  <div class="mt-5 pt-4 border-t border-black/10 flex justify-between items-center">
+    <span class="text-[9px] font-black uppercase tracking-widest opacity-40">
+      COORDENAÇÃO: <%= message.sender&.name || "SISTEMA" %>
+    </span>
+    <div class="bg-black/5 px-3 py-1 rounded-full">
+      <span class="text-[8px] font-black uppercase tracking-tighter">Aguardando Leitura</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  athlete: one
+  event: one
+  result: one
+  nota_geral: 1
+  nota_percurso: 1
+  nota_organizacao: 1
+  nota_estrutura: 1
+  nota_comunicacao: 1
+  comentario: MyText
+  respondido_em: 2026-05-31 23:29:50
+
+two:
+  athlete: two
+  event: two
+  result: two
+  nota_geral: 1
+  nota_percurso: 1
+  nota_organizacao: 1
+  nota_estrutura: 1
+  nota_comunicacao: 1
+  comentario: MyText
+  respondido_em: 2026-05-31 23:29:50

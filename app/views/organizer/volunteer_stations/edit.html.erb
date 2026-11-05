@@ -1,0 +1,34 @@
+<%# app/views/organizer/volunteer_stations/edit.html.erb %>
+<div class="mx-auto max-w-4xl">
+  <div class="md:flex md:items-center md:justify-between mb-8">
+    <div class="min-w-0 flex-1">
+      <nav class="mb-2">
+        <ol class="flex items-center space-x-2 text-sm text-gray-500">
+          <li class="dark:text-white">
+            <%= link_to @event.nome, organizer_event_path(@event), class: "hover:text-gray-500" %>
+          </li>
+          <li><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 11 7.293 7.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" /></svg></li>
+          <li><%= link_to "Postos", organizer_event_volunteer_stations_path(@event), class: "hover:text-gray-700" %></li>
+          <li><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 11 7.293 7.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" /></svg></li>
+          <li class="text-gray-900 font-semibold dark:text-white">Editar Posto</li>
+        </ol>
+      </nav>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white"><%= @station.nome %></h2>
+    </div>
+    
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= button_to organizer_event_volunteer_station_path(@event, @station), 
+                    method: :delete, 
+                    data: { turbo_confirm: "Tem certeza que deseja remover este posto? Todas as escalas de voluntários vinculadas a ele serão excluídas." },
+                    class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-50 dark:bg-gray-800 dark:ring-red-900 dark:text-red-400" do %>
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8.75 1A2.75 2.25 0 006 3.75V4H5a2 2 0 00-2 2v.25C3 6.664 3.336 7 3.75 7h12.5a.75.75 0 00.75-.75V6a2 2 0 00-2-2h-1V3.75A2.75 2.25 0 0011.25 1h-2.5zM5 8.25V18a2 2 0 002 2h6a2 2 0 002-2V8.25H5z" clip-rule="evenodd" />
+        </svg>
+        Excluir Posto
+      <% end %>
+    </div>
+  </div>
+
+  <%# O Form Object aponta para a URL de atualização do recurso singular %>
+  <%= render "form", station_form: @station_form, url: organizer_event_volunteer_station_path(@event, @station) %>
+</div>

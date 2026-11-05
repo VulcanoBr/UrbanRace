@@ -1,0 +1,6 @@
+<%# app/views/organizer/registrations/edit.html.erb %>
+<div class="mx-auto max-w-4xl">
+  <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Editar Inscrição</h2>
+  
+  <%= render "form", registration_form: @registration_form, url: organizer_registration_path(@registration) %>
+</div>

@@ -1,0 +1,42 @@
+<%# app/views/operation/incidents/new.html.erb %>
+<div class="max-w-xl mx-auto py-6 px-4">
+  <h2 class="text-2xl font-black text-red-600 mb-6 flex items-center gap-2">
+    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+    REGISTRAR OCORRÊNCIA
+  </h2>
+
+  <%= form_with model: @incident_form, url: operation_event_incidents_path(@event), class: "space-y-6" do |f| %>
+    
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-1">
+        <%= f.label :dorsal, "Nº Dorsal (se houver)", class: "block font-bold text-gray-700" %>
+        <%= f.number_field :dorsal, class: "w-full rounded-2xl border-gray-300 px-3 py-4 text-xl font-bold" %>
+      </div>
+      <div class="col-span-1">
+        <%= f.label :km_local, "KM Aproximado", class: "block font-bold text-gray-700" %>
+        <%= f.number_field :km_local, step: 0.1, class: "w-full rounded-2xl border-gray-300 py-4 text-xl font-bold" %>
+      </div>
+    </div>
+
+    <div>
+      <p class="block font-bold text-gray-700 mb-2">Gravidade</p>
+      <div class="grid grid-cols-2 gap-3">
+        <% [['BAIXA', 'low', 'bg-green-100 text-green-700'], ['MÉDIA', 'medium', 'bg-yellow-100 text-yellow-700'], ['ALTA', 'high', 'bg-orange-100 text-orange-700'], ['CRÍTICA', 'critical', 'bg-red-100 text-red-700']].each do |label, val, style| %>
+          <label class="relative">
+            <%= f.radio_button :gravidade, val, class: "peer sr-only" %>
+            <div class="text-center py-4 rounded-2xl border-2 border-transparent peer-checked:border-blue-600 <%= style %> font-black cursor-pointer">
+              <%= label %>
+            </div>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :tipo, "Tipo de Ocorrência", class: "block font-bold text-gray-700" %>
+      <%= f.select :tipo, Incident.tipos.keys.map { |k| [k.humanize, k] }, {}, class: "w-full rounded-2xl border-gray-300 px-3 py-4" %>
+    </div>
+
+    <%= f.submit "ENVIAR ALERTA AGORA", class: "w-full bg-red-600 text-white py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition" %>
+  <% end %>
+</div>
