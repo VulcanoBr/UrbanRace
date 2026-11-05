@@ -1,4 +1,4 @@
-[← Voltar ao README](../README.md)
+[← Voltar ao README](README.md)
 
 ---
 
@@ -1507,4 +1507,4 @@ Fim
 
 ---
 
-[← Voltar ao README](../README.md)
+[← Voltar ao README](README.md)

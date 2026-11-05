@@ -1,4 +1,4 @@
-[← Voltar ao README](../README.md)
+[← Voltar ao README](README.md)
 
 ---
 
@@ -1233,4 +1233,4 @@ Fim do Plano de Desenvolvimento — v1.0 — Junho de 20
 
 ---
 
-[← Voltar ao README](../README.md)
+[← Voltar ao README](README.md)
